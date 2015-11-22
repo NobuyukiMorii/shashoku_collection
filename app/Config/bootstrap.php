@@ -109,3 +109,12 @@ CakeLog::config('error', array(
 	'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
 	'file' => 'error',
 ));
+
+/**
+ * 2015/11/22
+ * nmorii
+ * Instalation Debugkit
+ * I download it from this url
+ * https://github.com/cakephp/debug_kit/tree/2.2
+ */
+CakePlugin::load('DebugKit');

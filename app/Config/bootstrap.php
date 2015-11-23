@@ -118,3 +118,10 @@ CakeLog::config('error', array(
  * https://github.com/cakephp/debug_kit/tree/2.2
  */
 CakePlugin::load('DebugKit');
+
+/**
+ * 2015/11/23
+ * nmorii
+ * Load app/Config/define.php, this files is for loading constant various
+ */
+Configure::load("define");

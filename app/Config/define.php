@@ -8,3 +8,12 @@
  * [example in another files]
  * $fruit = Configure::read('fruit');
  */
+
+
+/* ---------- About table ------------------------------ */
+
+/* ---------- All table ---------------------- */
+
+/* ---------- del_flg ---------- */
+$config['TABLE_NOT_DELETED'] = 0;
+$config['TABLE_DELETED'] = 1;

@@ -40,7 +40,7 @@ class AppController extends Controller {
     public function beforeFilter(){
 
         /* PCからのアクセスの場合には専用のviewを出力する */
-        $this->_setThemeForPC();
+        //$this->_setThemeForPC();
 
     }
 

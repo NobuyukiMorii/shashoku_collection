@@ -23,7 +23,22 @@
  */
 
 // Setup a 'default' cache configuration for use in the application.
-Cache::config('default', array('engine' => 'File'));
+/**
+ * 2015/11/27
+ * nmorii
+ * Setting file cache
+ */
+Cache::config('default', 
+    array(
+        'engine' => 'File',
+        'duration'      => 31536000,            //1 Year
+        'probability'   => 0,                   //ファイルがない場合に再作成される確率
+        'prefix'        => '',                  //キャッシュファイルのプリフィックス
+        'lock'          => false,               //ファイル生成時に1人のユーザーや1つのプロセスに制限。
+        'serialize'     => true,                //キャッシュの内容をシリアライズする
+        'mask'          => 0666,                //キャッシュ・ファイルを生成した際の権限    
+    )
+);
 
 /**
  * The settings below can be used to set additional paths to models, views and controllers.

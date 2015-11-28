@@ -31,6 +31,94 @@ App::uses('Model', 'Model');
  */
 class AppModel extends Model {
 
+    /* Findのタイプを格納するメンバ変数 */
+    protected $find_type = null;
+
+    /*
+     * Findで生成・利用するファイルキャッシュ名を生成する。
+     * Findの種類と検索条件をアンダースコアで繋ぎ、ファイル名を生成する。
+     */
+    protected function generateCacheName($type, $params){
+
+        /* $paramsの中のキャッシュを削除する */
+        unset($params['cache']);
+
+        /* $paramsのキーをアルファベットの小文字に変換する */
+        $params = array_change_key_case($params);
+
+        /* 多次元配列を１次限配列に変換する */
+        $params = Hash::flatten($params);
+
+        /* キーをアルファベットの昇順に変換する */
+        ksort($params);
+
+        /* $paramsをアンダースコアで文字列連結する */
+        $cacheName = "";
+        foreach ($params as $key => $value) {
+            if(empty($value)){
+                $value = "null";
+            }
+            $cacheName .= $key."_".$value."_";
+        }
+
+        /* キーを結合しているドットをアンダースコアに変換する */
+        $cacheName = str_replace('.', '_', $cacheName);
+
+        /* モデル名_Findのタイプ_$paramsの形式で文字列連結をする */
+        $cacheName = $this->name . '_' . $type . '_' . $cacheName;
+
+        /* 文字列から半角スペースと全角スペースを除去する */
+        $cacheName  = preg_replace("/( |　)/", "", $cacheName );
+
+        return $cacheName;
+
+    }
+
+
+    /*
+     * Findでキャッシュを指定出来るように変更
+     * $paramsの中にcachを指定することで、利用出来る。
+     * 検索条件がキャッシュファイル名となる。
+     */
+    function find($type = null, $params = array()) {
+
+        $doQuery = true;
+
+        // check if we want the cache
+        if (!empty($params['cache'])) {
+
+            $cacheName = $this->generateCacheName($type, $params);
+
+            Cache::set(array('path' => CACHE."models/"));
+ 
+            // if so, check if the cache exists
+            $data = Cache::read($cacheName);
+
+            var_dump($data);
+            if ($data == false) {
+                $data = parent::find($type, $params);
+
+                Cache::set(array('path' => CACHE."models/"));
+                Cache::write($cacheName, $data);
+
+            }
+            $doQuery = false;
+        }
+        if ($doQuery) {
+            $data = parent::find($type, $params);
+        }
+        return $data;
+    }
+
+    public function beforeFind($query){
+
+        /* Find('list')で検索した場合 */
+        if(!empty($query['list'])){
+            $this->find_type = "list";
+        }
+
+    }
+
     /*
      * Findの検索結果を変換
      * ・model名を削除
@@ -40,8 +128,17 @@ class AppModel extends Model {
      */
     public function afterFind($results, $primary = false) {
 
-        /* --------------- 配列の構造を判定する ------------------------------- */
+        /* --------------- 空の配列の場合、処理せずに返却 ----------------------- */
+        if(empty($results)){
+            return $results;  
+        }
 
+        /* --------------- find('list')で検索された場合にはそのまま返却 --------- */
+        if($this->find_type === 'list'){
+            return $results;
+        }
+
+        /* --------------- 配列の構造を判定する ------------------------------- */
         if(isset($results[0][0])){
 
             /* Countで取得された場合 */
@@ -59,7 +156,6 @@ class AppModel extends Model {
 
         }
 
-
         /* --------------- Countで取得された場合 ------------------------------ */
         if($data_type === "array_double_count"){
             /* 引数と同じ値を返却 */
@@ -71,18 +167,20 @@ class AppModel extends Model {
         /* Findの戻り値からモデル名を削除 */
         $results = Hash::extract($results,'{n}.'.$this->name);
 
-
         /* --------------- Findの結果が１つのキーを持つ配列の場合 --------------- */
         if($data_type === "array_cnt_one"){
 
-             /* 削除済みレコードの場合 */
-             if($results[0]['del_flg'] === Configure::read("RECORD_DELETED")){
-                /* 空の配列を返却 */
-                return array();
-             }
+            /* 削除済みレコードの場合 */
+            if(isset($results[0]['del_flg'])){
 
-             /* キーのdel_flgとその値を削除する */
-             unset($results[0]['del_flg']);
+                if($results[0]['del_flg'] === Configure::read("RECORD_DELETED")){
+                   /* 空の配列を返却 */
+                   return array();
+                }
+
+                /* キーのdel_flgとその値を削除する */
+                unset($results[0]['del_flg']);
+            }
 
             return $results;
         }  

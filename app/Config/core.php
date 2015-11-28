@@ -37,6 +37,13 @@
 	Configure::write('debug', 2);
 
 /**
+ * 2015/11/22
+ * nmorii
+ * SQLのログの出力設定
+ * Model/Behavior/MysqlLog.phpにて出力
+ */
+	Configure::write('Cake.logQuery', 1);
+/**
  * Configure the Error handler used to handle errors for your application. By default
  * ErrorHandler::handleError() is used. It will display errors using Debugger, when debug > 0
  * and log errors with CakeLog when debug = 0.

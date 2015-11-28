@@ -61,7 +61,7 @@ class AppModel extends Model {
             $cacheName .= $key."_".$value."_";
         }
 
-        /* キーを結合しているドットをアンダースコアに変換する */
+        /* ドットをアンダースコアに変換する */
         $cacheName = str_replace('.', '_', $cacheName);
 
         /* モデル名_Findのタイプ_$paramsの形式で文字列連結をする */
@@ -84,28 +84,39 @@ class AppModel extends Model {
 
         $doQuery = true;
 
-        // check if we want the cache
+        /* キャッシュを使う場合 */
         if (!empty($params['cache'])) {
 
+            /* キャッシュ名を生成する */
             $cacheName = $this->generateCacheName($type, $params);
 
+            /* キャッシュのパスを指定する */
             Cache::set(array('path' => CACHE."models/"));
- 
-            // if so, check if the cache exists
+
+            /* キャッシュを取得する */
             $data = Cache::read($cacheName);
 
-            var_dump($data);
+            /* キャッシュがない場合 */
             if ($data == false) {
+
+                /* Findで検索する */
                 $data = parent::find($type, $params);
 
+                /* キャッシュのパスを指定する */
                 Cache::set(array('path' => CACHE."models/"));
+
+                /* 結果をキャッシュに記録する */
                 Cache::write($cacheName, $data);
 
             }
+            /* Queryを発行させない */
             $doQuery = false;
         }
+        /* キャッシュを使わない場合 */
         if ($doQuery) {
+
             $data = parent::find($type, $params);
+
         }
         return $data;
     }

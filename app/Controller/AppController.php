@@ -34,4 +34,34 @@ class AppController extends Controller {
 
 	public $components = array('DebugKit.Toolbar');
 
+    /* 
+     *引数を取得する関数
+     */
+    protected function _getArguments(){
+
+        /* 返却値を設定する */
+        $result = array();
+
+        /* CakePHPのactionの引数を取得する */
+        $result['ACTION_ARGS'] = func_get_args();
+        if(empty($result['ACTION_ARGS'])){
+            unset($result['ACTION_ARGS']);
+        }
+
+        /* $_POSTのデータを取得する */
+        $result['POST'] = $this->request->data;
+        if(empty($result['POST'])){
+            unset($result['POST']);
+        }
+
+        /* $_GETのデータを取得する */
+        $result['GET'] = $this->request['url'];
+        if(empty($result['GET'])){
+            unset($result['GET']);
+        }
+
+        return $result;
+
+    }
+
 }

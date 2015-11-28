@@ -117,12 +117,33 @@ App::uses('CakeLog', 'Log');
 CakeLog::config('debug', array(
 	'engine' => 'File',
 	'types' => array('notice', 'info', 'debug'),
-	'file' => 'debug',
+    /* 日ごとにログを切り替える設定 */
+    'file' => date( 'Ymd') . '_' . 'debug',
+    /* 5Mごとにファイルを切り替え */
+    'size' => '5MB',
+    /* 20ファイルまで切り替え */
+    'rotate' => 20
 ));
 CakeLog::config('error', array(
 	'engine' => 'File',
 	'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
-	'file' => 'error',
+    /* 日ごとにログを切り替える設定 */
+    'file' => date( 'Ymd') . '_' . 'error',
+    /* 5Mごとにファイルを切り替え */
+    'size' => '5MB',
+    /* 20ファイルまで切り替え */
+    'rotate' => 20
+));
+/* SQLログを追加 */
+CakeLog::config('sql', array(
+    'engine' => 'File',
+    'types' => array('sql'),
+    /* 日ごとにログを切り替える設定 */
+    'file' => date( 'Ymd') . '_' . 'sql',
+    /* 5Mごとにファイルを切り替え */
+    'size' => '5MB',
+    /* 20ファイルまで切り替え */
+    'rotate' => 20
 ));
 
 /**

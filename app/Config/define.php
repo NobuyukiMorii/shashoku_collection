@@ -9,11 +9,10 @@
  * $fruit = Configure::read('fruit');
  */
 
-
 /* ---------- About table ------------------------------ */
 
 /* ---------- All table ---------------------- */
 
 /* ---------- del_flg ---------- */
-$config['TABLE_NOT_DELETED'] = 0;
-$config['TABLE_DELETED'] = 1;
+$config['RECORD_NOT_DELETED'] = "0";
+$config['RECORD_DELETED'] = "1";

@@ -134,6 +134,17 @@ CakeLog::config('error', array(
     /* 20ファイルまで切り替え */
     'rotate' => 20
 ));
+/* オリジナルのエラーログを追加 */
+CakeLog::config('original', array(
+    'engine' => 'File',
+    'types' => array('original'),
+    /* 日ごとにログを切り替える設定 */
+    'file' => date( 'Ymd') . '_' . 'original',
+    /* 5Mごとにファイルを切り替え */
+    'size' => '5MB',
+    /* 20ファイルまで切り替え */
+    'rotate' => 20
+));
 /* SQLログを追加 */
 CakeLog::config('sql', array(
     'engine' => 'File',

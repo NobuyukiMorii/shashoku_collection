@@ -9,6 +9,8 @@
 /dist
 /tags
 *.mo
+/node_modules/*
+/app/webroot/css/style.css
 
 # IDE and editor specific files #
 #################################

@@ -1,0 +1,55 @@
+@charset "utf-8"
+
+// ------------------------------------
+// layout
+// ------------------------------------
+
+
+/*----------------------------------------------------
+ *	#page
+ *----------------------------------------------------
+#page
+  width: $base_width
+  margin: 0 auto
+  padding: 10px
+  background: $sub_color
+  font-size: fz(12)
+
+/*----------------------------------------------------
+ *	#contents
+ *----------------------------------------------------
+#contents
+  @extend .clearfix
+  width: $base_width - 20px
+  padding: 10px
+  margin-bottom: $base_margin_bottom
+  background: #ccc
+  .pageTop
+    clear: both
+    margin: 0
+    text-align: right
+
+// ------------------------------------
+// ヘッダー
+// ------------------------------------
+// SP
+@media (max-width: 48em)
+  #l-header
+    width: 100%
+    height: 44px
+    background: #f8f8f8
+    border-bottom: 1px solid #f0f0f0
+    text-align: center
+    padding-top: 12px
+    font-size: 16px
+    padding-left: 15px
+
+/*----------------------------------------------------
+ *	フッター
+ *----------------------------------------------------
+#footer
+  @extend .clearfix
+  width: $base_width
+  background: #ccc
+  .copyright
+    text-align: center

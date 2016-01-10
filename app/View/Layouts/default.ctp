@@ -27,37 +27,58 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	</title>
 	<?php
 		echo $this->Html->meta('icon');
+		// echo $this->Html->css('cake.generic');
 
-		echo $this->Html->css('cake.generic');
+		// [Pure.css] http://purecss.io/
+		echo $this->Html->css('http://yui.yahooapis.com/pure/0.6.0/pure-min.css');
+		echo $this->Html->css('style');
 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
 	?>
 </head>
-<body>
-	<div id="container">
-		<div id="header">
-			<h1><?php echo $this->Html->link($cakeDescription, 'http://cakephp.org'); ?></h1>
+<body id="layout">
+	<div id="l-container">
+		<?php // $this->element('side-menu'); 読み込み方謎なので一旦放置 ?>
+		<a href="#menu" id="menuLink" class="menu-link">
+		    <!-- Hamburger icon -->
+		    <span></span>
+		</a>
+		<div id="menu">
+		    <div class="pure-menu">
+		        <p class="pure-menu-heading">
+			        <label>株式会社Shashoku</label><br/>
+			        <label>Tamiko</label>
+		        </p>
+		        <ul class="pure-menu-list">
+		            <li class="pure-menu-item"><a href="/Restaurants" class="pure-menu-link">ランチ店舗一覧</a></li>
+		            <li class="pure-menu-item"><a href="/Coupons/history" class="pure-menu-link">行ったお店の履歴</a></li>
+		            <li class="pure-menu-item" class="menu-item-divided pure-menu-selected">
+		                <a href="/Notifications" class="pure-menu-link">運営からのお知らせ</a>
+		            </li>
+		            <li class="pure-menu-item"><a href="#" class="pure-menu-link">使い方・マニュアル</a></li>
+		            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Q&A</a></li>
+		            <li class="pure-menu-item"><a href="#" class="pure-menu-link">利用規約</a></li>
+		            <li class="pure-menu-item"><a href="/Users/detail" class="pure-menu-link">設定</a></li>
+		        </ul>
+		    </div>
 		</div>
-		<div id="content">
-
+		<!--sidemenu ここまで-->
+		<div id="l-header">
+			<h1><?php echo $this->fetch('title'); ?></h1>
+		</div>
+		<div id="l-main">
 			<?php echo $this->Flash->render(); ?>
-
 			<?php echo $this->fetch('content'); ?>
 		</div>
-		<div id="footer">
-			<?php echo $this->Html->link(
-					$this->Html->image('cake.power.gif', array('alt' => $cakeDescription, 'border' => '0')),
-					'http://www.cakephp.org/',
-					array('target' => '_blank', 'escape' => false, 'id' => 'cake-powered')
-				);
-			?>
-			<p>
-				<?php echo $cakeVersion; ?>
-			</p>
+		<div id="l-flooter">
+			<p></p>
 		</div>
 	</div>
-	<?php echo $this->element('sql_dump'); ?>
+	<?php 
+		echo $this->element('sql_dump');
+		echo $this->Html->script('ui');
+	?>
 </body>
 </html>

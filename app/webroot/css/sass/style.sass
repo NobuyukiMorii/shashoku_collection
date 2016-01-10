@@ -1,0 +1,31 @@
+@charset "utf-8"
+
+// ※初めての方へ！運用ルール:rule.sass を必ず読んでください！※
+
+// ------------------------------------
+// style.sass
+// 各SASSファイルのインポート
+// ------------------------------------
+
+// ---拾ってきたデフォルトファイル---
+// http://css-happylife.com/archives/2012/0129_2345.php
+ 
+// 設定用
+@import "setting"
+// リセットCSS、フォントサイズ
+@import "reset"
+// ミックスイン、@extend、CSS3など
+@import "mixin"
+// メインスタイル - layout.scssはメイン内でインポート
+@import "main"
+// 印刷用スタイル
+@import "print"
+
+// サイドメニュー:pure.cssのアレンジ
+@import "sidemenu"
+
+// モジュール: 共通スタイル
+@import "modules"
+
+// ---viewごとのスタイル設定---
+@import "restaurants"

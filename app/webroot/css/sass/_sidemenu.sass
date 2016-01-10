@@ -1,0 +1,143 @@
+@charset "utf-8"
+
+// ------------------------------------
+// sidemenu
+// Pure.cssをSassで書き換えたもの
+// ------------------------------------
+
+// 変数セット ※これグローバル変数なので注意
+$m_width: 220px
+$m_bgColor: #666
+$m_borderColor: #707070
+$m_fontColor: #EEE
+
+// Add transition to containers so they can push in and out.
+#layout,
+#menu,
+.menu-link
+    -webkit-transition: all 0.2s ease-out
+    -moz-transition: all 0.2s ease-out
+    -ms-transition: all 0.2s ease-out
+    -o-transition: all 0.2s ease-out
+    transition: all 0.2s ease-out
+
+// This is the parent `<div>` that contains the menu and the content area.
+#layout
+    position: relative
+    padding-left: 0
+    &.active #menu
+        left: $m_width
+        width: $m_width
+    &.active .menu-link
+        left: $m_width
+
+// The `#menu` `<div>` is the parent `<div>` that contains the `.pure-menu` that
+// appears on the left side of the page.
+
+#menu 
+    margin-left: -$m_width /* "#menu" width */
+    width: $m_width
+    position: fixed
+    top: 0
+    left: 0
+    bottom: 0
+    z-index: 1000 /* so the menu or its navicon stays above all content */
+    background: $m_bgColor
+    overflow-y: auto
+    -webkit-overflow-scrolling: touch
+    a
+        color: $m_fontColor
+        border-bottom: 1px solid $m_borderColor
+        padding: 1em 0 1em 0.6em
+    .pure-menu,
+    .pure-menu ul 
+        border: none
+        background: transparent
+    .pure-menu ul,
+    .pure-menu .menu-item-divided 
+        border-top: 1px solid $m_borderColor
+    .pure-menu li a:hover,
+    .pure-menu li a:focus 
+        background: $m_borderColor
+    .pure-menu-selected
+        // something?
+    .pure-menu-selected a 
+        color: #fff
+    .pure-menu-heading 
+        font-size: 10px
+        color: $m_fontColor
+        margin: 0
+        padding: 1.5em 0 1.5em 70px
+        line-height: 1.3
+
+/* -- Dynamic Button For Responsive Menu -------------------------------------*/
+// The button to open/close the Menu is custom-made and not part of Pure. Here's
+// how it works:
+// `.menu-link` represents the responsive menu toggle that shows/hides on
+// small screens.
+
+.menu-link 
+    position: fixed
+    display: block /* show this only on small screens */
+    top: 0
+    left: 0 /* "#menu width" */
+    background: #000
+    background: rgba(0,0,0,0.7)
+    font-size: 10px /* change this value to increase/decrease button size */
+    z-index: 10
+    width: 5em
+    height: auto
+    padding: 2.1em 1.6em
+    &:hover,
+    &:focus 
+        background: #000
+    span 
+        position: relative
+        display: block
+    span,
+    span:before,
+    span:after 
+        background-color: #fff
+        width: 100%
+        height: 0.2em
+    span:before,
+    span:after 
+        position: absolute
+        margin-top: -0.6em
+        content: " "
+    span:after 
+        margin-top: 0.6em
+        
+
+
+/* -- Responsive Styles (Media Queries) ------------------------------------- */
+// Hides the menu at `48em`, but modify this based on your app's needs.
+
+@media (min-width: 48em)
+    .header,
+    .content 
+        padding-left: 2em
+        padding-right: 2em
+    #layout
+        padding-left: $m_width
+        left: 0
+    #menu
+        left: $m_width
+    .menu-link 
+        position: fixed
+        left: $m_width
+        display: none
+    #layout.active .menu-link 
+        left: $m_width
+
+@media (max-width: 48em)
+    // Only apply this when the window is small. Otherwise, the following
+    // case results in extra padding on the left:
+    //     * Make the window small.
+    //     * Tap the menu to trigger the active state.
+    //     * Make the window large again.
+    #layout.active 
+        position: relative
+        left: $m_width
+
+

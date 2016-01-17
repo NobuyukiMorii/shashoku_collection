@@ -21,6 +21,12 @@
 
 App::uses('Controller', 'Controller');
 
+/* アプリケーション全体で利用出来る関数をロード */
+App::uses('Util', 'Vendor');
+App::uses('ArrayControl', 'Vendor');
+App::uses('Arguments', 'Vendor');
+App::uses('UserAgent', 'Vendor');
+
 /**
  * Application Controller
  *
@@ -34,96 +40,19 @@ class AppController extends Controller {
     // デザイン上邪魔なので一旦消します
 	// public $components = array('DebugKit.Toolbar');
 
+    /* コンポーネントをロード*/
+    public $components = array(
+        'FindSupport',
+        'Common'
+    );
+    
     /*
      * アクション実行前にコールされる
      */
     public function beforeFilter(){
 
         /* PCからのアクセスの場合には専用のviewを出力する */
-        //$this->_setThemeForPC();
-
-    }
-
-    /* 
-     * 引数を取得する関数
-     */
-    protected function _getArguments(){
-
-        /* 返却値を設定する */
-        $result = array();
-
-        /* CakePHPのactionの引数を取得する */
-        $result['ACTION_ARGS'] = func_get_args();
-        if(empty($result['ACTION_ARGS'])){
-            unset($result['ACTION_ARGS']);
-        }
-
-        /* $_POSTのデータを取得する */
-        $result['POST'] = $this->request->data;
-        if(empty($result['POST'])){
-            unset($result['POST']);
-        }
-
-        /* $_GETのデータを取得する */
-        $result['GET'] = $this->request['url'];
-        if(empty($result['GET'])){
-            unset($result['GET']);
-        }
-
-        return $result;
-
-    }
-
-    /*
-     * PCの場合には、PC用のthemeを設定する
-     */
-    protected function _setThemeForPC(){
-
-        /* PCからのアクセスかどうかを判定する */
-        $device_type = $this->_detectClientDeviceType();
-        
-        /* PCからのアクセスの場合 */
-        if($device_type === 'PC') {
-            /* PC用のviewを表示する */
-            $this->theme = 'PC';
-        }
-
-    }
-
-    /*
-     * PCからのアクセスを判定する
-     */
-    protected function _detectClientDeviceType(){
-
-        /* 返却値の初期値を設定する */
-        $device_type = 'PC';
-
-        /* ユーザーエージェントを取得する */
-        $ua = env('HTTP_USER_AGENT');
-
-        if(strpos($ua,'iPhone')){
-            $device_type = 'iPhone';
-        } else if (strpos($ua,'iPod')){
-            $device_type = 'iPad';
-        } else if (strpos($ua,'iPod')){
-            $device_type = 'iPod';
-        } else if (strpos($ua,'Android')){
-            $device_type = 'Android';
-        } else if (strpos($ua,'DoCoMo')){
-            $device_type = 'DoCoMo';
-        } else if (strpos($ua,'UP\.Browser')){
-            $device_type = 'UP\.Browser';
-        } else if (strpos($ua,'J-PHONE')){
-            $device_type = 'J-PHONE';
-        } else if (strpos($ua,'Vodafone')){
-            $device_type = 'Vodafone';
-        } else if (strpos($ua,'SoftBank')){
-            $device_type = 'SoftBank';
-        } else if(strpos($ua,'Googlebot-Mobile')){
-            $device_type = 'Googlebot';
-        } 
-
-        return $device_type;
+        $this->Common->setThemeForPC();
 
     }
 

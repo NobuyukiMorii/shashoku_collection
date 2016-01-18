@@ -82,6 +82,29 @@ if (!defined('WWW_ROOT')) {
 	define('WWW_ROOT', dirname(__FILE__) . DS);
 }
 
+/**
+ * プロジェクト名を定義する
+ */
+if (!defined('PROJECT_NAME')) {
+	//プロジェクト名を変更した場合は修正すること
+	define('PROJECT_NAME', 'shashoku_collection');
+}
+
+/**
+ * 画像のURL（画像ファイル名は除く）
+ */
+if (!defined('IMG_RESTAURANT_PHOTO')) {
+	//ホスト名を取得
+	$HOST_URL = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"];
+
+	//レストランの画像のURL
+	define('IMG_RESTAURANTS_PHOTO', $HOST_URL . DS . PROJECT_NAME . DS . 'img/restaurants_photo/');
+
+	//セットメニューの画像のURL
+	define('IMG_SET_MENUS_PHOTO', $HOST_URL . DS . PROJECT_NAME . DS . 'img/set_menus_photo/');
+
+}
+
 // for built-in server
 if (PHP_SAPI === 'cli-server') {
 	if ($_SERVER['REQUEST_URI'] !== '/' && file_exists(WWW_ROOT . $_SERVER['PHP_SELF'])) {

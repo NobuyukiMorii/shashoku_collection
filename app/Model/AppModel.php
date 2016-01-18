@@ -21,6 +21,10 @@
 
 App::uses('Model', 'Model');
 
+/* アプリケーション全体で利用出来る関数をロード */
+App::uses('Util', 'Vendor');
+App::uses('ArrayControl', 'Vendor');
+
 /**
  * Application model for Cake.
  *
@@ -30,6 +34,14 @@ App::uses('Model', 'Model');
  * @package       app.Model
  */
 class AppModel extends Model {
+
+    /* モデルの共通関数を集約するbehaviorロード */
+    public $actsAs = array(
+        'Common', 
+        'CompleteRecords', 
+        'StartEndDate', 
+        'PriorityOrder'
+    );
 
     /* Findのタイプを格納するメンバ変数 */
     protected $find_type = null;

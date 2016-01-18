@@ -7,7 +7,7 @@ $rest = array(
     'genre_id' => '4',
     'tags_id' => ['0','1'],
     'description' => 'アクセスしやすい隠れ家カフェ！季節の野菜をたっぷり使った熱々のグラタンをご用意してお待ちしています！',
-    'address' => '渋谷区',
+    'address' => '世田谷区上馬1-19-16',
     'phone_num' => '03-0000-0000',
     'seats_num' => '24',
     'regular_holiday' => '火曜日',
@@ -17,9 +17,9 @@ $rest = array(
     'smoke_flg' => '1',
     'reservation_flg' => '1',
     'smoke_flg' => '1',
-    'image' => '/img/rest01.jpg',
+    'image' => array('/img/rest01.jpg','/img/rest01.jpg'),
     'menu' => 'チキンと野菜のグラタン', // main_menu? 配列にする?
-    'menu_count' => '3' //仮: menuの数
+    'menu_count' => '2' //仮: menuの数
 );
 $tags = array(
     '0' => '栄養バランスバッチリ!',
@@ -54,10 +54,38 @@ $menus = array(
 );
 ?>
 
+<?php
+// jQueryこんなところで読み込んでしもた
+echo $this->Html->script('https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js');
+// 地図用にgmaps埋め込み
+echo $this->Html->script('http://maps.google.com/maps/api/js?sensor=true&.js');
+echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
+?>
+
 <!-- ヘッダーのタイトル、レストラン名にできたらおけ -->
 
 <!-- レストラン情報 -->
-<img class="" src="<? echo $rest["image"] ?>" />
+<div id="restImgsBox">
+    <button id="r_prevBtn" class="is-hidden"></button>
+    <button id="r_nextBtn"></button>
+    <div id="restImgs">
+        <?
+        $restImg_count = count($rest["image"]);
+        if (isset($rest["image"]) && $restImg_count  > 0) {
+            foreach ($rest["image"] as $restImg) {
+        ?>
+            <div class="restImgBox">
+                <img class="" src="<? echo $restImg ?>" />
+            </div>
+        <?
+            }
+        }
+        ?>
+    </div>
+</div>
+
+
+
 <div class="titleBox">
     <ul class="tags">
     <?  
@@ -74,32 +102,35 @@ $menus = array(
     <p class="description"><? echo $rest["description"]; ?></p>
 </div>
 
-<!-- メニュー -->　
-<div class="menus">
-    <!-- スライド -->
-    <?
-    $menu_count = count($menus);
-    if (isset($menus) && $menu_count  > 0) {
-        foreach ($menus as $menu) {
-    ?>
-            <div class="menuBox">
-                <img class="" src="<? echo $menu["image"] ?>" />
-                <p>クーポン利用可能期間：<? echo date("m/d",$menu["start_date"]).'〜'.date("m/d",$menu["end_date"]) ?></p>
-                <p class="bold"><? echo $menu['price'] ?>円メニュー:<? echo $menu['name'] ?></p>
-                <button>このメニューのクーポンを発行する</button>
-            </div>
-    <?
+<!-- メニュー -->
+<div id="menusBox">
+    <button id="prevBtn" class="is-hidden"></button>
+    <button id="nextBtn"></button>
+    <div id="menus">
+        <?
+        $menu_count = count($menus);
+        if (isset($menus) && $menu_count  > 0) {
+            foreach ($menus as $menu) {
+        ?>
+                <div class="menuBox">
+                    <img class="" src="<? echo $menu["image"] ?>" />
+                    <p>クーポン利用可能期間：<? echo date("m/d",$menu["start_date"]).'〜'.date("m/d",$menu["end_date"]) ?></p>
+                    <p class="bold"><? echo $menu['price'] ?>円メニュー:<? echo $menu['name'] ?></p>
+                    <button>このメニューのクーポンを発行する</button>
+                </div>
+        <?
+            }
         }
-    }
-    ?>
+        ?>
+    </div>
 </div>
 
+<h2>アクセス</h2>
 <div id="map">
 ここにmapが入ります
 </div>
 
 <h2>店舗情報</h2>
-
 <dl>
 <dt>店舗名</dt><dd><? echo $rest['name']; ?></dd>
 <dt>ジャンル</dt><dd><? echo $genres[$rest["genre_id"]]; ?></dd>
@@ -111,3 +142,78 @@ $menus = array(
 <dt>住所</dt><dd><? echo $rest['address'] ?></dd>
 <dt>店舗URL</dt><dd><? echo $rest['name'] ?></dd>
 </dl>
+
+
+<script>
+// メニューのスライド
+var count = <? echo $rest['menu_count'] ?>;
+var w = window.innerWidth;
+var menus = document.getElementById('menus');
+menus.style.width = w*count + 'px';
+
+// レストラン画像
+var restImgs = document.getElementById('restImgs');
+restImgs.style.width = w*count + 'px';
+
+// ナンバー生成
+if (count > 1) {
+    var ul = $("<ul>",{id:"countBox"}).appendTo($("#menusBox"));
+    for (var i=1; i<count+1; i++) {
+        var li = $("<li>",{id:"num_"+i, class:(i==1)?"selected":"", text:i});
+        li.appendTo(ul);
+    }
+}
+
+var interval = -(w-25);
+var now = 0;
+$("#nextBtn").click(function(){
+    if (now >= count-1) return;
+    now++;
+    $("#menus").animate({ "margin-left": interval*now+'px' }, 800 );
+    // TODO: 番号の背景色変更
+    if (now == count-1) $("#nextBtn").addClass("is-hidden");
+    if (now > 0) $("#prevBtn").removeClass("is-hidden");
+    refreshNum(now+1);
+});
+$("#prevBtn").click(function(){
+    if (now <= 0) return;
+    now--;
+    $("#menus").animate({ "margin-left": interval*now+'px' }, 800 );
+    // TODO: 番号の背景色変更
+    if (now == 0) $("#prevBtn").addClass("is-hidden");
+    if (now < count-1) $("#nextBtn").removeClass("is-hidden");
+    refreshNum(now+1);
+});
+
+var refreshNum = function(num) {
+    var nums = $("#countBox").children();
+    if (nums && nums.length > 1) {
+        var count = nums.length;
+        for (var i=1; i<count+1; i++) {
+            if (i==num) $("#num_"+i).addClass("selected");
+            else $("#num_"+i).removeClass("selected"); 
+        }
+    }
+}
+
+// 地図
+var map = new GMaps({
+    div: '#map',
+    lat: -12.043333,
+    lng: -77.028333,
+    zoom: 17
+});
+GMaps.geocode({
+    address: "<? echo $rest['address'] ?>",
+    callback: function(results, status) {
+        if (status == 'OK') {
+            var latlng = results[0].geometry.location;
+            map.setCenter(latlng.lat(), latlng.lng());
+            map.addMarker({
+                lat: latlng.lat(),
+                lng: latlng.lng()
+            });
+        }
+    }
+});
+</script>

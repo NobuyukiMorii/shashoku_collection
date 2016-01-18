@@ -92,22 +92,105 @@ div.img.history
 .boxList
   margin-top: 10px
 
-.menus
-  height: 315px
+#menusBox
+  width: 100%
   overflow: hidden
-  padding: 15px 25px
-  background-color: #f5e6ce
-  .menuBox
-  p
-    text-align: center
+  position: relative
+  > button
+    position: absolute
+    width: 44px
+    height: 44px
+    background: no-repeat
+  #nextBtn
+    top: 80px
+    right: 5px
+    background-image: url("/img/arrow_right.png")
+  #prevBtn
+    top: 80px
+    left: 5px
+    background-image: url("/img/arrow_left.png")
+  #countBox
+    position: absolute
+    top: 25px
+    left: 40px
+    height: 34px
+    li
+      margin-right: 7px
+      text-align: center
+      padding-top: 2px
+      width: 24px
+      height: 24px
+      border-radius: 12px
+      float: left
+      background-color: #FFF
+      border: 1px solid #555
+    li.selected
+      background-color: #f5a623
+  #menus
+    height: 330px
+    overflow: hidden
+    padding: 15px 25px
+    background-color: #f5e6ce
+    .menuBox
+      max-width: calc(100vw - 50px)
+      margin-right: 25px
+      float: left
+    p
+      text-align: center
+
+#restImgsBox
+  width: 100%
+  overflow: hidden
+  position: relative
+  > button
+    position: absolute
+    width: 44px
+    height: 44px
+    background: no-repeat
+  #nextBtn
+    top: 80px
+    right: 5px
+    background-image: url("/img/arrow_right.png")
+  #prevBtn
+    top: 80px
+    left: 5px
+    background-image: url("/img/arrow_left.png")
+  #countBox
+    position: absolute
+    top: 25px
+    left: 40px
+    height: 34px
+    li
+      margin-right: 7px
+      text-align: center
+      padding-top: 2px
+      width: 24px
+      height: 24px
+      border-radius: 12px
+      float: left
+      background-color: #FFF
+      border: 1px solid #555
+    li.selected
+      background-color: #f5a623
+  #restImgs
+    height: 240px
+    overflow: hidden
+    // padding: 15px 25px
+    background-color: #f5e6ce
+    .restImgBox
+      max-width: calc(100vw - 50px)
+      margin-right: 25px
+      float: left
+    p
+      text-align: center
 
 .bold
   font-weight: bold
 
 #map
   height: 200px
-  margin-top: 15px
-  padding: 0 10px
+  width: calc(100% - 50px)
+  margin: 15px auto 0
   background-color: #EEE
 
 dl
@@ -160,3 +243,6 @@ button.cancel
 .is-important
   color: #e0001a !important
   font-weight: bold
+
+.is-hidden
+  display: none !important

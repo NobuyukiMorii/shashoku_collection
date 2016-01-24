@@ -43,7 +43,7 @@ class RestaurantsTagsRelationsComponent extends Component {
 		$restaurants_tags_relation = Hash::sort($restaurants_tags_relation, '{n}.priority_order');
 
 		//ジャンルidを抽出
-		$tag_ids = hash::extract($restaurants_tags_relation, '{n}.resaurant_tag_id');
+		$tag_ids = hash::extract($restaurants_tags_relation, '{n}.restaurants_tag_id');
 
 		//ジャンルidを追加
 		$restaurant['tag_ids'] = $tag_ids;
@@ -84,7 +84,7 @@ class RestaurantsTagsRelationsComponent extends Component {
 				if(!empty($restaurants[$tag_value['restaurant_id']])){
 
 					//タグを追加する
-					$restaurants[$tag_value['restaurant_id']]['tag_id'][] = $tag_value['resaurant_tag_id'];
+					$restaurants[$tag_value['restaurant_id']]['tag_id'][] = $tag_value['restaurants_tag_id'];
 
 				}
 

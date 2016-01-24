@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost:8889
--- Generation Time: 2016 年 1 月 24 日 17:37
+-- Generation Time: 2016 年 1 月 24 日 17:53
 -- サーバのバージョン： 5.5.42
 -- PHP Version: 5.6.10
 
@@ -438,7 +438,7 @@ CREATE TABLE `restaurants_tags_relations` (
   `id` int(11) NOT NULL,
   `restaurant_id` int(11) NOT NULL,
   `priority_order` int(11) NOT NULL,
-  `resaurant_tag_id` int(11) NOT NULL,
+  `restaurants_tag_id` int(11) NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
   `del_flg` tinyint(4) NOT NULL
@@ -448,7 +448,7 @@ CREATE TABLE `restaurants_tags_relations` (
 -- テーブルのデータのダンプ `restaurants_tags_relations`
 --
 
-INSERT INTO `restaurants_tags_relations` (`id`, `restaurant_id`, `priority_order`, `resaurant_tag_id`, `created`, `modified`, `del_flg`) VALUES
+INSERT INTO `restaurants_tags_relations` (`id`, `restaurant_id`, `priority_order`, `restaurants_tag_id`, `created`, `modified`, `del_flg`) VALUES
 (1, 1, 1, 1, '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
 (2, 1, 2, 2, '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
 (3, 1, 3, 3, '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),

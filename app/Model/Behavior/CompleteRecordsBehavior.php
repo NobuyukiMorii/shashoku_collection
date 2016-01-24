@@ -11,6 +11,13 @@ class CompleteRecordsBehavior extends ModelBehavior {
      */ 
     public function removeIncompleteRecords_ShouldBelongsTo(Model $model, $mst_A, $mst_B, $should_belongs_to_foreign_key, $file=NULL, $method=NULL, $line=NULL){
 
+        //引数が欠落している場合
+        $flg = ArrayControl::multipleEmptyCheck($mst_A, $mst_B, $should_belongs_to_foreign_key);
+        if($flg === false) {
+            //空配列を返却
+            return array();
+        }
+
         //ファイル名がない場合
         if(is_null($file)){
             $file = __FILE__;
@@ -49,6 +56,13 @@ class CompleteRecordsBehavior extends ModelBehavior {
      * $mst_Aの該当のレコードを削除する
      */ 
     public function removeIncompleteRecords_ShouldHave(Model $model, $mst_A, $mst_B, $foreign_key, $file=NULL, $method=NULL, $line=NULL){
+
+        //引数が欠落している場合
+        $flg = ArrayControl::multipleEmptyCheck($mst_A, $mst_B, $foreign_key);
+        if($flg === false) {
+            //空配列を返却
+            return array();
+        }
 
         //ファイル名がない場合
         if(is_null($file)){

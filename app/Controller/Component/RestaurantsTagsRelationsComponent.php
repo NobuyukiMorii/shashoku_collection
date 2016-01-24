@@ -14,6 +14,11 @@ class RestaurantsTagsRelationsComponent extends Component {
 	 */
     public function AddTagIdsToRestaurant($restaurant){
 
+    	//引数をチェック
+    	if(empty($restaurant)){
+    		return array();
+    	}
+
 		//モデルをロード
 		$RestaurantsTagsRelation = ClassRegistry::init('RestaurantsTagsRelation');
 
@@ -56,9 +61,18 @@ class RestaurantsTagsRelationsComponent extends Component {
 	 */
     public function AddPrimaryTagIdToRestaurants($restaurants, $restaurants_tags_relations){
 
+    	//引数チェック
+    	$flg = ArrayControl::multipleEmptyCheck($restaurants, $restaurants_tags_relations);
+    	if($flg === false) {
+    		return array();
+    	}
+
 		//レストランごとに、優先順位が高いタグ関連レコードを２つ取得する
 		$RestaurantsTagsRelation = ClassRegistry::init('RestaurantsTagsRelation');
 		$primary_tag_relations = $RestaurantsTagsRelation->getPrimaryRecordsOfEachKey($restaurants_tags_relations, 'restaurant_id', 2);
+		if(empty($primary_tag_relations)){
+			return array();
+		}
 
 		//レストランのタグ関連性をループ
 		foreach ($primary_tag_relations as $key => $tags) {

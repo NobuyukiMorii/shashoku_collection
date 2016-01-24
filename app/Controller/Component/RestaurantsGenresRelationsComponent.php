@@ -14,6 +14,11 @@ class RestaurantsGenresRelationsComponent extends Component {
 	 */
     public function AddGenreIdToRestaurant($restaurant){
 
+    	//引数をチェック
+    	if(empty($restaurant)){
+    		return array();
+    	}
+
 		//モデルをロード
 		$RestaurantsGenresRelation = ClassRegistry::init('RestaurantsGenresRelation');
 
@@ -28,7 +33,7 @@ class RestaurantsGenresRelationsComponent extends Component {
 		//対象のジャンルが存在しない場合
 		if(empty($restaurants_genres_relation)){
 
-			//値を空配列として健脚
+			//空配列を格納
 			$restaurant['genre_id'] = array();
 			return $restaurant;
 
@@ -56,9 +61,17 @@ class RestaurantsGenresRelationsComponent extends Component {
 	 */
     public function AddPrimaryGenreIdToRestaurants($restaurants, $restaurants_genres_relations){
 
+    	$flg = ArrayControl::multipleEmptyCheck($restaurants, $restaurants_genres_relations);
+    	if($flg === false){
+    		return array();
+    	}
+
 		//レストランごとに、優先順位の高いジャンル関連idを取得する
 		$RestaurantsGenresRelation = ClassRegistry::init('RestaurantsGenresRelation');
 		$primary_genres_relations = $RestaurantsGenresRelation->getPrimaryRecordOfEachKey($restaurants_genres_relations, 'restaurant_id');
+		if(empty($primary_genres_relations)){
+			return array();
+		}
 
 		//レストランのジャンルをループ
 		foreach ($primary_genres_relations as $key => $value) {

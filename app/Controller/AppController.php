@@ -37,8 +37,12 @@ App::uses('UserAgent', 'Vendor');
  * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
-    // デザイン上邪魔なので一旦消します
-	// public $components = array('DebugKit.Toolbar');
+
+    /* viewに送信する変数 */
+    public $view_data = array(
+        'error_code'    => 0,
+        'error_message' => null
+    );
 
     /* コンポーネントをロード*/
     public $components = array(
@@ -51,8 +55,18 @@ class AppController extends Controller {
      */
     public function beforeFilter(){
 
-        /* PCからのアクセスの場合には専用のviewを出力する */
+        //PCからのアクセスの場合には専用のviewを出力する 
         $this->Common->setThemeForPC();
+
+    }
+
+    /*
+     * レンダリングの前にコールされる
+     */
+    public function beforeRender() {
+
+        //viewに渡す変数をセット
+        $this->set('response', $this->view_data);
 
     }
 

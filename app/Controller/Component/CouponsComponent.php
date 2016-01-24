@@ -6,12 +6,22 @@ App::uses('Component', 'Controller');
  */
 class CouponsComponent extends Component {
 
+	//コンポーネントをロード
+    public $components = array(
+    	'SetMenus'
+    );
+
 	/**
 	 * １つのレストランに複数のクーポン情報を追加する
 	 * @param array $restaurant
 	 * @return array
 	 */
     public function AddCouponsInfoToRestaurant($restaurant){
+
+    	//引数をチェック
+    	if(empty($restaurant)){
+    		return array();
+    	}
 
     	//モデルをロード
 		$Coupon 		= ClassRegistry::init('Coupon');
@@ -25,46 +35,23 @@ class CouponsComponent extends Component {
 			),
 			'cache' => true
 		));
+		if(empty($coupons)){
+			return array();
+		}
 
 		//セットメニューのidを取得
 		$set_menu_ids = Hash::extract($coupons, '{n}.set_menu_id');
 
-		//セットメニューを取得
-		$set_menus = $SetMenu->find('all', array(
-			'conditions' => array(
-					'id' => $set_menu_ids
-			),
-			'cache' => true
-		));
-
-		//セットメニューのキーをidとする
-		$set_menus = Hash::combine($set_menus, '{n}.id', '{n}');
-
-		//セットメニューの写真を取得
-		$set_menu_photos = $SetMenusPhoto->find('all', array(
-			'conditions' => array(
-					'set_menu_id' => $set_menu_ids
-			),
-			'cache' => true
-		));
-
 		//クーポンをpriority_order順に並べ替える
 		$coupons = Hash::sort($coupons, '{n}.priority_order');
 
-		//セットメニューidごとに一番priority_orderの高い画像を取得
-		$set_menu_photos = $SetMenusPhoto->getPrimaryRecordOfEachKey($set_menu_photos, 'set_menu_id');
+		//クーポンのキーをidとする
+		$coupons = Hash::combine($coupons, '{n}.id', '{n}');
 
-		//セットメニューに写真を結合する
-		foreach ($set_menu_photos as $key => $value) {
-
-			//写真のセットメニューがあれば
-			if(!empty($set_menus[$value['set_menu_id']])){
-				//画像のパスを設定
-				$path = IMG_SET_MENUS_PHOTO.$value['file_name'];
-				//セットメニューに写真を付加
-				$set_menus[$value['set_menu_id']]['photo_url'] = $path;
-			}
-
+		//セットメニュー（写真付き）を取得
+		$set_menus = $this->SetMenus->getSetMenuWitPhoto($set_menu_ids);
+		if(empty($set_menus)){
+			return array();
 		}
 
 		//クーポンとセットメニューを結合
@@ -112,8 +99,17 @@ class CouponsComponent extends Component {
 	 */
     public function AddCouponInfoToRestaurants($restaurants, $coupons, $set_menus){
 
+    	//引数をチェック
+    	$flg = ArrayControl::multipleEmptyCheck($restaurants, $coupons, $set_menus);
+    	if($flg === false){
+    		return array();
+    	}
+
 		/* レストランにクーポンの数量を追加する */
 		$restaurants = $this->AddCouponCountToRestaurants($restaurants, $coupons);
+		if(empty($restaurants)){
+			return array();
+		}
 
 		/* 優先順位の一番高いレストランにクーポンを追加する */
 		$restaurants = $this->AddPrimaryCouponInfoToRestaurants($restaurants, $coupons, $set_menus);
@@ -130,8 +126,17 @@ class CouponsComponent extends Component {
 	 */
     public function AddCouponCountToRestaurants($restaurants, $coupons){
 
+    	//引数をチェック
+    	$flg = ArrayControl::multipleEmptyCheck($restaurants, $coupons);
+    	if($flg === false){
+    		return array();
+    	}
+
     	/* レストランidごとのクーポンの数量を取得する */
     	$coupons_count = ArrayControl::getCountOfValueOfTargetKey($coupons, 'restaurant_id');
+    	if(empty($coupons_count)){
+    		return array();
+    	}
 
     	/* レストランに数量を格納するキーを設定する。*/
     	$restaurants_key_for_coupons_count = 'coupons.count';

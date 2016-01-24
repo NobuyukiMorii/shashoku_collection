@@ -113,7 +113,7 @@ if(strpos($_SERVER['PHP_SELF'], PROJECT_NAME) !== false) {
  */
 if (!defined('IMG_RESTAURANT_PHOTO')) {
 
-	define('IMG_RESTAURANTS_PHOTO', $HOST_URL . $joint_path . 'img/restaurants_photo/');
+	define('IMG_RESTAURANTS_PHOTO', $HOST_URL . '/image/restaurants_photo/');
 
 }
 /**
@@ -121,7 +121,7 @@ if (!defined('IMG_RESTAURANT_PHOTO')) {
  */
 if (!defined('IMG_SET_MENUS_PHOTO')) {
 
-	define('IMG_SET_MENUS_PHOTO', $HOST_URL . $joint_path . 'img/set_menus_photo/');
+	define('IMG_SET_MENUS_PHOTO', $HOST_URL . '/image/set_menus_photo/');
 
 }
 

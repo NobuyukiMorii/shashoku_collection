@@ -1,4 +1,16 @@
 <!-- Restaurants/index.ctp トップページ レストラン一覧 -->
+<?php 
+//エラーコード（0以外の場合、いい感じにエラーメッセージを表示して頂きたいです。）
+$error_code     = $response['error_code'];
+//エラーメッセージ
+$error_message  = $response['error_message'];
+//レストラン
+$restaurants    = $response['restaurants'];
+//ジャンル
+$genres         = $response['genres'];
+//タグ
+$tags           = $response['tags'];
+?>
 
 <!-- お知らせ -->
 <ul class="information small">
@@ -41,80 +53,26 @@
 
 <!-- 一覧 -->
 <div class="boxList 3col">
-    <?
-    ////////// ダミーデータ //////////
-    $restaurants = array(
-        array(
-            'id' => '0',
-            'name' => 'Sancha Cafe',
-            'genre_id' => '4',
-            'tags_id' => ['0','1'],
-            'address' => '渋谷区',
-            'phone_num' => '03-0000-0000',
-            'seats_num' => '24',
-            'regular_holiday' => '火曜日',
-            'url' => '',
-            'lunch_time' => '1',
-            'open_time' => '1',
-            'smoke_flg' => '1',
-            'reservation_flg' => '1',
-            'smoke_flg' => '1',
-            'image' => '/img/rest01.jpg',
-            'menu' => 'チキンと野菜のグラタン', // main_menu? 配列にする?
-            'menu_count' => '3' //仮: menuの数
-        ),
-        array(
-            'id' => '0',
-            'name' => 'Sancha Cafe',
-            'genre_id' => '1',
-            'tags_id' => ['1'],
-            'address' => '渋谷区',
-            'phone_num' => '03-0000-0000',
-            'seats_num' => '24',
-            'regular_holiday' => '火曜日',
-            'url' => '',
-            'lunch_time' => '1',
-            'open_time' => '1',
-            'smoke_flg' => '1',
-            'reservation_flg' => '1',
-            'smoke_flg' => '1',
-            'image' => '/img/rest01.jpg',
-            'menu' => 'そばつゆ',
-            'menu_count' => '2' //仮: menuの数
-        ),
-    );
-    $tags = array(
-        '0' => '栄養バランスバッチリ!',
-        '1' => '低カロリー'
-    );
-    $genres = array(
-        '0' => '和食',
-        '1' => '洋食',
-        '2' => '中華',
-        '3' => 'ビュッフェ',
-        '4' => 'カフェランチ'
-    );
-    ?>
 
     <?
-    if (isset($restaurants) && count($restaurants) > 0) {
+    if (!empty($restaurants)) {
         foreach ($restaurants as $rest) {
     ?>
-            <a href="/Restaurants/detail/<? $rest['id'] ?>"><div class="img ratioFixed" style="background-image:url('<? echo $rest["image"]; ?>')">
+            <a href="<?php echo $this->Html->url(array("controller" => "Restaurants", "action" => "detail", '?' => array('restaurant_id' => $rest['id']))); ?>"><div class="img ratioFixed" style="background-image:url('<? echo $rest["photo_url"]; ?>')">
                 <div class="titleBox titleBox-top">
                     <!-- <div class="map">map</div> -->
                     <ul class="tags">
                     <?  
-                        if (isset($rest["tags_id"]) && count($rest["tags_id"]) > 0) {
-                            foreach ($rest["tags_id"] as $tag_id) {
-                                echo ' <li>'.$tags[$tag_id].'</li>';
+                        if (!empty($rest["tag_id"])) {
+                            foreach ($rest["tag_id"] as $tag_id) {
+                                echo ' <li>'.$tags[$tag_id]['name'].'</li>';
                             }
                         }
                     ?>
                     </ul>
-                    <p class="category"><? echo $genres[$rest["genre_id"]]; ?></p>
+                    <p class="category"><? echo $genres[$rest["genres_id"]]; ?></p>
                     <h4><? echo $rest["name"]; ?></h4>
-                    <p class="menu">300円メニュー:<? echo $rest["menu"]; ?><label <? if((int)$rest["menu_count"]<=1) echo 'class="is-hidden"' ?>>..他<?echo $rest["menu_count"]-1?>つ</label></p>
+                    <p class="menu"><? echo $rest["coupons"]["price"]; ?>円メニュー:<? echo $rest["coupons"]["set_menu_name"]; ?><label <? if((int)$rest["coupons"]["count"]<=1) echo 'class="is-hidden"' ?>>..他<?echo $rest["coupons"]["count"]-1?>つ</label></p>
                 </div>
             </div></a>
     <?

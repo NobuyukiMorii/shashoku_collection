@@ -44,6 +44,12 @@ class FindSupportComponent extends Component {
      */
 	public function washMasterData($model_name_array, $msts, $file=NULL, $mothod=NULL, $line=NULL){
 
+		//引数がない場合
+		$flg = ArrayControl::multipleEmptyCheck($model_name_array, $msts);
+		if($flg === false){
+			return array();
+		}
+
 		//ファイル名がない場合
 		if(is_null($file)){
 			$file = __FILE__;
@@ -103,6 +109,10 @@ class FindSupportComponent extends Component {
 
 						//不完全なデータを削除
 						$msts[$use_table]  = $model->removeIncompleteRecords_ShouldHave($msts[$use_table], $msts[$should_have_use_table], $foreign_key, $file, $mothod, $line);
+						//エラーハンドリング
+						if(empty($msts[$use_table])){
+							return array();
+						}
 
 					} else {
 
@@ -135,6 +145,10 @@ class FindSupportComponent extends Component {
 
 						//不完全なデータを削除
 						$msts[$use_table]  = $model->removeIncompleteRecords_ShouldBelongsTo($msts[$use_table], $msts[$should_belongs_to_use_table], $should_belongs_to_foreign_key, $file, $mothod, $line);
+						//エラーハンドリング
+						if(empty($msts[$use_table])){
+							return array();
+						}
 
 					} else {
 						

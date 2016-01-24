@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost:8889
--- Generation Time: 2016 年 1 月 24 日 13:28
+-- Generation Time: 2016 年 1 月 24 日 17:37
 -- サーバのバージョン： 5.5.42
 -- PHP Version: 5.6.10
 
@@ -36,7 +36,7 @@ CREATE TABLE `colors` (
 
 INSERT INTO `colors` (`id`, `name`, `color_code`, `del_flg`, `created`, `modified`) VALUES
 (1, '橙', '#ffb2b2', 0, '2016-01-01 00:00:00', '2016-01-01 00:00:00'),
-(2, '赤', '#ffb2d8	', 0, '2016-01-01 00:00:00', '2016-01-01 00:00:00'),
+(2, '赤', '#ffb2d8 ', 0, '2016-01-01 00:00:00', '2016-01-01 00:00:00'),
 (3, 'ピンク', '#ffb2ff', 0, '2016-01-01 00:00:00', '2016-01-01 00:00:00'),
 (4, '紫', '#d8b2ff', 0, '2016-01-01 00:00:00', '2016-01-01 00:00:00'),
 (5, '青', '#b2b2ff', 0, '2016-01-01 00:00:00', '2016-01-01 00:00:00'),
@@ -189,85 +189,6 @@ INSERT INTO `coupons` (`id`, `restaurant_id`, `priority_order`, `set_menu_id`, `
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `menus`
---
-
-DROP TABLE IF EXISTS `menus`;
-CREATE TABLE `menus` (
-  `id` int(11) NOT NULL,
-  `set_menu_id` int(11) NOT NULL,
-  `priority_order` int(11) NOT NULL,
-  `name` varchar(500) NOT NULL,
-  `description` text NOT NULL,
-  `created` datetime NOT NULL,
-  `modified` datetime NOT NULL,
-  `del_flg` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
-
---
--- テーブルのデータのダンプ `menus`
---
-
-INSERT INTO `menus` (`id`, `set_menu_id`, `priority_order`, `name`, `description`, `created`, `modified`, `del_flg`) VALUES
-(1, 1, 1, 'チキンと野菜のグラタン', '旬の野菜と比内地鶏を使ったグラタン。秘伝のクリームソースは絶品の一言。', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(2, 1, 2, '7種類の野菜のサラダ', '旬の野菜と比内地鶏を使ったグラタン。秘伝のクリームソースは絶品の一言。', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(3, 1, 3, 'ドリンク', '旬の野菜と比内地鶏を使ったグラタン。秘伝のクリームソースは絶品の一言。', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(4, 2, 1, 'チキンと野菜のグラタン', '旬の野菜と比内地鶏を使ったグラタン。秘伝のクリームソースは絶品の一言。', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(5, 3, 1, 'チキンと野菜のグラタン', '旬の野菜と比内地鶏を使ったグラタン。秘伝のクリームソースは絶品の一言。', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(6, 4, 1, 'チキンと野菜のグラタン', '旬の野菜と比内地鶏を使ったグラタン。秘伝のクリームソースは絶品の一言。', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(7, 5, 1, 'チキンと野菜のグラタン', '旬の野菜と比内地鶏を使ったグラタン。秘伝のクリームソースは絶品の一言。', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(8, 6, 1, 'チキンと野菜のグラタン', '旬の野菜と比内地鶏を使ったグラタン。秘伝のクリームソースは絶品の一言。', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(9, 7, 1, 'チキンと野菜のグラタン', '旬の野菜と比内地鶏を使ったグラタン。秘伝のクリームソースは絶品の一言。', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(10, 8, 1, 'チキンと野菜のグラタン', '旬の野菜と比内地鶏を使ったグラタン。秘伝のクリームソースは絶品の一言。', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(11, 9, 1, 'チキンと野菜のグラタン', '旬の野菜と比内地鶏を使ったグラタン。秘伝のクリームソースは絶品の一言。', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(12, 10, 1, 'チキンと野菜のグラタン', '旬の野菜と比内地鶏を使ったグラタン。秘伝のクリームソースは絶品の一言。', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(13, 11, 1, 'チキンと野菜のグラタン', '旬の野菜と比内地鶏を使ったグラタン。秘伝のクリームソースは絶品の一言。', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(14, 12, 1, 'チキンと野菜のグラタン', '旬の野菜と比内地鶏を使ったグラタン。秘伝のクリームソースは絶品の一言。', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(15, 13, 1, 'チキンと野菜のグラタン', '旬の野菜と比内地鶏を使ったグラタン。秘伝のクリームソースは絶品の一言。', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(16, 14, 1, 'チキンと野菜のグラタン', '旬の野菜と比内地鶏を使ったグラタン。秘伝のクリームソースは絶品の一言。', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(17, 15, 1, 'チキンと野菜のグラタン', '旬の野菜と比内地鶏を使ったグラタン。秘伝のクリームソースは絶品の一言。', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0);
-
--- --------------------------------------------------------
-
---
--- テーブルの構造 `menus_photos`
---
-
-DROP TABLE IF EXISTS `menus_photos`;
-CREATE TABLE `menus_photos` (
-  `id` int(11) NOT NULL,
-  `menu_id` int(11) NOT NULL,
-  `priority_order` int(11) NOT NULL,
-  `file_name` varchar(500) NOT NULL,
-  `created` datetime NOT NULL,
-  `modified` datetime NOT NULL,
-  `del_flg` tinyint(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
-
---
--- テーブルのデータのダンプ `menus_photos`
---
-
-INSERT INTO `menus_photos` (`id`, `menu_id`, `priority_order`, `file_name`, `created`, `modified`, `del_flg`) VALUES
-(1, 1, 1, 'menus_1_1.png', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(13, 1, 2, 'menus_1_2.png', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(14, 1, 3, 'menus_1_3.png', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(15, 1, 4, 'menus_1_4.png', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(2, 2, 1, 'menus_2_1.png', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(3, 3, 1, 'menus_3_1.png', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(4, 4, 1, 'menus_4_1.png', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(5, 5, 1, 'menus_5_1.png', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(6, 6, 1, 'menus_6_1.png', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(7, 7, 1, 'menus_7_1.png', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(8, 8, 1, 'menus_8_1.png', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(9, 9, 1, 'menus_9_1.png', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(10, 10, 1, 'menus_10_1.png', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(11, 11, 1, 'menus_11_1.png', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
-(12, 12, 1, 'menus_12_1.png', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0);
-
--- --------------------------------------------------------
-
---
 -- テーブルの構造 `restaurants`
 --
 
@@ -347,7 +268,7 @@ CREATE TABLE `restaurants_genres_relations` (
   `id` int(11) NOT NULL,
   `restaurant_id` int(11) NOT NULL,
   `priority_order` int(11) NOT NULL,
-  `resaurant_genre_id` int(11) NOT NULL,
+  `restaurants_genre_id` int(11) NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
   `del_flg` tinyint(4) NOT NULL
@@ -357,7 +278,7 @@ CREATE TABLE `restaurants_genres_relations` (
 -- テーブルのデータのダンプ `restaurants_genres_relations`
 --
 
-INSERT INTO `restaurants_genres_relations` (`id`, `restaurant_id`, `priority_order`, `resaurant_genre_id`, `created`, `modified`, `del_flg`) VALUES
+INSERT INTO `restaurants_genres_relations` (`id`, `restaurant_id`, `priority_order`, `restaurants_genre_id`, `created`, `modified`, `del_flg`) VALUES
 (1, 1, 1, 1, '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
 (2, 1, 2, 2, '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
 (3, 1, 3, 3, '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
@@ -737,20 +658,6 @@ ALTER TABLE `coupons`
   ADD UNIQUE KEY `id` (`id`) USING BTREE;
 
 --
--- Indexes for table `menus`
---
-ALTER TABLE `menus`
-  ADD PRIMARY KEY (`set_menu_id`,`priority_order`) USING BTREE,
-  ADD UNIQUE KEY `id` (`id`);
-
---
--- Indexes for table `menus_photos`
---
-ALTER TABLE `menus_photos`
-  ADD PRIMARY KEY (`menu_id`,`priority_order`) USING BTREE,
-  ADD UNIQUE KEY `id` (`id`) USING BTREE;
-
---
 -- Indexes for table `restaurants`
 --
 ALTER TABLE `restaurants`
@@ -821,16 +728,6 @@ ALTER TABLE `companies_restaurants_relations`
 --
 ALTER TABLE `coupons`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=47;
---
--- AUTO_INCREMENT for table `menus`
---
-ALTER TABLE `menus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
---
--- AUTO_INCREMENT for table `menus_photos`
---
-ALTER TABLE `menus_photos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `restaurants`
 --

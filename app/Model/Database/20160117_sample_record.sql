@@ -349,7 +349,7 @@ CREATE TABLE `restaurants_genres_relations` (
   `id` int(11) NOT NULL,
   `restaurant_id` int(11) NOT NULL,
   `priority_order` int(11) NOT NULL,
-  `resaurant_genre_id` int(11) NOT NULL,
+  `restaurants_genre_id` int(11) NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
   `del_flg` tinyint(4) NOT NULL
@@ -359,7 +359,7 @@ CREATE TABLE `restaurants_genres_relations` (
 -- テーブルのデータのダンプ `restaurants_genres_relations`
 --
 
-INSERT INTO `restaurants_genres_relations` (`id`, `restaurant_id`, `priority_order`, `resaurant_genre_id`, `created`, `modified`, `del_flg`) VALUES
+INSERT INTO `restaurants_genres_relations` (`id`, `restaurant_id`, `priority_order`, `restaurants_genre_id`, `created`, `modified`, `del_flg`) VALUES
 (1, 1, 1, 1, '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
 (2, 1, 2, 2, '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),
 (3, 1, 3, 3, '2016-01-01 00:00:00', '2016-01-01 00:00:00', 0),

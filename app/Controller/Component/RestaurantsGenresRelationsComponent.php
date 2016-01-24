@@ -43,7 +43,7 @@ class RestaurantsGenresRelationsComponent extends Component {
 		$restaurants_genres_relation = Hash::sort($restaurants_genres_relation, '{n}.priority_order');
 
 		//ジャンルidを抽出
-		$genre_ids = hash::extract($restaurants_genres_relation, '{n}.resaurant_genre_id');
+		$genre_ids = hash::extract($restaurants_genres_relation, '{n}.restaurants_genre_id');
 
 		//ジャンルidを追加
 		$restaurant['genre_id'] = $genre_ids[0];
@@ -80,7 +80,7 @@ class RestaurantsGenresRelationsComponent extends Component {
 			if(!empty($restaurants[$value['restaurant_id']])) {
 
 				//ジャンルidを追加する
-				$restaurants[$value['restaurant_id']]['genres_id'] = $value['resaurant_genre_id'];
+				$restaurants[$value['restaurant_id']]['genres_id'] = $value['restaurants_genre_id'];
 
 			}
 

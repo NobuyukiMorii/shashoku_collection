@@ -86,10 +86,15 @@
  */
 	Configure::write('Exception', array(
 		'handler' => 'ErrorHandler::handleException',
-		'renderer' => 'ExceptionRenderer',
+		//'renderer' => 'ExceptionRenderer',
+		'renderer' => 'MyExceptionRenderer', /*** 独自の例外処理 ***/
 		'log' => true
 	));
 
+/*
+ * Fatal Errorの場合
+ */
+	Configure::write('Error.handler', 'AppError::handleError');
 /**
  * Application wide charset encoding
  */

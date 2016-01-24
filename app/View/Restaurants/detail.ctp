@@ -1,58 +1,17 @@
 <!-- Restaurants/detail.ctp レストラン詳細 -->
-<?
-////////// ダミーデータ //////////
-$rest = array(
-    'id' => '0',
-    'name' => 'Sancha Cafe',
-    'genre_id' => '4',
-    'tags_id' => ['0','1'],
-    'description' => 'アクセスしやすい隠れ家カフェ！季節の野菜をたっぷり使った熱々のグラタンをご用意してお待ちしています！',
-    'address' => '世田谷区上馬1-19-16',
-    'phone_num' => '03-0000-0000',
-    'seats_num' => '24',
-    'regular_holiday' => '火曜日',
-    'url' => '',
-    'lunch_time' => '12:00~15:00',
-    'open_time' => '1',
-    'smoke_flg' => '1',
-    'reservation_flg' => '1',
-    'smoke_flg' => '1',
-    'image' => array('/img/rest01.jpg','/img/rest01.jpg'),
-    'menu' => 'チキンと野菜のグラタン', // main_menu? 配列にする?
-    'menu_count' => '2' //仮: menuの数
-);
-$tags = array(
-    '0' => '栄養バランスバッチリ!',
-    '1' => '低カロリー'
-);
-$genres = array(
-    '0' => '和食',
-    '1' => '洋食',
-    '2' => '中華',
-    '3' => 'ビュッフェ',
-    '4' => 'カフェランチ'
-);
-$menus = array(
-    array(
-        'price' => '300',
-        'order' => '/img/menu.jpeg',
-        'start_date' => '1451574000',
-        'end_date' => '1454166000',
-        'name' => 'チキンと野菜のグラタン',
-        'description' => 'ディスクリプション',
-        'image' => '/img/menu.jpeg'
-    ),
-    array(
-        'price' => '300',
-        'order' => '/img/menu.jpeg',
-        'start_date' => '1451574000',
-        'end_date' => '1454166000',
-        'name' => 'いちごパイ',
-        'description' => 'ディスクリプション',
-        'image' => '/img/menu.jpeg'
-    )
-);
+<?php 
+//エラーコード（0以外の場合、いい感じにエラーメッセージを表示して頂きたいです。）
+$error_code     = $response['error_code'];
+//エラーメッセージ
+$error_message  = $response['error_message'];
+//レストラン
+$rest           = $response['restaurant'];
+//ジャンル
+$genres         = $response['genres'];
+//タグ
+$tags           = $response['tags'];
 ?>
+
 
 <?php
 // jQueryこんなところで読み込んでしもた
@@ -70,9 +29,9 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
     <button id="r_nextBtn"></button>
     <div id="restImgs">
         <?
-        $restImg_count = count($rest["image"]);
-        if (isset($rest["image"]) && $restImg_count  > 0) {
-            foreach ($rest["image"] as $restImg) {
+        $restImg_count = count($rest["photo_url"]);
+        if (!empty($rest["photo_url"])) {
+            foreach ($rest["photo_url"] as $restImg) {
         ?>
             <div class="restImgBox">
                 <img class="" src="<? echo $restImg ?>" />
@@ -89,9 +48,9 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
 <div class="titleBox">
     <ul class="tags">
     <?  
-        if (isset($rest["tags_id"]) && count($rest["tags_id"]) > 0) {
+        if (empty($rest["tag_ids"])) {
             foreach ($rest["tags_id"] as $tag_id) {
-                echo ' <li>'.$tags[$tag_id].'</li>';
+                echo ' <li>'.$tags[$tag_id]["name"].'</li>';
             }
         }
     ?>
@@ -108,15 +67,14 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
     <button id="nextBtn"></button>
     <div id="menus">
         <?
-        $menu_count = count($menus);
-        if (isset($menus) && $menu_count  > 0) {
-            foreach ($menus as $menu) {
+        if ($rest['coupons']['count']  > 0) {
+            foreach ($rest['coupons']['list'] as $coupon) {
         ?>
                 <div class="menuBox">
-                    <img class="" src="<? echo $menu["image"] ?>" />
-                    <p>クーポン利用可能期間：<? echo date("m/d",$menu["start_date"]).'〜'.date("m/d",$menu["end_date"]) ?></p>
-                    <p class="bold"><? echo $menu['price'] ?>円メニュー:<? echo $menu['name'] ?></p>
-                    <button>このメニューのクーポンを発行する</button>
+                    <img class="" src="<? echo $coupon['set_menu']["photo_url"] ;?>" />
+                    <p>クーポン利用可能期間：<? echo date("m/d",strtotime($coupon["start_date"])).'〜'.date("m/d", strtotime($coupon["end_date"])) ?></p>
+                    <p class="bold"><? echo $coupon['price'] ?>円メニュー:<? echo $coupon['set_menu']['name'] ?></p>
+                    <button><a href="<?php echo $this->Html->url(array("controller" => "Coupons", "action" => "show")); ?>">このメニューのクーポンを発行する</a></button>
                 </div>
         <?
             }
@@ -140,7 +98,7 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
 <dt>ランチ営業時間</dt><dd><? echo $rest['lunch_time'] ?></dd>
 <dt>定休日</dt><dd><? echo $rest['regular_holiday'] ?></dd>
 <dt>住所</dt><dd><? echo $rest['address'] ?></dd>
-<dt>店舗URL</dt><dd><? echo $rest['name'] ?></dd>
+<dt>店舗URL</dt><dd><a href="<? echo $rest['url'] ?>" target="_blank"><? echo $rest['url'] ?></a></dd>
 </dl>
 
 

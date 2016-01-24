@@ -7,6 +7,75 @@
 class ArrayControl {
 
     //----------------------------------------
+    //キーチェック系
+    //----------------------------------------
+
+    /**
+     * 対象の変数の中身がemptyかどうかをチェックする
+     * @param  string
+     * @return array
+     */  
+    public function multipleEmptyCheck(){
+
+        //返却値を設定
+        $result = true;
+
+        //引数を取得
+        $variables = func_get_args();
+
+        //引数がない場合
+        if(empty($variables)){
+            $result = false;
+            return $result;
+        }
+
+        //配列をループ
+        foreach ($variables as $variable) {
+
+            //emptyの変数があった場合
+            if(empty($variable)){
+                $result = false;
+            }
+
+        }
+
+        return $result;
+
+    }
+
+    /**
+     * 対象のキー（複数）の中身がemptyかどうかをチェックする
+     * @param  string
+     * @return array
+     */
+    public function multipleHashEmptyCheck($msts, $key_names){
+
+        //返却値を指定
+        $result = true;
+
+        //引数がない場合
+        if(empty($msts) || empty($key_names)){
+            //falseでリターン
+            $result = false;
+            return $result;
+        }
+
+        //配列をループ
+        foreach ($key_names as $key => $key_name) {
+
+            //１つでもemptyの場合
+            if(empty($msts[$key_name])){
+                $result = false;
+            }
+
+        }
+
+        return $result;
+
+    }
+
+
+    //----------------------------------------
     //キー追加系
     //----------------------------------------
 
@@ -17,12 +86,17 @@ class ArrayControl {
      * @param  array  $mst_A
      * @param  array  $mst_B
      * @param  string $target_key
-     * @param  string $replace_key_name
      * @return array
      */
     public function arrayMergeToTargetKey($mst_A, $mst_B, $target_key){
 
-        /* $mst_Aに$_mstBの値を追加する */
+        //引数がない場合
+        $flg = ArrayControl::multipleEmptyCheck($mst_A, $mst_B, $target_key);
+        if($flg === false){
+            return array();
+        }
+
+        /* $mst_Aに$mst_Bの値を追加する */
         foreach ($mst_A as $key => $value) {
 
             //$mst_Bに対象のデータがあれば
@@ -258,7 +332,7 @@ class ArrayControl {
 
     		//ない場合
     		if(!isset($result[$value[$target_key]])){
-    			//数量を0とする
+    			//数量を1とする
     			$result[$value[$target_key]] = 1;
     		} else {
     		//ある場合

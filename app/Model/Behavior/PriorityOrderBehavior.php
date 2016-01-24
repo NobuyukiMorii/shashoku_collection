@@ -16,6 +16,12 @@ class PriorityOrderBehavior extends ModelBehavior {
 		//返却値を設定
 		$result = array();
 
+    	//引数チェック
+    	$flg = ArrayControl::multipleEmptyCheck($array, $key_name);
+    	if($flg === false) {
+    		return $result;
+    	}
+
 		//配列をループする
 		foreach ($array as $key => $value) {
 
@@ -44,7 +50,7 @@ class PriorityOrderBehavior extends ModelBehavior {
 	}
 
     /**
-     * 対象のキーごとに、優先順位が高いレコードから順に２つ取得する
+     * 対象のキーごとに、優先順位が高いレコードから順に取得する
 	 * @param array  $array
 	 * @param string $key_name
 	 * @return array
@@ -53,6 +59,12 @@ class PriorityOrderBehavior extends ModelBehavior {
 
 		//返却値を設定
 		$result = array();
+		
+    	//引数チェック
+    	$flg = ArrayControl::multipleEmptyCheck($array, $key_name, $max_count);
+    	if($flg === false) {
+    		return $result;
+    	}
 
 		//配列をループする
 		foreach ($array as $key => $value) {

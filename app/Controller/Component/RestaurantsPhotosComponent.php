@@ -14,6 +14,11 @@ class RestaurantsPhotosComponent extends Component {
 	 */
     public function AddPhotosToRestaurant($restaurant){
 
+    	//引数をチェック
+    	if(empty($restaurant)){
+    		return array();
+    	}
+    	
 		//モデルをロード
 		$RestaurantsPhoto = ClassRegistry::init('RestaurantsPhoto');
 
@@ -64,9 +69,18 @@ class RestaurantsPhotosComponent extends Component {
 	 */
     public function AddPrimaryPhotoToRestaurants($restaurants, $restaurants_photos){
 
+    	//引数チェック
+    	$flg = ArrayControl::multipleEmptyCheck($restaurants, $restaurants_photos);
+    	if($flg === false) {
+    		return array();
+    	}
+
 		//レストランidごとに、１番優先順位の高い画像を取得する
 		$RestaurantsPhoto = ClassRegistry::init('RestaurantsPhoto');
 		$restaurants_photos = $RestaurantsPhoto->getPrimaryRecordOfEachKey($restaurants_photos, 'restaurant_id');
+		if(empty($restaurants_photos)){
+			return array();
+		}
 
 		//レストランの写真をループする
 		foreach ($restaurants_photos as $key => $value) {

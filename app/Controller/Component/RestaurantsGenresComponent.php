@@ -19,7 +19,7 @@ class RestaurantsGenresComponent extends Component {
         $RestaurantsGenres = ClassRegistry::init('RestaurantsGenres');
 
         //マスタを取得する
-        $restaurants_genres   = $RestaurantsGenres->find('all', array('cache' => true));
+        $restaurants_genres = $RestaurantsGenres->find('all', array('cache' => true));
 
         //データがない場合
         if(empty($restaurants_genres)) {

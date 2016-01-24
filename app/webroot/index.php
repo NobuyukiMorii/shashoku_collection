@@ -90,18 +90,38 @@ if (!defined('PROJECT_NAME')) {
 	define('PROJECT_NAME', 'shashoku_collection');
 }
 
+//ホスト名を取得
+$HOST_URL = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"];
+
+/**
+ * PHP_SELFに'shashoku_collection'が含まれていた場合
+ *（含まれていた場合）
+ * PROJECT_NAME/app/webroot/index.php
+ */
+if(strpos($_SERVER['PHP_SELF'], PROJECT_NAME) !== false) {
+
+	$joint_path = DS . PROJECT_NAME . DS;
+
+} else {
+
+	$joint_path = DS;
+
+}
+
 /**
  * 画像のURL（画像ファイル名は除く）
  */
 if (!defined('IMG_RESTAURANT_PHOTO')) {
-	//ホスト名を取得
-	$HOST_URL = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"];
 
-	//レストランの画像のURL
-	define('IMG_RESTAURANTS_PHOTO', $HOST_URL . DS . PROJECT_NAME . DS . 'img/restaurants_photo/');
+	define('IMG_RESTAURANTS_PHOTO', $HOST_URL . '/image/restaurants_photo/');
 
-	//セットメニューの画像のURL
-	define('IMG_SET_MENUS_PHOTO', $HOST_URL . DS . PROJECT_NAME . DS . 'img/set_menus_photo/');
+}
+/**
+ *セットメニューの画像URL
+ */
+if (!defined('IMG_SET_MENUS_PHOTO')) {
+
+	define('IMG_SET_MENUS_PHOTO', $HOST_URL . '/image/set_menus_photo/');
 
 }
 

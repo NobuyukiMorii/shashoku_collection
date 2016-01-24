@@ -1,21 +1,6 @@
 <?php
 class RestaurantsController extends AppController {
 
-	//モデルをロード
-	public $uses = array(
-		'Coupon', 
-		'Restaurant',
-		'SetMenusPhoto',
-		'SetMenu', 
-		'RestaurantsPhoto', 
-		'RestaurantsGenre', 
-		'RestaurantsGenresRelation', 
-		'RestaurantsTag', 
-		'RestaurantsTagsRelation', 
-		'CompaniesRestaurantsRelation',
-		'Color'
-	);
-
 	//コンポーネントをロード
     public $components = array(
         'Restaurants',
@@ -24,30 +9,50 @@ class RestaurantsController extends AppController {
         'RestaurantsGenres',
         'RestaurantsGenresRelations',
         'RestaurantsPhotos',
-        'Coupons'
+        'Coupons',
+        'Common'
     );
     
 	/**
 	 * レストラン一覧表示画面のアクション
-	 *
 	 * @return array
 	 */
     public function index() {
 
-    	//法人idを取得（仮）
+        //----------------------------------------
+        //法人id取得（仮）
+        //----------------------------------------
 		$company_id = 1;
 
-		//法人の利用可能なレストランを取得
-		$restaurants = $this->Restaurants->getWashedRestaurantsByCompanyId($company_id);
-
-		//返却用レストランのジャンル
-		$genres = $this->RestaurantsGenres->getRestaurantsGenres();
-
-		//返却用レストランのタグ
-		$tags = $this->RestaurantsTags->getRestaurantsTags();
-
-		//viewに値を返却する
-		$this->set(compact('restaurants', 'genres',  'tags'));
+        //----------------------------------------
+        //レストラン取得
+        //----------------------------------------
+		$this->view_data['restaurants'] = $this->Restaurants->getWashedRestaurantsByCompanyId($company_id);
+		//レストランが取得出来ない場合
+		if(empty($this->view_data['restaurants'])){
+			$this->Common->returnError(1, "レストランが取得出来ません");
+			return;
+		}
+				
+        //----------------------------------------
+        //ジャンル取得
+        //----------------------------------------
+		$this->view_data['genres'] 		= $this->RestaurantsGenres->getRestaurantsGenres();
+		//ジャンルが取得出来ない場合
+		if(empty($this->view_data['genres'])){
+			$this->Common->returnError(1, "ジャンルが取得出来ません");
+			return;
+		}
+			
+        //----------------------------------------
+        //タグ取得
+        //----------------------------------------
+		$this->view_data['tags'] 		= $this->RestaurantsTags->getRestaurantsTags();
+		//レストランが取得出来ない場合
+		if(empty($this->view_data['tags'])){
+			$this->Common->returnError(1, "タグが取得出来ません");
+			return;
+		}
 
     }
 
@@ -57,49 +62,45 @@ class RestaurantsController extends AppController {
 	 */
     public function detail() {
 
-    	//レストランidを取得
+        //----------------------------------------
+        //レストランidを取得
+        //----------------------------------------
     	$restaurant_id = Arguments::getArguments('restaurant_id');
-
     	//レストランidが設定されなかった場合
-    	if(empty($restaurant_id)){
-    		//エラーとする
-    		exit;
+    	if(is_null($restaurant_id) || !is_numeric($restaurant_id)){
+			$this->Common->returnError(1, "タグが取得出来ません");
+			return;
     	}
 
-    	//レストランを取得
-		$restaurant = $this->Restaurant->find('first', array(
-			'conditions' => array(
-				'id' => $restaurant_id
-			),
-			'cache' => true
-		));
+        //----------------------------------------
+        //レストラン取得
+        //----------------------------------------
+    	$this->view_data['restaurant'] = $this->Restaurants->getRestaurantById($restaurant_id);	
+		//レストランが取得出来ない場合
+		if(empty($this->view_data['restaurant'])){
+			$this->Common->returnError(1, "レストランが取得出来ません");
+			return;
+		}
 
-    	//レストランが存在しない場合
-    	if(empty($restaurant)){
-    		//エラーとする
-    		exit;
-    	}
-
-		//ジャンルidを追加
-		$restaurant = $this->RestaurantsGenresRelations->AddGenreIdToRestaurant($restaurant);
-
-		//タグidを追加
-		$restaurant = $this->RestaurantsTagsRelations->AddTagIdsToRestaurant($restaurant);
-
-		//レストラン画像を追加
-		$restaurant = $this->RestaurantsPhotos->AddPhotosToRestaurant($restaurant);
-
-		//クーポンとメニューを追加
-		$restaurant = $this->Coupons->AddCouponsInfoToRestaurant($restaurant);		
-
-		//返却用レストランのジャンル
-		$genres = $this->RestaurantsGenres->getRestaurantsGenres();
-
-		//返却用レストランのタグ
-		$tags = $this->RestaurantsTags->getRestaurantsTags();
-
-		//viewに値を返却する
-		$this->set(compact('restaurant', 'genres',  'tags'));
+        //----------------------------------------
+        //ジャンル取得
+        //----------------------------------------
+		$this->view_data['genres'] 		= $this->RestaurantsGenres->getRestaurantsGenres();
+		//ジャンルが取得出来ない場合
+		if(empty($this->view_data['genres'])){
+			$this->Common->returnError(1, "ジャンルが取得出来ません");
+			return;
+		}
+			
+        //----------------------------------------
+        //タグ取得
+        //----------------------------------------
+		$this->view_data['tags'] 		= $this->RestaurantsTags->getRestaurantsTags();
+		//レストランが取得出来ない場合
+		if(empty($this->view_data['tags'])){
+			$this->Common->returnError(1, "タグが取得出来ません");
+			return;
+		}
 
     }
 

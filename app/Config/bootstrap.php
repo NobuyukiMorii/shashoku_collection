@@ -172,3 +172,9 @@ CakePlugin::load('DebugKit');
  * Load app/Config/define.php, this files is for loading constant various
  */
 Configure::load("define");
+/*
+ * 2016/01/23
+ * nmorii
+ * Setting behavior of fatal error
+ */
+App::uses('AppError', 'Lib');

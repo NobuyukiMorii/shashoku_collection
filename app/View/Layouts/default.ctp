@@ -52,15 +52,15 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 			        <label>Tamiko</label>
 		        </p>
 		        <ul class="pure-menu-list">
-		            <li class="pure-menu-item"><a href="/Restaurants" class="pure-menu-link">ランチ店舗一覧</a></li>
-		            <li class="pure-menu-item"><a href="/Coupons/history" class="pure-menu-link">行ったお店の履歴</a></li>
+		            <li class="pure-menu-item"><a href="<?php echo $this->Html->url(array("controller" => "Restaurants", "action" => "index")); ?>" class="pure-menu-link">ランチ店舗一覧</a></li>
+		            <li class="pure-menu-item"><a href="<?php echo $this->Html->url(array("controller" => "Coupons", "action" => "history")); ?>" class="pure-menu-link">行ったお店の履歴</a></li>
 		            <li class="pure-menu-item" class="menu-item-divided pure-menu-selected">
-		                <a href="/Notifications" class="pure-menu-link">運営からのお知らせ</a>
+		                <a href="<?php echo $this->Html->url(array("controller" => "Notifications", "action" => "index")); ?>" class="pure-menu-link">運営からのお知らせ</a>
 		            </li>
 		            <li class="pure-menu-item"><a href="#" class="pure-menu-link">使い方・マニュアル</a></li>
 		            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Q&A</a></li>
 		            <li class="pure-menu-item"><a href="#" class="pure-menu-link">利用規約</a></li>
-		            <li class="pure-menu-item"><a href="/Users/detail" class="pure-menu-link">設定</a></li>
+		            <li class="pure-menu-item"><a href="<?php echo $this->Html->url(array("controller" => "Users", "action" => "detail")); ?>" class="pure-menu-link">設定</a></li>
 		        </ul>
 		    </div>
 		</div>

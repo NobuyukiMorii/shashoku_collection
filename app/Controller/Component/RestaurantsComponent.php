@@ -15,16 +15,36 @@ class RestaurantsComponent extends Component {
         'Coupons'
     );
 
+	//----------------------------------------
+	//１//
+	//action:index
+	//最終的にviewに表示するレストラン情報を取得するメソッド
+	//----------------------------------------
+
 	/**
-	 * レストランに関連するマスタを全て取得します。
-	 * イレギュラーなデータを削除しています。
+	 * 返却用のレストランを取得。
+	 * ①レストランに関連するマスタを全て取得。
+	 * ②返却用レストランを作成。
 	 * @param  array $company_id
 	 * @return array
 	 */
 	public function getWashedRestaurantsByCompanyId($company_id){
 
+		//返却値を設定
+		$restaurants = array();		
+
+		//引数がないか、数字ではない場合
+    	if(is_null($company_id) || !is_numeric($company_id)){
+    		return $restaurants;
+    	}
+
 		//関連マスタを取得
 		$msts = $this->getWashedRestaurantsRelatedMasterByCompanyId($company_id);
+		//エラーハンドリング
+		$flg = ArrayControl::multipleHashEmptyCheck($msts, array('restaurants', 'coupons', 'set_menus', 'restaurants_photos', 'restaurants_genres_relations', 'restaurants_tags_relations'));
+		if($flg === false){
+			return $result;
+		}
 
         //返却用レストランを取得
         $restaurants = $this->getRestaurants($msts['restaurants'], $msts['coupons'], $msts['set_menus'], $msts['restaurants_photos'], $msts['restaurants_genres_relations'], $msts['restaurants_tags_relations']);
@@ -32,6 +52,12 @@ class RestaurantsComponent extends Component {
         return $restaurants;
 
 	}
+
+	//----------------------------------------
+	//２//
+	//action:index
+	//1のgetWashedRestaurantsByCompanyIdメソッド内の①「レストランに関連するマスタを全て取得」に関連するメソッド群
+	//----------------------------------------
 
 	/**
 	 * レストランに関連するマスタを全て取得。
@@ -49,26 +75,35 @@ class RestaurantsComponent extends Component {
     		return $result;
     	}
 
-    	//キャッシュを参照する
+    	//レストランの関連マスタを全て取得（レストラン以外）
+    	$related_models = array(
+			'Coupon', 
+			'SetMenusPhoto',
+			'SetMenu', 
+			'RestaurantsPhoto', 
+			'RestaurantsGenresRelation', 
+			'RestaurantsTagsRelation', 
+    	);
+    	$result = $this->FindSupport->multipleFindCache($related_models);
 
-	    	//レストランの関連マスタを全て取得（レストラン以外）
-	    	$related_models = array(
-				'Coupon', 
-				'SetMenusPhoto',
-				'SetMenu', 
-				'RestaurantsPhoto', 
-				'RestaurantsGenresRelation', 
-				'RestaurantsTagsRelation', 
-	    	);
-	    	$result = $this->FindSupport->multipleFindCache($related_models);
+    	//エラーハンドリング
+		$flg = ArrayControl::multipleHashEmptyCheck($result, array('coupons', 'set_menus', 'restaurants_photos', 'restaurants_genres_relations', 'restaurants_tags_relations'));
+		if($flg === false){
+			return $result;
+		}
 
-	    	//法人が現在利用可能なレストランを取得
-			$result['restaurants'] = $this->getRestaurantsByCompanyId($company_id);
+    	//法人が現在利用可能なレストランを取得
+		$result['restaurants'] = $this->getRestaurantsByCompanyId($company_id);
+		//エラーハンドリング
+		if(empty($result['restaurants'])){
+			return $result;
+		}
 
-	        //不完全なレコードを除去（期間外&他テーブルに必要な情報がない場合。開発環境でのみログを残しています。）
-	        //セットメニューを除去してから、クーポンを除去し、最後にレストランを除去する構成
-			$wash_models = array('SetMenu', 'Coupon', 'Restaurant',);
-	    	$result = $this->FindSupport->washMasterData($wash_models, $result, __FILE__, __METHOD__, __LINE__);
+
+        //不完全なレコードを除去（期間外&他テーブルに必要な情報がない場合。開発環境でのみログを残しています。）
+        //セットメニューを除去してから、クーポンを除去し、最後にレストランを除去する構成
+		$wash_models = array('SetMenu', 'Coupon', 'Restaurant',);
+    	$result = $this->FindSupport->washMasterData($wash_models, $result, __FILE__, __METHOD__, __LINE__);
 
     	return $result;
 
@@ -89,13 +124,17 @@ class RestaurantsComponent extends Component {
     	//返却値を作成
     	$result = array();
 
-    	//レストランがない場合
-    	if(empty($restaurants)){
-    		return $result;
-    	}
+		//引数をチェック
+		$flg = ArrayControl::multipleEmptyCheck($restaurants, $coupons, $set_menus, $restaurants_photos, $restaurants_genres_relations, $restaurants_tags_relations);
+		if($flg === false){
+			return $result;
+		}
 
     	//レストランに関連情報を付加
         $result = $this->addRelatedDataToRestaurants($restaurants, $coupons, $set_menus, $restaurants_photos, $restaurants_genres_relations, $restaurants_tags_relations);
+        if(empty($result)){
+        	return $result;
+        }
 
         //レストランから不必要なキーを除去
         $result = ArrayControl::removeKeys($result, array('description', 'address', 'phone_num', 'seats_num', 'regular_holiday', 'url', 'lunch_time', 'open_time', 'smoke_flg', 'reservation_flg', 'created', 'modified'));
@@ -123,7 +162,7 @@ class RestaurantsComponent extends Component {
 		}
 
 		//レストランidを取得
-		$restaurant_ids = $this->getRestaurantIdByCompanyId($company_id);
+		$restaurant_ids = $this->getRestaurantsIdByCompanyId($company_id);
 
 		//モデルをロード
 		$Restaurant = ClassRegistry::init('Restaurant');
@@ -156,12 +195,18 @@ class RestaurantsComponent extends Component {
 
 	}
 
+	//----------------------------------------
+	//３//
+	//action:index
+	//1のgetWashedRestaurantsByCompanyIdメソッド内の②「返却用レストランを作成」に関連するメソッド
+	//----------------------------------------
+
     /**
      * 法人の利用可能なレストランidを取得
      * @param  int    $company_id
      * @return array
      */
-	public function getRestaurantIdByCompanyId($company_id){
+	public function getRestaurantsIdByCompanyId($company_id){
 
 		//返却値を設定
 		$result = array();
@@ -229,30 +274,103 @@ class RestaurantsComponent extends Component {
 		if(!empty($coupons) && !empty($set_menus)){
 			/* レストランにクーポンを追加する */	
 			$result = $this->Coupons->AddCouponInfoToRestaurants($result, $coupons , $set_menus);
+			if(empty($result)){
+				return $result;
+			}
 		}
 
 		//レストランの写真があれば
 		if(!empty($restaurants_photos)){
 			/* レストランに写真を追加する */
 			$result = $this->RestaurantsPhotos->AddPrimaryPhotoToRestaurants($result, $restaurants_photos);
+			if(empty($result)){
+				return $result;
+			}
 		}
 
 		//レストランのジャンル関連性があれば
 		if(!empty($restaurants_genres_relations)){
 			/* レストランにジャンルにジャンルidを追加する */
 			$result = $this->RestaurantsGenresRelations->AddPrimaryGenreIdToRestaurants($result, $restaurants_genres_relations);	
+			if(empty($result)){
+				return $result;
+			}
 		}
 
 		//レストランのタグ関連性があれば
 		if(!empty($restaurants_tags_relations)){
-
 			/* タグidをレストランに追加する */
-			$result = $this->RestaurantsTagsRelations->AddPrimaryTagIdToRestaurants($result, $restaurants_tags_relations);			
+			$result = $this->RestaurantsTagsRelations->AddPrimaryTagIdToRestaurants($result, $restaurants_tags_relations);
+			if(empty($result)){
+				return $result;
+			}
 
 		}
 
 		return $result;
 
     }
+
+	//----------------------------------------
+	//４//
+	//action:detail
+	//----------------------------------------
+
+    /**
+     * レストランidから、レストランを取得
+     * @param  int   $restaurant_id
+     * @return array
+     */
+	public function getRestaurantById($restaurant_id){
+
+		//引数がないか、数字ではない場合
+    	if(is_null($restaurant_id) || !is_numeric($restaurant_id)){
+    		return array();
+    	}
+
+		//モデルをロード
+		$Restaurant = ClassRegistry::init('Restaurant');
+
+    	//レストランを取得
+		$restaurant = $Restaurant->find('first', array(
+			'conditions' => array(
+				'id' => $restaurant_id
+			),
+			'cache' => true
+		));
+
+    	//レストランが存在しない場合
+    	if(empty($restaurant)){
+    		//エラーとする
+    		return array();
+    	}
+
+		//ジャンルidを追加
+		$restaurant = $this->RestaurantsGenresRelations->AddGenreIdToRestaurant($restaurant);
+		if(empty($restaurant)){
+			return array();
+		}
+
+		//タグidを追加
+		$restaurant = $this->RestaurantsTagsRelations->AddTagIdsToRestaurant($restaurant);
+		if(empty($restaurant)){
+			return array();
+		}
+
+		//レストラン画像を追加
+		$restaurant = $this->RestaurantsPhotos->AddPhotosToRestaurant($restaurant);
+		if(empty($restaurant)){
+			return array();
+		}
+
+		//クーポンとメニューを追加
+		$restaurant = $this->Coupons->AddCouponsInfoToRestaurant($restaurant);		
+		if(empty($restaurant)){
+			return array();
+		}
+		
+		return $restaurant;
+
+	} 
 
 }

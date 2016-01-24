@@ -30,7 +30,7 @@ class RestaurantsController extends AppController {
 		$this->view_data['restaurants'] = $this->Restaurants->getWashedRestaurantsByCompanyId($company_id);
 		//レストランが取得出来ない場合
 		if(empty($this->view_data['restaurants'])){
-			$this->Common->returnError(1, "レストランが取得出来ません");
+			$this->Common->returnError(Configure::read('ERR_CODE_NO_DATA'), "レストランが取得出来ません");
 			return;
 		}
 				
@@ -40,7 +40,7 @@ class RestaurantsController extends AppController {
 		$this->view_data['genres'] 		= $this->RestaurantsGenres->getRestaurantsGenres();
 		//ジャンルが取得出来ない場合
 		if(empty($this->view_data['genres'])){
-			$this->Common->returnError(1, "ジャンルが取得出来ません");
+			$this->Common->returnError(Configure::read('ERR_CODE_NO_DATA'), "ジャンルが取得出来ません");
 			return;
 		}
 			
@@ -50,7 +50,7 @@ class RestaurantsController extends AppController {
 		$this->view_data['tags'] 		= $this->RestaurantsTags->getRestaurantsTags();
 		//レストランが取得出来ない場合
 		if(empty($this->view_data['tags'])){
-			$this->Common->returnError(1, "タグが取得出来ません");
+			$this->Common->returnError(Configure::read('ERR_CODE_NO_DATA'), "タグが取得出来ません");
 			return;
 		}
 
@@ -68,7 +68,7 @@ class RestaurantsController extends AppController {
     	$restaurant_id = Arguments::getArguments('restaurant_id');
     	//レストランidが設定されなかった場合
     	if(is_null($restaurant_id) || !is_numeric($restaurant_id)){
-			$this->Common->returnError(1, "タグが取得出来ません");
+			$this->Common->returnError(Configure::read('ERR_CODE_NO_PARAM'), "タグが取得出来ません");	
 			return;
     	}
 
@@ -78,7 +78,7 @@ class RestaurantsController extends AppController {
     	$this->view_data['restaurant'] = $this->Restaurants->getRestaurantById($restaurant_id);	
 		//レストランが取得出来ない場合
 		if(empty($this->view_data['restaurant'])){
-			$this->Common->returnError(1, "レストランが取得出来ません");
+			$this->Common->returnError(Configure::read('ERR_CODE_NO_DATA'), "レストランが取得出来ません");
 			return;
 		}
 
@@ -88,7 +88,7 @@ class RestaurantsController extends AppController {
 		$this->view_data['genres'] 		= $this->RestaurantsGenres->getRestaurantsGenres();
 		//ジャンルが取得出来ない場合
 		if(empty($this->view_data['genres'])){
-			$this->Common->returnError(1, "ジャンルが取得出来ません");
+			$this->Common->returnError(Configure::read('ERR_CODE_NO_DATA'), "ジャンルが取得出来ません");
 			return;
 		}
 			
@@ -98,7 +98,7 @@ class RestaurantsController extends AppController {
 		$this->view_data['tags'] 		= $this->RestaurantsTags->getRestaurantsTags();
 		//レストランが取得出来ない場合
 		if(empty($this->view_data['tags'])){
-			$this->Common->returnError(1, "タグが取得出来ません");
+			$this->Common->returnError(Configure::read('ERR_CODE_NO_DATA'), "タグが取得出来ません");
 			return;
 		}
 

@@ -55,6 +55,9 @@ class AppController extends Controller {
      */
     public function beforeFilter(){
 
+        //Basic認証（開発中のみ）
+        $this->Common->basicAuthentication();
+
         //PCからのアクセスの場合には専用のviewを出力する 
         $this->Common->setThemeForPC();
 

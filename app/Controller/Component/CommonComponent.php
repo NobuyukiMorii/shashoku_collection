@@ -44,4 +44,35 @@ class CommonComponent extends Component {
 
     }
 
+    /*
+     * Basic認証のコンポーネント
+     */
+    public function basicAuthentication(){
+
+        //Basic認証
+        $this->Controller->autoRender = false;
+
+
+        $loginId = 'shashoku';
+        $loginPassword = 'shashoku'; 
+
+        if (!isset($_SERVER['PHP_AUTH_USER'])) {
+
+            header('WWW-Authenticate: Basic realm="Please enter your ID and password"');
+            header('HTTP/1.0 401 Unauthorized');
+            die("id / password Required");
+
+        } else {
+
+            if ($_SERVER['PHP_AUTH_USER'] != $loginId || $_SERVER['PHP_AUTH_PW'] != $loginPassword) {
+                
+                header('WWW-Authenticate: Basic realm="Please enter your ID and password"');
+                header('HTTP/1.0 401 Unauthorized');
+                die("Invalid id / password combination.  Please try again");
+            }
+        }
+        $this->Controller->autoRender = true;
+
+    }
+
 }

@@ -28,15 +28,15 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
     <button id="r_prevBtn" class="is-hidden"></button>
     <button id="r_nextBtn"></button>
     <div id="restImgs">
-        <?
+        <?php
         $restImg_count = count($rest["photo_url"]);
         if (!empty($rest["photo_url"])) {
             foreach ($rest["photo_url"] as $restImg) {
         ?>
             <div class="restImgBox">
-                <img class="" src="<? echo $restImg ?>" />
+                <img class="" src="<?php echo $restImg ?>" />
             </div>
-        <?
+        <?php
             }
         }
         ?>
@@ -47,7 +47,7 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
 
 <div class="titleBox">
     <ul class="tags">
-    <?  
+    <?php  
         if (empty($rest["tag_ids"])) {
             foreach ($rest["tags_id"] as $tag_id) {
                 echo ' <li>'.$tags[$tag_id]["name"].'</li>';
@@ -55,10 +55,10 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
         }
     ?>
     </ul>
-    <p class="category"><? echo $genres[$rest["genre_id"]]; ?></p>
-    <h4><? echo $rest["name"]; ?></h4>
-    <p>ランチ営業時間:<? echo $rest["lunch_time"]; ?>　定休日:<? echo $rest["regular_holiday"]; ?></p>
-    <p class="description"><? echo $rest["description"]; ?></p>
+    <p class="category"><?php echo $genres[$rest["genre_id"]]; ?></p>
+    <h4><?php echo $rest["name"]; ?></h4>
+    <p>ランチ営業時間:<?php echo $rest["lunch_time"]; ?>　定休日:<?php echo $rest["regular_holiday"]; ?></p>
+    <p class="description"><?php echo $rest["description"]; ?></p>
 </div>
 
 <!-- メニュー -->
@@ -66,17 +66,17 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
     <button id="prevBtn" class="is-hidden"></button>
     <button id="nextBtn"></button>
     <div id="menus">
-        <?
+        <?php
         if ($rest['coupons']['count']  > 0) {
             foreach ($rest['coupons']['list'] as $coupon) {
         ?>
                 <div class="menuBox">
-                    <img class="" src="<? echo $coupon['set_menu']["photo_url"] ;?>" />
-                    <p>クーポン利用可能期間：<? echo date("m/d",strtotime($coupon["start_date"])).'〜'.date("m/d", strtotime($coupon["end_date"])) ?></p>
-                    <p class="bold"><? echo $coupon['price'] ?>円メニュー:<? echo $coupon['set_menu']['name'] ?></p>
+                    <img class="" src="<?php echo $coupon['set_menu']["photo_url"] ;?>" />
+                    <p>クーポン利用可能期間：<?php echo date("m/d",strtotime($coupon["start_date"])).'〜'.date("m/d", strtotime($coupon["end_date"])) ?></p>
+                    <p class="bold"><?php echo $coupon['price'] ?>円メニュー:<?php echo $coupon['set_menu']['name'] ?></p>
                     <button><a href="<?php echo $this->Html->url(array("controller" => "Coupons", "action" => "show")); ?>">このメニューのクーポンを発行する</a></button>
                 </div>
-        <?
+        <?php
             }
         }
         ?>
@@ -90,21 +90,21 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
 
 <h2>店舗情報</h2>
 <dl>
-<dt>店舗名</dt><dd><? echo $rest['name']; ?></dd>
-<dt>ジャンル</dt><dd><? echo $genres[$rest["genre_id"]]; ?></dd>
-<dt>席数</dt><dd><? echo $rest['seats_num'].'席'; ?></dd>
-<dt>喫煙</dt><dd><? if($rest['smoke_flg']==1) echo '可能'; else echo '不可'; ?></dd>
-<dt>電話番号</dt><dd><? echo $rest['phone_num'] ?></dd>
-<dt>ランチ営業時間</dt><dd><? echo $rest['lunch_time'] ?></dd>
-<dt>定休日</dt><dd><? echo $rest['regular_holiday'] ?></dd>
-<dt>住所</dt><dd><? echo $rest['address'] ?></dd>
-<dt>店舗URL</dt><dd><a href="<? echo $rest['url'] ?>" target="_blank"><? echo $rest['url'] ?></a></dd>
+<dt>店舗名</dt><dd><?php echo $rest['name']; ?></dd>
+<dt>ジャンル</dt><dd><?php echo $genres[$rest["genre_id"]]; ?></dd>
+<dt>席数</dt><dd><?php echo $rest['seats_num'].'席'; ?></dd>
+<dt>喫煙</dt><dd><?php if($rest['smoke_flg']==1) echo '可能'; else echo '不可'; ?></dd>
+<dt>電話番号</dt><dd><?php echo $rest['phone_num'] ?></dd>
+<dt>ランチ営業時間</dt><dd><?php echo $rest['lunch_time'] ?></dd>
+<dt>定休日</dt><dd><?php echo $rest['regular_holiday'] ?></dd>
+<dt>住所</dt><dd><?php echo $rest['address'] ?></dd>
+<dt>店舗URL</dt><dd><a href="<?php echo $rest['url'] ?>" target="_blank"><?php echo $rest['url'] ?></a></dd>
 </dl>
 
 
 <script>
 // メニューのスライド
-var count = <? echo $rest['menu_count'] ?>;
+var count = <?php echo $rest['menu_count'] ?>;
 var w = window.innerWidth;
 var menus = document.getElementById('menus');
 menus.style.width = w*count + 'px';
@@ -162,7 +162,7 @@ var map = new GMaps({
     zoom: 17
 });
 GMaps.geocode({
-    address: "<? echo $rest['address'] ?>",
+    address: "<?php echo $rest['address'] ?>",
     callback: function(results, status) {
         if (status == 'OK') {
             var latlng = results[0].geometry.location;

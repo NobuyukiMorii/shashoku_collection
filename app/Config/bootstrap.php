@@ -176,5 +176,6 @@ Configure::load("define");
  * 2016/01/23
  * nmorii
  * Setting behavior of fatal error
+ * エラー画面が見えないと開発が難しいため、一度コメントアウト
  */
 App::uses('AppError', 'Lib');

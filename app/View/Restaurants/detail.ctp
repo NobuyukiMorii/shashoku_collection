@@ -5,11 +5,17 @@ $error_code     = $response['error_code'];
 //エラーメッセージ
 $error_message  = $response['error_message'];
 //レストラン
-$rest           = $response['restaurant'];
+if(!empty($response['restaurant'])){
+    $rest           = $response['restaurant'];
+}
 //ジャンル
-$genres         = $response['genres'];
+if(!empty($response['genres'])){
+    $genres         = $response['genres'];
+}
 //タグ
-$tags           = $response['tags'];
+if(!empty($response['tags'])){
+    $tags           = $response['tags'];
+}
 ?>
 
 
@@ -22,6 +28,7 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
 ?>
 
 <!-- ヘッダーのタイトル、レストラン名にできたらおけ -->
+<?php if($error_code === 0): ?>
 
 <!-- レストラン情報 -->
 <div id="restImgsBox">
@@ -101,6 +108,7 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
 <dt>店舗URL</dt><dd><a href="<?php echo $rest['url'] ?>" target="_blank"><?php echo $rest['url'] ?></a></dd>
 </dl>
 
+<?php endif; ?>
 
 <script>
 // メニューのスライド

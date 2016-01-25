@@ -28,7 +28,7 @@ class RestaurantsComponent extends Component {
 	 * @param  array $company_id
 	 * @return array
 	 */
-	public function getWashedRestaurantsByCompanyId($company_id){
+	public function getRestaurantsByCompanyId($company_id){
 
 		//返却値を設定
 		$restaurants = array();		
@@ -39,7 +39,7 @@ class RestaurantsComponent extends Component {
     	}
 
 		//関連マスタを取得
-		$msts = $this->getWashedRestaurantsRelatedMasterByCompanyId($company_id);
+		$msts = $this->getVerifiedVariousMstByCompany($company_id);
 		//エラーハンドリング
 		$flg = ArrayControl::multipleHashEmptyCheck($msts, array('restaurants', 'coupons', 'set_menus', 'restaurants_photos', 'restaurants_genres_relations', 'restaurants_tags_relations'));
 		if($flg === false){
@@ -47,7 +47,7 @@ class RestaurantsComponent extends Component {
 		}
 
         //返却用レストランを取得
-        $restaurants = $this->getRestaurants($msts['restaurants'], $msts['coupons'], $msts['set_menus'], $msts['restaurants_photos'], $msts['restaurants_genres_relations'], $msts['restaurants_tags_relations']);
+        $restaurants = $this->makeRestaurantsArrayForDisplay($msts['restaurants'], $msts['coupons'], $msts['set_menus'], $msts['restaurants_photos'], $msts['restaurants_genres_relations'], $msts['restaurants_tags_relations']);
 
         return $restaurants;
 
@@ -56,7 +56,7 @@ class RestaurantsComponent extends Component {
 	//----------------------------------------
 	//２//
 	//action:index
-	//1のgetWashedRestaurantsByCompanyIdメソッド内の①「レストランに関連するマスタを全て取得」に関連するメソッド群
+	//1のmakeRestaurantsArrayForDisplayByCompanyIdメソッド内の①「レストランに関連するマスタを全て取得」に関連するメソッド群
 	//----------------------------------------
 
 	/**
@@ -65,7 +65,7 @@ class RestaurantsComponent extends Component {
 	 * @param  array $company_id
 	 * @return array
 	 */
-	public function getWashedRestaurantsRelatedMasterByCompanyId($company_id){
+	public function getVerifiedVariousMstByCompany($company_id){
 
     	//返却値を作成
     	$result = array();
@@ -93,7 +93,7 @@ class RestaurantsComponent extends Component {
 		}
 
     	//法人が現在利用可能なレストランを取得
-		$result['restaurants'] = $this->getRestaurantsByCompanyId($company_id);
+		$result['restaurants'] = $this->getRestaurantMstByCompanyId($company_id);
 		//エラーハンドリング
 		if(empty($result['restaurants'])){
 			return $result;
@@ -119,7 +119,7 @@ class RestaurantsComponent extends Component {
 	 * @param array $restaurants_tags_relations
 	 * @return array
 	 */
-	public function getRestaurants($restaurants, $coupons, $set_menus, $restaurants_photos, $restaurants_genres_relations, $restaurants_tags_relations){
+	public function makeRestaurantsArrayForDisplay($restaurants, $coupons, $set_menus, $restaurants_photos, $restaurants_genres_relations, $restaurants_tags_relations){
 
     	//返却値を作成
     	$result = array();
@@ -131,7 +131,7 @@ class RestaurantsComponent extends Component {
 		}
 
     	//レストランに関連情報を付加
-        $result = $this->addRelatedDataToRestaurants($restaurants, $coupons, $set_menus, $restaurants_photos, $restaurants_genres_relations, $restaurants_tags_relations);
+        $result = $this->ApplyVariousMstToRestaurants($restaurants, $coupons, $set_menus, $restaurants_photos, $restaurants_genres_relations, $restaurants_tags_relations);
         if(empty($result)){
         	return $result;
         }
@@ -150,7 +150,7 @@ class RestaurantsComponent extends Component {
      * @param  int    $company_id
      * @return array
      */
-	public function getRestaurantsByCompanyId($company_id){
+	public function getRestaurantMstByCompanyId($company_id){
 
 		//返却値を設定
 		$result = array();
@@ -162,7 +162,7 @@ class RestaurantsComponent extends Component {
 		}
 
 		//レストランidを取得
-		$restaurant_ids = $this->getRestaurantsIdByCompanyId($company_id);
+		$restaurant_ids = $this->seachRestaurantIdsWithCompanyId($company_id);
 
 		//モデルをロード
 		$Restaurant = ClassRegistry::init('Restaurant');
@@ -198,7 +198,7 @@ class RestaurantsComponent extends Component {
 	//----------------------------------------
 	//３//
 	//action:index
-	//1のgetWashedRestaurantsByCompanyIdメソッド内の②「返却用レストランを作成」に関連するメソッド
+	//1のmakeRestaurantsArrayForDisplayByCompanyIdメソッド内の②「返却用レストランを作成」に関連するメソッド
 	//----------------------------------------
 
     /**
@@ -206,7 +206,7 @@ class RestaurantsComponent extends Component {
      * @param  int    $company_id
      * @return array
      */
-	public function getRestaurantsIdByCompanyId($company_id){
+	public function seachRestaurantIdsWithCompanyId($company_id){
 
 		//返却値を設定
 		$result = array();
@@ -257,7 +257,7 @@ class RestaurantsComponent extends Component {
 	 * @param array $restaurants_tags_relations
 	 * @return array
 	 */
-    public function addRelatedDataToRestaurants($restaurants, $coupons, $set_menus, $restaurants_photos, $restaurants_genres_relations, $restaurants_tags_relations){
+    public function ApplyVariousMstToRestaurants($restaurants, $coupons, $set_menus, $restaurants_photos, $restaurants_genres_relations, $restaurants_tags_relations){
 
     	//返却値を作成
     	$result = array();

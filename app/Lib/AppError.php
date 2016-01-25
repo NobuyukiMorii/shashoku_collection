@@ -1,4 +1,6 @@
 <?php
+App::uses ('ErrorHandler' , 'Error' );
+
 class AppError {
 
     /*

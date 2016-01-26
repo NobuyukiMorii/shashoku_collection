@@ -9,8 +9,9 @@ class AppError {
      */
     public static function handleError($code, $description, $file = null, $line = null, $context = null) {
 
-        //画面表示
-        echo "現在システムに障害が発生しております。ご不便をおかけしますが、しばらくお待ち下さい。";
+    	//phpの内部エラーの場合
+    	//何も処理をしない
+    	//500エラーとなり、ユーザーはサービスの利用が出来なくなる
 
     }
 

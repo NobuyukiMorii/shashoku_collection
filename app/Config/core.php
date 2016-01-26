@@ -63,7 +63,11 @@
 		'level' => E_ALL & ~E_DEPRECATED,
 		'trace' => true
 	));
-	Configure:: write('Error.handler', 'AppError::handleError');
+	
+/*
+ * Fatal Errorの場合
+ */
+	Configure::write('Error.handler', 'AppError::handleError');
 
 /**
  * Configure the Exception handler used for uncaught exceptions. By default,
@@ -92,10 +96,7 @@
 		'log' => true
 	));
 
-/*
- * Fatal Errorの場合
- */
-	Configure::write('Error.handler', 'AppError::handleError');
+
 /**
  * Application wide charset encoding
  */

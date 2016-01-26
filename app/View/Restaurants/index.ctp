@@ -6,7 +6,7 @@ $error_code     = $response['error_code'];
 $error_message  = $response['error_message'];
 //レストラン
 if(!empty($response['restaurants'])){
-    $restaurants           = $response['restaurants'];
+    $restaurants    = $response['restaurants'];
 }
 //ジャンル
 if(!empty($response['genres'])){

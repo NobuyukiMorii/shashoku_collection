@@ -39,6 +39,9 @@ class CouponsComponent extends Component {
 			return array();
 		}
 
+		//期間外のクーポンを除去
+		$coupons = $Coupon->extractRecordInPeriod($coupons);
+
 		//セットメニューのidを取得
 		$set_menu_ids = Hash::extract($coupons, '{n}.set_menu_id');
 
@@ -53,6 +56,9 @@ class CouponsComponent extends Component {
 		if(empty($set_menus)){
 			return array();
 		}
+
+		//セットメニューのキーをidとする
+		$set_menus = Hash::combine($set_menus, '{n}.id', '{n}');
 
 		//クーポンとセットメニューを結合
 		foreach ($coupons as $key => $value) {

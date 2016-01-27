@@ -53,8 +53,11 @@ class SetMenusComponent extends Component {
 		$set_menus_photos = $SetMenusPhoto->getPrimaryRecordOfEachKey($set_menus_photos, 'set_menu_id');
 		//写真がない場合
 		if(empty($set_menus_photos)){
-			
+			return $result;
 		}
+
+		//セットメニューのキーをidとする
+		$set_menus = Hash::combine($set_menus, '{n}.id', '{n}');
 
 		//セットメニューに写真を結合する
 		foreach ($set_menus_photos as $key => $value) {

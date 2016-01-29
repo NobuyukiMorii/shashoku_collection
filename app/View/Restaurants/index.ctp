@@ -73,7 +73,7 @@ if(!empty($response['tags'])){
                         <?php  
                             if (!empty($rest["tag_id"])) {
                                 foreach ($rest["tag_id"] as $tag_id) {
-                                    echo ' <li>'.$tags[$tag_id]['name'].'</li>';
+                                    echo ' <li style="background-color:'.$tags[$tag_id]['color_code'].';">'.$tags[$tag_id]['name'].'</li>';
                                 }
                             }
                         ?>

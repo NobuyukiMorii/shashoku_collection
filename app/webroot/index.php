@@ -84,24 +84,28 @@ if (!defined('WWW_ROOT')) {
 
 //ホスト名を取得
 $HOST_URL = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"];
+//サーバーURL
+$SERVER_URL = 'http://shashoku-c.pupu.jp';
 
 /**
  * 画像のURL（画像ファイル名は除く）
  */
-if (!defined('IMG_RESTAURANT_PHOTO')) {
-
-	define('IMG_RESTAURANTS_PHOTO', $HOST_URL . '/image/restaurants_photo/');
-
+if (!defined('IMG_RESTAURANTS_PHOTO')) {
+	define('IMG_RESTAURANTS_PHOTO', $SERVER_URL.'/image/restaurants_photo/');
 }
+// if (!defined('IMG_RESTAURANT_PHOTO')) {
+// 	define('IMG_RESTAURANTS_PHOTO', $HOST_URL . '/image/restaurants_photo/');
+// }
 
 /**
  *セットメニューの画像URL
  */
 if (!defined('IMG_SET_MENUS_PHOTO')) {
-
-	define('IMG_SET_MENUS_PHOTO', $HOST_URL . '/image/set_menus_photo/');
-
+	define('IMG_SET_MENUS_PHOTO', $SERVER_URL.'/image/set_menus_photo/');
 }
+// if (!defined('IMG_SET_MENUS_PHOTO')) {
+// 	define('IMG_SET_MENUS_PHOTO', $HOST_URL . '/image/set_menus_photo/');
+// }
 
 // for built-in server
 if (PHP_SAPI === 'cli-server') {

@@ -32,8 +32,8 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
 
 <!-- レストラン情報 -->
 <div id="restImgsBox">
-    <button id="r_prevBtn" class="is-hidden"></button>
-    <button id="r_nextBtn"></button>
+<!--     <button id="prevBtn" class="is-hidden"></button>
+    <button id="nextBtn"></button> -->
     <div id="restImgs">
         <?php
         $restImg_count = count($rest["photo_url"]);
@@ -41,7 +41,7 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
             foreach ($rest["photo_url"] as $restImg) {
         ?>
             <div class="restImgBox">
-                <img class="" src="<?php echo $restImg ?>" />
+                <img id="" src="<?php echo $restImg ?>" />
             </div>
         <?php
             }
@@ -78,7 +78,7 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
             foreach ($rest['coupons']['list'] as $coupon) {
         ?>
                 <div class="menuBox">
-                    <img class="" src="<?php echo $coupon['set_menu']["photo_url"] ;?>" />
+                    <img class="menuImg" src="<?php echo $coupon['set_menu']["photo_url"] ;?>" />
                     <p>クーポン利用可能期間：<?php echo date("m/d",strtotime($coupon["start_date"])).'〜'.date("m/d", strtotime($coupon["end_date"])) ?></p>
                     <p class="bold"><?php echo $coupon['price'] ?>円メニュー:<?php echo $coupon['set_menu']['name'] ?></p>
                     <button><a href="<?php echo $this->Html->url(array("controller" => "Coupons", "action" => "show")); ?>">このメニューのクーポンを発行する</a></button>
@@ -91,36 +91,32 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
 </div>
 
 <h2>アクセス</h2>
-<div id="map">
-ここにmapが入ります
-</div>
+<div id="map"></div>
 
 <h2>店舗情報</h2>
-<dl>
-<dt>店舗名</dt><dd><?php echo $rest['name']; ?></dd>
-<dt>ジャンル</dt><dd><?php echo $genres[$rest["genre_id"]]; ?></dd>
-<dt>席数</dt><dd><?php echo $rest['seats_num'].'席'; ?></dd>
-<dt>喫煙</dt><dd><?php if($rest['smoke_flg']==1) echo '可能'; else echo '不可'; ?></dd>
-<dt>電話番号</dt><dd><?php echo $rest['phone_num'] ?></dd>
-<dt>ランチ営業時間</dt><dd><?php echo $rest['lunch_time'] ?></dd>
-<dt>定休日</dt><dd><?php echo $rest['regular_holiday'] ?></dd>
-<dt>住所</dt><dd><?php echo $rest['address'] ?></dd>
-<dt>店舗URL</dt><dd><a href="<?php echo $rest['url'] ?>" target="_blank"><?php echo $rest['url'] ?></a></dd>
+<table>
+<tr><th>店舗名</th><td><?php echo $rest['name']; ?></td></tr>
+<tr><th>ジャンル</th><td><?php echo $genres[$rest["genre_id"]]; ?></td></tr>
+<tr><th>席数</th><td><?php echo $rest['seats_num']; ?></td></tr>
+<tr><th>喫煙</th><td><?php if($rest['smoke_flg']==1) echo '可能'; else echo '不可'; ?></td></tr>
+<tr><th>電話番号</th><td><?php echo $rest['phone_num'] ?></td></tr>
+<tr><th>ランチ<br/>営業時間</th><td><?php echo $rest['lunch_time'] ?></td></tr>
+<tr><th>定休日</th><td><?php echo $rest['regular_holiday'] ?></td></tr>
+<tr><th>住所</th><td><?php echo $rest['address'] ?></td></tr>
+<tr><th>店舗URL</th><td><a href="<?php echo $rest['url'] ?>" target="_blank"><?php echo $rest['url'] ?></a></td></tr>
 </dl>
+</table>
 
 <?php endif; ?>
 
 <script>
-// メニューのスライド
-var count = <?php echo $rest['menu_count'] ?>;
+/**
+* メニューのスライド
+*/
+var count = <?php echo $rest['coupons']['count'] ?>;
 var w = window.innerWidth;
 var menus = document.getElementById('menus');
 menus.style.width = w*count + 'px';
-
-// レストラン画像
-var restImgs = document.getElementById('restImgs');
-restImgs.style.width = w*count + 'px';
-
 // ナンバー生成
 if (count > 1) {
     var ul = $("<ul>",{id:"countBox"}).appendTo($("#menusBox"));
@@ -129,28 +125,37 @@ if (count > 1) {
         li.appendTo(ul);
     }
 }
-
 var interval = -(w-25);
 var now = 0;
+var moving_flg = false;
 $("#nextBtn").click(function(){
+    moveNext();
+});
+$("#prevBtn").click(function(){
+    movePrev();
+});
+var moveNext = function() {
     if (now >= count-1) return;
+    moving_flg = true;
     now++;
-    $("#menus").animate({ "margin-left": interval*now+'px' }, 800 );
+    $("#menus").animate({ "margin-left": interval*now+'px' }, 800);
+    setTimeout(function loop(){ doneMoving(); },800);
     // TODO: 番号の背景色変更
     if (now == count-1) $("#nextBtn").addClass("is-hidden");
     if (now > 0) $("#prevBtn").removeClass("is-hidden");
     refreshNum(now+1);
-});
-$("#prevBtn").click(function(){
+}
+var movePrev = function() {
     if (now <= 0) return;
+    moving_flg = true;
     now--;
-    $("#menus").animate({ "margin-left": interval*now+'px' }, 800 );
+    $("#menus").animate({ "margin-left": interval*now+'px' }, 800);
+    setTimeout(function loop(){ doneMoving(); },800);
     // TODO: 番号の背景色変更
     if (now == 0) $("#prevBtn").addClass("is-hidden");
     if (now < count-1) $("#nextBtn").removeClass("is-hidden");
     refreshNum(now+1);
-});
-
+}
 var refreshNum = function(num) {
     var nums = $("#countBox").children();
     if (nums && nums.length > 1) {
@@ -160,6 +165,129 @@ var refreshNum = function(num) {
             else $("#num_"+i).removeClass("selected"); 
         }
     }
+}
+var doneMoving = function(){
+    moving_flg = false;
+}
+/**
+ * スワイプ処理
+ */
+$("#menus").bind("touchstart", TouchStart);
+$("#menus").bind("touchmove" , TouchMove);
+// タップした位置をメモリーする
+var posTapped;
+function TouchStart( event ) {
+    var pos = Position(event);
+    posTapped = pos.x;
+    // $("#menus").data("memory",pos.x);
+    console.log("TouchStart pos x == "+pos.x);
+}
+//タップした位置からプラスかマイナスかで左右移動を判断
+function TouchMove( event ) {
+    if (moving_flg) return;
+    var pos = Position(event); //X,Yを得る
+    console.log("TouchMove pos x == "+pos.x);
+    console.log("TouchMove posTapped == "+posTapped);
+    if( pos.x < posTapped ){
+        if ((pos.x - posTapped) < -100 ) {
+            console.log("TouchMove 左!!");
+            moveNext();
+        }
+    }else{
+        if ((pos.x - posTapped) > 100 ) {
+            console.log("TouchMove 右!!");
+            movePrev();
+        }
+    }
+}
+
+/**
+ * レストランのスライド(とりあえずコピーでごめんなさい!
+ * 共通項みつけてリファクタリングかける 
+ */
+ // レストラン画像
+var r_count = <?php echo count($rest["photo_url"]) ?>;
+var restImgs = document.getElementById('restImgs');
+restImgs.style.width = w*r_count + 'px';
+// ナンバー生成
+if (r_count > 1) {
+    var ul = $("<ul>",{id:"r_countBox"}).appendTo($("#restImgsBox"));
+    for (var i=1; i<r_count+1; i++) {
+        var li = $("<li>",{id:"r_num_"+i, class:(i==1)?"selected":""});
+        li.appendTo(ul);
+    }
+}
+var r_interval = -(w);
+var r_now = 0;
+var r_moving_flg = false;
+var r_moveNext = function() {
+    if (r_now >= r_count-1) return;
+    r_moving_flg = true;
+    r_now++;
+    $("#restImgs").animate({ "margin-left": r_interval*r_now+'px' }, 800);
+    setTimeout(function loop(){ r_moving_flg=false; },800);
+    r_refreshNum(r_now+1);
+}
+var r_movePrev = function() {
+    if (r_now <= 0) return;
+    r_moving_flg = true;
+    r_now--;
+    $("#restImgs").animate({ "margin-left": r_interval*r_now+'px' }, 800);
+    setTimeout(function loop(){ r_moving_flg=false; },800);
+    r_refreshNum(r_now+1);
+}
+var r_refreshNum = function(num) {
+    var nums = $("#r_countBox").children();
+    if (nums && nums.length > 1) {
+        var r_count = nums.length;
+        for (var i=1; i< r_count+1; i++) {
+            if (i==num) $("#r_num_"+i).addClass("selected");
+            else $("#r_num_"+i).removeClass("selected"); 
+        }
+    }
+}
+/**
+ * スワイプ処理
+ */
+$("#restImgs").bind("touchstart", r_TouchStart);
+$("#restImgs").bind("touchmove" , r_TouchMove);
+// タップした位置をメモリーする
+var r_posTapped;
+function r_TouchStart( event ) {
+    var pos = Position(event);
+    r_posTapped = pos.x;
+    // $("#restImgs").data("memory",pos.x);
+    console.log("TouchStart pos x == "+pos.x);
+}
+//タップした位置からプラスかマイナスかで左右移動を判断
+function r_TouchMove( event ) {
+    if (r_moving_flg) return;
+    var pos = Position(event); //X,Yを得る
+    console.log("TouchMove pos x == "+pos.x);
+    console.log("TouchMove r_posTapped == "+r_posTapped);
+    if( pos.x < r_posTapped ){
+        if ((pos.x - r_posTapped) < -100 ) {
+            console.log("TouchMove 左!!");
+            r_moveNext();
+        }
+    }else{
+        if ((pos.x - r_posTapped) > 100 ) {
+            console.log("TouchMove 右!!");
+            r_movePrev();
+        }
+    }
+}
+
+/*
+ * 現在位置を得る
+ */
+function Position   (e){
+    var x   = e.originalEvent.touches[0].pageX;
+    var y   = e.originalEvent.touches[0].pageY;
+    x = Math.floor(x);
+    y = Math.floor(y);
+    var pos = {'x':x , 'y':y};
+    return pos;
 }
 
 // 地図

@@ -37,6 +37,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		echo $this->fetch('css');
 		echo $this->fetch('script');
 	?>
+	<meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
 <body id="layout">
 	<div id="l-container">

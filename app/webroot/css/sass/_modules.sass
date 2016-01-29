@@ -61,7 +61,7 @@ div.img.history
 
 
 .titleBox
-  background: rgba(255,255,255,0.6)
+  background: rgba(255,255,255,0.7)
   padding: 8px 10px
   p
     font-size: 12px
@@ -80,6 +80,8 @@ div.img.history
       padding: 2px 5px
       background-color: #EEE
       margin-left: 5px
+      border: 1px solid #AAA
+      border-radius: 3px
   .description
     margin-top: 10px
     font-size: 13px
@@ -127,7 +129,7 @@ div.img.history
     li.selected
       background-color: #f5a623
   #menus
-    height: 330px
+    // height: 330px
     overflow: hidden
     padding: 15px 25px
     background-color: #f5e6ce
@@ -147,27 +149,20 @@ div.img.history
     width: 44px
     height: 44px
     background: no-repeat
-  #nextBtn
-    top: 80px
-    right: 5px
-    background-image: url("/img/arrow_right.png")
-  #prevBtn
-    top: 80px
-    left: 5px
-    background-image: url("/img/arrow_left.png")
-  #countBox
+  #r_countBox
     position: absolute
-    top: 25px
-    left: 40px
-    height: 34px
+    bottom: 15px
+    height: 12px
+    width: 100vw
+    text-align: center
     li
+      display: inline-block
       margin-right: 7px
       text-align: center
       padding-top: 2px
-      width: 24px
-      height: 24px
-      border-radius: 12px
-      float: left
+      width: 12px
+      height: 12px
+      border-radius: 6px
       background-color: #FFF
       border: 1px solid #555
     li.selected
@@ -178,8 +173,7 @@ div.img.history
     // padding: 15px 25px
     background-color: #f5e6ce
     .restImgBox
-      max-width: calc(100vw - 50px)
-      margin-right: 25px
+      width: 100vw
       float: left
     p
       text-align: center
@@ -208,6 +202,23 @@ dl
     width: 70%
   dt:last-child, dd:last-child
     border-bottom: none
+
+table
+  margin: 10px 10px 0
+  border: 1px solid #AAA
+  tr
+    border-bottom: 1px solid #AAA
+  th,td
+    padding: 10px
+  th
+    width: 30%
+    background-color: #CCC
+    border-right: 1px solid #AAA
+  td
+    width: 70%
+    word-break: break-all
+  tr:last-child
+    border-bottom: none 
 
 p.message
   color: red

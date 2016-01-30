@@ -38,6 +38,16 @@ App::uses('UserAgent', 'Vendor');
  */
 class AppController extends Controller {
 
+    /* ユーザーの情報 */
+    public $user_data = array(
+        'user'    => array(
+
+        ),
+        'company' => array(
+
+        )
+    );
+
     /* viewに送信する変数 */
     public $view_data = array(
         'error_code'    => 0,

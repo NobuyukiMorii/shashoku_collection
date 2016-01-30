@@ -3,6 +3,7 @@ class RestaurantsController extends AppController {
 
 	//コンポーネントをロード
     public $components = array(
+    	'Companies',
         'Restaurants',
         'RestaurantsTags',
         'RestaurantsTagsRelations',
@@ -20,14 +21,17 @@ class RestaurantsController extends AppController {
     public function index() {
 
         //----------------------------------------
-        //法人id取得（仮）
+        //法人id取得。ログイン機能実装後、本コードは削除する。自動的に取得出来るように修正する。
         //----------------------------------------
 		$company_id = 1;
+
+        //会社情報をappコントローラーのメンバ変数に格納
+		$this->user_data['company'] = $this->Companies->getCompanyById($company_id);
 
         //----------------------------------------
         //レストラン取得
         //----------------------------------------
-		$this->view_data['restaurants'] = $this->Restaurants->getRestaurantsByCompanyId($company_id);
+		$this->view_data['restaurants'] = $this->Restaurants->getRestaurants();
 		//レストランが取得出来ない場合
 		if(empty($this->view_data['restaurants'])){
 			$this->Common->returnError(Configure::read('ERR_CODE_NO_DATA'), __('レストランが取得出来ません'));
@@ -65,12 +69,20 @@ class RestaurantsController extends AppController {
     public function detail() {
 
         //----------------------------------------
+        //法人id取得。ログイン機能実装後、本コードは削除する。自動的に取得出来るように修正する。
+        //----------------------------------------
+		$company_id = 1;
+
+        //会社情報をappコントローラーのメンバ変数に格納
+		$this->user_data['company'] = $this->Companies->getCompanyById($company_id);
+
+        //----------------------------------------
         //レストランidを取得
         //----------------------------------------
     	$restaurant_id = Arguments::getArguments('restaurant_id');
     	//レストランidが設定されなかった場合
     	if(is_null($restaurant_id) || !is_numeric($restaurant_id)){
-			$this->Common->returnError(Configure::read('ERR_CODE_NO_PARAM'), '対象のレストランが取得出来ません');	
+			$this->Common->returnError(Configure::read('ERR_CODE_NO_PARAM'), __('対象のレストランが取得出来ません'));	
 			return;
     	}
 

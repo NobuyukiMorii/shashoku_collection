@@ -42,7 +42,7 @@ class FindSupportComponent extends Component {
      * @param  string $line
      * @return array
      */
-	public function washMasterData($model_name_array, $msts, $file=NULL, $mothod=NULL, $line=NULL){
+	public function verifyMsts($model_name_array, $msts, $file=NULL, $mothod=NULL, $line=NULL){
 
 		//引数がない場合
 		$flg = ArrayControl::multipleEmptyCheck($model_name_array, $msts);

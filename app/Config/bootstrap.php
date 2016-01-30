@@ -179,3 +179,9 @@ Configure::load("define");
  * エラー画面が見えないと開発が難しいため、一度コメントアウト
  */
 App::uses('AppError', 'Lib');
+
+/*
+ * 2016/01/23
+ * viewで利用する関数
+ */
+App::import('Vendor', 'ViewFunc');

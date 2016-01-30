@@ -98,7 +98,7 @@ class CompleteRecordsBehavior extends ModelBehavior {
 
                 //エラーログを出力
                 $message = $foreign_key."が不整合のため、".$model->useTable."テーブルから取得したレコードからid=".$mst_A[$key]['id']."を除去しました。";
-                Util::OriginalLog($file, $method, $line, $message);
+                Log::verify($file, $method, $line, $message);
 
                 //使われていないmst_Aを除外
                 unset($mst_A[$key]);

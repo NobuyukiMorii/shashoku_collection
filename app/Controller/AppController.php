@@ -26,6 +26,7 @@ App::uses('Util', 'Vendor');
 App::uses('ArrayControl', 'Vendor');
 App::uses('Arguments', 'Vendor');
 App::uses('UserAgent', 'Vendor');
+App::uses('Log', 'Vendor');
 
 /**
  * Application Controller

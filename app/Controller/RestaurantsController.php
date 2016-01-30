@@ -13,7 +13,7 @@ class RestaurantsController extends AppController {
         'Coupons',
         'Common'
     );
-    
+
 	/**
 	 * レストラン一覧表示画面のアクション
 	 * @return array

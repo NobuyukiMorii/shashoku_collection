@@ -44,6 +44,9 @@ class AppController extends Controller {
         'error_message' => null
     );
 
+    /* 表示jsonフラグ */
+    public $view_json_flag = false;
+
     /* コンポーネントをロード*/
     public $components = array(
         'FindSupport',
@@ -55,7 +58,7 @@ class AppController extends Controller {
      */
     public function beforeFilter(){
 
-        //Basic認証（開発中のみ）
+        //Basic認証
         $this->Common->basicAuthentication();
 
         //PCからのアクセスの場合には専用のviewを出力する 
@@ -64,12 +67,44 @@ class AppController extends Controller {
     }
 
     /*
+     * アクション実行後にコールされる
+     */
+    public function afterFilter(){
+
+        // jsonで返却する場合
+        if ($this->view_json_flag) {
+
+            //Json専用のviewを指定する
+            $this->render('/Json/json');
+
+        }
+
+    }
+
+    /*
      * レンダリングの前にコールされる
      */
     public function beforeRender() {
 
-        //viewに渡す変数をセット
-        $this->set('response', $this->view_data);
+        // jsonで返却する場合
+        if ($this->view_json_flag) {
+
+            //UTF-8を指定
+            $this->response->header(array(
+                'Content-Type: application/json; charset=utf-8'
+            ));
+
+            //Jsonにエンコードして表示
+            echo json_encode($this->view_data);
+
+            exit;
+
+        } else {
+        //phpの変数で返却する場合
+
+            $this->set('response', $this->view_data);
+
+        }
 
     }
 

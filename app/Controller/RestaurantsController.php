@@ -54,6 +54,8 @@ class RestaurantsController extends AppController {
 			return;
 		}
 
+		return $this->view_data;
+
     }
 
 	/**
@@ -101,6 +103,8 @@ class RestaurantsController extends AppController {
 			$this->Common->returnError(Configure::read('ERR_CODE_NO_DATA'), __('タグが取得出来ません'));
 			return;
 		}
+
+		return $this->view_data;
 
     }
 

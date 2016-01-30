@@ -114,7 +114,7 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
 * メニューのスライド
 */
 var count = <?php echo $rest['coupons']['count'] ?>;
-var w = window.innerWidth;
+var w = screen.width;
 var menus = document.getElementById('menus');
 menus.style.width = w*count + 'px';
 // ナンバー生成

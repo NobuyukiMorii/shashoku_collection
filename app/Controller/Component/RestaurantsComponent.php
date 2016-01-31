@@ -196,7 +196,7 @@ class RestaurantsComponent extends Component {
 		//レストランのタグ関連性があれば
 		if(!empty($restaurants_tags_relations)){
 			/* タグidをレストランに追加する */
-			$result = $this->RestaurantsTagsRelations->AddPrimaryTagIdToRestaurants($result, $restaurants_tags_relations);
+			$result = $this->RestaurantsTagsRelations->AddPrimaryTagIdsToRestaurants($result, $restaurants_tags_relations);
 			if(empty($result)){
 				return $result;
 			}

@@ -118,43 +118,47 @@ CakeLog::config('debug', array(
 	'engine' => 'File',
 	'types' => array('notice', 'info', 'debug'),
     /* 日ごとにログを切り替える設定 */
-    'file' => date( 'Ymd') . '_' . 'debug',
+    'file' => date( 'Ymd'),
     /* 5Mごとにファイルを切り替え */
     'size' => '5MB',
     /* 20ファイルまで切り替え */
-    'rotate' => 20
+    'rotate' => 20,
+    'path' => LOGS.DS.'debug'.DS,
 ));
 CakeLog::config('error', array(
 	'engine' => 'File',
 	'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
     /* 日ごとにログを切り替える設定 */
-    'file' => date( 'Ymd') . '_' . 'error',
+    'file' => date( 'Ymd'),
     /* 5Mごとにファイルを切り替え */
     'size' => '5MB',
     /* 20ファイルまで切り替え */
-    'rotate' => 20
+    'rotate' => 20,
+    'path' => LOGS.DS.'error'.DS,
 ));
-/* オリジナルのエラーログを追加 */
-CakeLog::config('original', array(
+/* ベリファイログを追加 */
+CakeLog::config('verify', array(
     'engine' => 'File',
-    'types' => array('original'),
+    'types' => array('verify'),
     /* 日ごとにログを切り替える設定 */
-    'file' => date( 'Ymd') . '_' . 'original',
+    'file' => date( 'Ymd'),
     /* 5Mごとにファイルを切り替え */
     'size' => '5MB',
     /* 20ファイルまで切り替え */
-    'rotate' => 20
+    'rotate' => 20,
+    'path' => LOGS.DS.'verify'.DS,
 ));
 /* SQLログを追加 */
 CakeLog::config('sql', array(
     'engine' => 'File',
     'types' => array('sql'),
     /* 日ごとにログを切り替える設定 */
-    'file' => date( 'Ymd') . '_' . 'sql',
+    'file' => date( 'Ymd'),
     /* 5Mごとにファイルを切り替え */
     'size' => '5MB',
     /* 20ファイルまで切り替え */
-    'rotate' => 20
+    'rotate' => 20,
+    'path' => LOGS.DS.'sql'.DS,
 ));
 
 /**
@@ -179,3 +183,9 @@ Configure::load("define");
  * エラー画面が見えないと開発が難しいため、一度コメントアウト
  */
 App::uses('AppError', 'Lib');
+
+/*
+ * 2016/01/23
+ * viewで利用する関数
+ */
+App::import('Vendor', 'ViewFunc');

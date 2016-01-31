@@ -16,7 +16,7 @@ class CouponsComponent extends Component {
 	 * @param array $restaurant
 	 * @return array
 	 */
-    public function AddCouponsInfoToRestaurant($restaurant){
+    public function AddCouponsInfoToRestaurant($restaurant, $basic_price){
 
     	//引数をチェック
     	if(empty($restaurant)){
@@ -60,9 +60,10 @@ class CouponsComponent extends Component {
 		//セットメニューのキーをidとする
 		$set_menus = Hash::combine($set_menus, '{n}.id', '{n}');
 
-		//クーポンとセットメニューを結合
+		//クーポンをループ
 		foreach ($coupons as $key => $value) {
 
+			/* クーポンとセットメニューを結合 */
 			//クーポンの対象のセットメニューがあれば
 			if(!empty($set_menus[$value['set_menu_id']])){
 
@@ -76,6 +77,9 @@ class CouponsComponent extends Component {
 				$coupons[$key]['set_menu']['photo_url'] 		= $set_menus[$value['set_menu_id']]['photo_url'];
 
 			}
+
+			/* 追加料金と基礎料金を合算 */
+			$coupons[$key]['price'] = $value['additional_price'] + $basic_price;
 
 		}
 
@@ -103,7 +107,7 @@ class CouponsComponent extends Component {
 	 * @param array $set_menus
 	 * @return array
 	 */
-    public function AddCouponInfoToRestaurants($restaurants, $coupons, $set_menus){
+    public function AddCouponInfoToRestaurants($restaurants, $coupons, $set_menus, $basic_price){
 
     	//引数をチェック
     	$flg = ArrayControl::multipleEmptyCheck($restaurants, $coupons, $set_menus);
@@ -117,8 +121,8 @@ class CouponsComponent extends Component {
 			return array();
 		}
 
-		/* 優先順位の一番高いレストランにクーポンを追加する */
-		$restaurants = $this->AddPrimaryCouponInfoToRestaurants($restaurants, $coupons, $set_menus);
+		/* レストランに優先順位の一番高いクーポンを追加する */
+		$restaurants = $this->AddPrimaryCouponInfoToRestaurants($restaurants, $coupons, $set_menus, $basic_price);
 
 		return $restaurants;
 
@@ -162,7 +166,7 @@ class CouponsComponent extends Component {
 	 * @param array $set_menus
 	 * @return array
 	 */
-    public function AddPrimaryCouponInfoToRestaurants($restaurants, $coupons, $set_menus){
+    public function AddPrimaryCouponInfoToRestaurants($restaurants, $coupons, $set_menus, $basic_price){
 	
 		//レストランごとに、優先順位の高いクーポンを取得する
 		$Coupon = ClassRegistry::init('Coupon');
@@ -175,7 +179,7 @@ class CouponsComponent extends Component {
     		if(!empty($restaurants[$value['restaurant_id']])) {
 
 	    		//クーポンの価格を追加する
-	    		$restaurants[$value['restaurant_id']]['coupons']['price']			= $value['price'];
+	    		$restaurants[$value['restaurant_id']]['coupons']['price'] = $basic_price + $value['additional_price'];
 
 	    		//セットメニューの名前を追加する
 	    		if(!empty($set_menus[$value['set_menu_id']]['name'])){

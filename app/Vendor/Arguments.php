@@ -27,16 +27,8 @@ class Arguments {
         //POSTがなければ
         if(is_null($result)) {
 
-            //debugレベルを取得
-            $debug_level = Configure::read('debug');
-
-            //開発環境の場合
-            if($debug_level !== 0){
-
-                //GETを格納する
-                $result = $this->request->query($param);
-
-            } 
+            //GETを格納する
+            $result = $this->request->query($param);
 
         } 
 

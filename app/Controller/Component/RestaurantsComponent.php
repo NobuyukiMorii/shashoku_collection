@@ -15,6 +15,15 @@ class RestaurantsComponent extends Component {
         'Coupons'
     );
 
+    /*
+     * コントローラーを読み込む
+     */
+    public function initialize(Controller $controller) {
+
+      $this->Controller = $controller;
+
+    }
+
 	//----------------------------------------
 	//１//
 	//action:index
@@ -28,18 +37,13 @@ class RestaurantsComponent extends Component {
 	 * @param  array $company_id
 	 * @return array
 	 */
-	public function getRestaurantsByCompanyId($company_id){
+	public function getRestaurants(){
 
 		//返却値を設定
 		$restaurants = array();		
 
-		//引数がないか、数字ではない場合
-    	if(is_null($company_id) || !is_numeric($company_id)){
-    		return $restaurants;
-    	}
-
 		//関連マスタを取得
-		$msts = $this->getVerifiedVariousMstByCompany($company_id);
+		$msts = $this->getVerifiedMsts();
 		//エラーハンドリング
 		$flg = ArrayControl::multipleHashEmptyCheck($msts, array('restaurants', 'coupons', 'set_menus', 'restaurants_photos', 'restaurants_genres_relations', 'restaurants_tags_relations'));
 		if($flg === false){
@@ -56,7 +60,7 @@ class RestaurantsComponent extends Component {
 	//----------------------------------------
 	//２//
 	//action:index
-	//1のmakeRestaurantsArrayForDisplayByCompanyIdメソッド内の①「レストランに関連するマスタを全て取得」に関連するメソッド群
+	//1のmakegetRestaurantsメソッド内の①「レストランに関連するマスタを全て取得」に関連するメソッド群
 	//----------------------------------------
 
 	/**
@@ -65,18 +69,14 @@ class RestaurantsComponent extends Component {
 	 * @param  array $company_id
 	 * @return array
 	 */
-	public function getVerifiedVariousMstByCompany($company_id){
+	public function getVerifiedMsts(){
 
     	//返却値を作成
     	$result = array();
 
-    	//引数がないか数字ではない場合
-    	if(is_null($company_id) || !is_numeric($company_id)){
-    		return $result;
-    	}
-
-    	//レストランの関連マスタを全て取得（レストラン以外）
+    	//レストランの関連マスタを全て取得
     	$related_models = array(
+    		'Restaurant',
 			'Coupon', 
 			'SetMenusPhoto',
 			'SetMenu', 
@@ -84,26 +84,19 @@ class RestaurantsComponent extends Component {
 			'RestaurantsGenresRelation', 
 			'RestaurantsTagsRelation', 
     	);
+    	//マスタを検索
     	$result = $this->FindSupport->multipleFindCache($related_models);
 
     	//エラーハンドリング
-		$flg = ArrayControl::multipleHashEmptyCheck($result, array('coupons', 'set_menus', 'restaurants_photos', 'restaurants_genres_relations', 'restaurants_tags_relations'));
+		$flg = ArrayControl::multipleHashEmptyCheck($result, array('restaurants', 'coupons', 'set_menus', 'restaurants_photos', 'restaurants_genres_relations', 'restaurants_tags_relations'));
 		if($flg === false){
 			return $result;
 		}
 
-    	//法人が現在利用可能なレストランを取得
-		$result['restaurants'] = $this->getRestaurantMstByCompanyId($company_id);
-		//エラーハンドリング
-		if(empty($result['restaurants'])){
-			return $result;
-		}
-
-
         //不完全なレコードを除去（期間外&他テーブルに必要な情報がない場合。開発環境でのみログを残しています。）
         //セットメニューを除去してから、クーポンを除去し、最後にレストランを除去する構成
-		$wash_models = array('SetMenu', 'Coupon', 'Restaurant',);
-    	$result = $this->FindSupport->washMasterData($wash_models, $result, __FILE__, __METHOD__, __LINE__);
+		$target_models = array('SetMenu', 'Coupon', 'Restaurant');
+    	$result = $this->FindSupport->verifyMsts($target_models, $result, __FILE__, __METHOD__, __LINE__);
 
     	return $result;
 
@@ -131,7 +124,7 @@ class RestaurantsComponent extends Component {
 		}
 
     	//レストランに関連情報を付加
-        $result = $this->ApplyVariousMstToRestaurants($restaurants, $coupons, $set_menus, $restaurants_photos, $restaurants_genres_relations, $restaurants_tags_relations);
+        $result = $this->ApplyMstsToRestaurants($restaurants, $coupons, $set_menus, $restaurants_photos, $restaurants_genres_relations, $restaurants_tags_relations);
         if(empty($result)){
         	return $result;
         }
@@ -141,109 +134,6 @@ class RestaurantsComponent extends Component {
 
         //値を返却
         return $result;
-
-	}
-
-    /**
-     * 法人の利用可能なレストランを取得
-     * @param  array  $restaurants
-     * @param  int    $company_id
-     * @return array
-     */
-	public function getRestaurantMstByCompanyId($company_id){
-
-		//返却値を設定
-		$result = array();
-
-		//引数が不足していた場合
-		if(is_null($company_id)){
-			//空配列で返却
-			return $result;
-		}
-
-		//レストランidを取得
-		$restaurant_ids = $this->seachRestaurantIdsWithCompanyId($company_id);
-
-		//モデルをロード
-		$Restaurant = ClassRegistry::init('Restaurant');
-
-		//レストランを取得
-		$restaurants = $Restaurant->find('all', array('cache' => true));
-		if(empty($restaurants)){
-			return $result;
-		}
-
-    	//レストランidをループする
-    	foreach ($restaurant_ids as $restaurant_id) {
-
-    		//レストラン情報を格納する
-    		if(!empty($restaurants[$restaurant_id])){
-
-    			$result[$restaurant_id] = $restaurants[$restaurant_id];
-
-    		} else {
-
-                //エラーログを出力（開発環境のみ）
-                $message = "法人id".$company_id."に".$restaurant_id."が登録されていますが、対象のレストランは存在しませんでした。";
-                Util::OriginalLog($file, __method__, __line__, __message__);
-
-    		}
-
-    	}
-
-    	return $result;
-
-	}
-
-	//----------------------------------------
-	//３//
-	//action:index
-	//1のmakeRestaurantsArrayForDisplayByCompanyIdメソッド内の②「返却用レストランを作成」に関連するメソッド
-	//----------------------------------------
-
-    /**
-     * 法人の利用可能なレストランidを取得
-     * @param  int    $company_id
-     * @return array
-     */
-	public function seachRestaurantIdsWithCompanyId($company_id){
-
-		//返却値を設定
-		$result = array();
-
-		//法人idがnullか数字ではない場合
-		if(is_null($company_id) || !is_numeric($company_id)){
-			//空配列で返却
-			return $result;
-		}
-
-		//モデルをロード
-		$CompaniesRestaurantsRelation = ClassRegistry::init('CompaniesRestaurantsRelation');
-
-		//法人の利用可能なレストランを全て取得
-		$companies_restaurants_relations = $CompaniesRestaurantsRelation->find('all', array(
-			'conditions' => array(
-				'company_id' => $company_id
-			),
-			'cache' => true
-		));
-
-		//対象のレストランが登録されていない場合
-		if(empty($companies_restaurants_relations)) {
-			return $result;
-		}
-
-		//有効期間外のレストランを除外する
-		$companies_restaurants_relations = $CompaniesRestaurantsRelation->extractRecordInPeriod($companies_restaurants_relations);
-		//全てが有効期間外の場合
-		if(empty($companies_restaurants_relations)) {
-			return $result;
-		}
-
-		//対象のレストランidを抽出する
-		$result = Hash::extract($companies_restaurants_relations, '{n}.restaurant_id');
-
-		return $result;
 
 	}
 
@@ -257,7 +147,7 @@ class RestaurantsComponent extends Component {
 	 * @param array $restaurants_tags_relations
 	 * @return array
 	 */
-    public function ApplyVariousMstToRestaurants($restaurants, $coupons, $set_menus, $restaurants_photos, $restaurants_genres_relations, $restaurants_tags_relations){
+    public function ApplyMstsToRestaurants($restaurants, $coupons, $set_menus, $restaurants_photos, $restaurants_genres_relations, $restaurants_tags_relations){
 
     	//返却値を作成
     	$result = array();
@@ -270,10 +160,16 @@ class RestaurantsComponent extends Component {
     	//返却値にレストランを格納する
     	$result = $restaurants;
 
+		//クーポンの基礎料金を追加
+		if(!isset($this->Controller->user_data['company']['basic_price'])){
+			return $result;
+		}
+		$basic_price = $this->Controller->user_data['company']['basic_price'];
+
 		//クーポンとセットメニューがあれば
 		if(!empty($coupons) && !empty($set_menus)){
 			/* レストランにクーポンを追加する */	
-			$result = $this->Coupons->AddCouponInfoToRestaurants($result, $coupons , $set_menus);
+			$result = $this->Coupons->AddCouponInfoToRestaurants($result, $coupons , $set_menus, $basic_price);
 			if(empty($result)){
 				return $result;
 			}
@@ -363,8 +259,14 @@ class RestaurantsComponent extends Component {
 			return array();
 		}
 
+		//クーポンの基礎料金を追加
+		if(!isset($this->Controller->user_data['company']['basic_price'])){
+			return $result;
+		}
+		$basic_price = $this->Controller->user_data['company']['basic_price'];
+
 		//クーポンとメニューを追加
-		$restaurant = $this->Coupons->AddCouponsInfoToRestaurant($restaurant);		
+		$restaurant = $this->Coupons->AddCouponsInfoToRestaurant($restaurant, $basic_price);		
 		if(empty($restaurant)){
 			return array();
 		}

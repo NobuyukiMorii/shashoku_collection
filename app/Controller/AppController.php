@@ -26,6 +26,7 @@ App::uses('Util', 'Vendor');
 App::uses('ArrayControl', 'Vendor');
 App::uses('Arguments', 'Vendor');
 App::uses('UserAgent', 'Vendor');
+App::uses('Log', 'Vendor');
 
 /**
  * Application Controller
@@ -38,11 +39,24 @@ App::uses('UserAgent', 'Vendor');
  */
 class AppController extends Controller {
 
+    /* ユーザーの情報 */
+    public $user_data = array(
+        'user'    => array(
+
+        ),
+        'company' => array(
+
+        )
+    );
+
     /* viewに送信する変数 */
     public $view_data = array(
         'error_code'    => 0,
         'error_message' => null
     );
+
+    /* 表示jsonフラグ */
+    public $view_json_flag = false;
 
     /* コンポーネントをロード*/
     public $components = array(
@@ -55,7 +69,7 @@ class AppController extends Controller {
      */
     public function beforeFilter(){
 
-        //Basic認証（開発中のみ）
+        //Basic認証
         $this->Common->basicAuthentication();
 
         //PCからのアクセスの場合には専用のviewを出力する 
@@ -64,12 +78,44 @@ class AppController extends Controller {
     }
 
     /*
+     * アクション実行後にコールされる
+     */
+    public function afterFilter(){
+
+        // jsonで返却する場合
+        if ($this->view_json_flag) {
+
+            //Json専用のviewを指定する
+            $this->render('/Json/json');
+
+        }
+
+    }
+
+    /*
      * レンダリングの前にコールされる
      */
     public function beforeRender() {
 
-        //viewに渡す変数をセット
-        $this->set('response', $this->view_data);
+        // jsonで返却する場合
+        if ($this->view_json_flag) {
+
+            //UTF-8を指定
+            $this->response->header(array(
+                'Content-Type: application/json; charset=utf-8'
+            ));
+
+            //Jsonにエンコードして表示
+            echo json_encode($this->view_data);
+
+            exit;
+
+        } else {
+        //phpの変数で返却する場合
+
+            $this->set('response', $this->view_data);
+
+        }
 
     }
 

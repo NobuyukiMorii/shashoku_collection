@@ -42,7 +42,7 @@
  * SQLのログの出力設定
  * Model/Behavior/MysqlLog.phpにて出力
  */
-	Configure::write('Cake.logQuery', 1);
+	Configure::write('Cake.logQuery', 0);
 /**
  * Configure the Error handler used to handle errors for your application. By default
  * ErrorHandler::handleError() is used. It will display errors using Debugger, when debug > 0
@@ -63,11 +63,6 @@
 		'level' => E_ALL & ~E_DEPRECATED,
 		'trace' => true
 	));
-	
-/*
- * Fatal Errorの場合
- */
-	Configure::write('Error.handler', 'AppError::handleError');
 
 /**
  * Configure the Exception handler used for uncaught exceptions. By default,

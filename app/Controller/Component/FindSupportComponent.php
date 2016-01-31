@@ -42,7 +42,7 @@ class FindSupportComponent extends Component {
      * @param  string $line
      * @return array
      */
-	public function washMasterData($model_name_array, $msts, $file=NULL, $mothod=NULL, $line=NULL){
+	public function verifyMsts($model_name_array, $msts, $file=NULL, $mothod=NULL, $line=NULL){
 
 		//引数がない場合
 		$flg = ArrayControl::multipleEmptyCheck($model_name_array, $msts);
@@ -118,7 +118,7 @@ class FindSupportComponent extends Component {
 
 		                //エラーログを出力（開発環境のみ）
 		                $message = "removeIncompleteRecords_ShouldHaveにより不完全な".$use_table."のデータを除去を試みましたが、必要な".$should_have_use_table."がありませんでした。";
-		                Util::OriginalLog($file, $method, $line, $message);
+		                Log::verify($file, $method, $line, $message);
 
 					}
 
@@ -154,7 +154,7 @@ class FindSupportComponent extends Component {
 						
 		                //エラーログを出力（開発環境のみ）
 		                $message = "removeIncompleteRecords_ShouldBelongsToにより不完全な".$use_table."のデータを除去を試みましたが、必要な".$should_belongs_to_use_table."がありませんでした。";
-		                Util::OriginalLog($file, $method, $line, $message);
+		                Log::verify($file, $method, $line, $message);
 
 					}
 

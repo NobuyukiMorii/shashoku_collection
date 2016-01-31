@@ -55,9 +55,9 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
 <div class="titleBox">
     <ul class="tags">
     <?php  
-        if (empty($rest["tag_ids"])) {
-            foreach ($rest["tags_id"] as $tag_id) {
-                echo ' <li>'.$tags[$tag_id]["name"].'</li>';
+        if (!empty($rest["tag_ids"])) {
+            foreach ($rest["tag_ids"] as $tag_id) {
+                echo ' <li style="background-color:'.$tags[$tag_id]['color_code'].';">'.$tags[$tag_id]['name'].'</li>';
             }
         }
     ?>
@@ -124,6 +124,9 @@ if (count > 1) {
         var li = $("<li>",{id:"num_"+i, class:(i==1)?"selected":"", text:i});
         li.appendTo(ul);
     }
+} else {
+    $("#nextBtn").addClass("is-hidden");
+    $(".menuBox").css('margin-right','0');
 }
 var interval = -(w-25);
 var now = 0;

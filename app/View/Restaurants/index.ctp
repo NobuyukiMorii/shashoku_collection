@@ -80,7 +80,7 @@ if(!empty($response['tags'])){
                         </ul>
                         <p class="category"><?php echo $genres[$rest["genres_id"]]; ?></p>
                         <h4><?php echo $rest["name"]; ?></h4>
-                        <p class="menu"><?php echo $rest["coupons"]["price"]; ?>円メニュー:<?php echo $rest["coupons"]["set_menu_name"]; ?><label <?php if((int)$rest["coupons"]["count"]<=1) echo 'class="is-hidden"' ?>>..他<?php echo $rest["coupons"]["count"]-1?>つ</label></p>
+                        <p class="menu"><?php echo $rest["coupons"]["price"]; ?>円:<?php echo $rest["coupons"]["set_menu_name"]; ?><label <?php if((int)$rest["coupons"]["count"]<=1) echo 'class="is-hidden"' ?>>..他<?php echo $rest["coupons"]["count"]-1?>つ</label></p>
                     </div>
                 </div></a>
         <?php

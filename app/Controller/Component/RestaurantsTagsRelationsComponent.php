@@ -33,7 +33,7 @@ class RestaurantsTagsRelationsComponent extends Component {
 		//対象のタグが存在しない場合
 		if(empty($restaurants_tags_relation)){
 
-			//値を空配列として健脚
+			//値を空配列として返却
 			$restaurant['image'] = array();
 			return $restaurant;
 			
@@ -42,10 +42,10 @@ class RestaurantsTagsRelationsComponent extends Component {
 		//priority_order順に並び変える
 		$restaurants_tags_relation = Hash::sort($restaurants_tags_relation, '{n}.priority_order');
 
-		//ジャンルidを抽出
+		//タグidを抽出
 		$tag_ids = hash::extract($restaurants_tags_relation, '{n}.restaurants_tag_id');
 
-		//ジャンルidを追加
+		//タグidを追加
 		$restaurant['tag_ids'] = $tag_ids;
 
 		return $restaurant;
@@ -59,7 +59,7 @@ class RestaurantsTagsRelationsComponent extends Component {
 	 * @param  array $restaurants_tags_relations
 	 * @return array
 	 */
-    public function AddPrimaryTagIdToRestaurants($restaurants, $restaurants_tags_relations){
+    public function AddPrimaryTagIdsToRestaurants($restaurants, $restaurants_tags_relations){
 
     	//引数チェック
     	$flg = ArrayControl::multipleEmptyCheck($restaurants, $restaurants_tags_relations);

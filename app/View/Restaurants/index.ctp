@@ -66,7 +66,7 @@ if(!empty($response['tags'])){
         if (!empty($restaurants)) {
             foreach ($restaurants as $rest) {
         ?>
-                <a href="<?php echo $this->Html->url(array("controller" => "Restaurants", "action" => "detail", '?' => array('restaurant_id' => $rest['id']))); ?>"><div class="img ratioFixed" style="background-image:url('<?php echo $rest["photo_url"]; ?>')">
+                <a href="<?php echo $this->Html->url(array("controller" => "Restaurants", "action" => "detail", '?' => array('restaurant_id' => $rest['id']))); ?>" class="a"><div class="img ratioFixed" style="background-image:url('<?php echo $rest["photo_url"]; ?>')">
                     <div class="titleBox titleBox-top">
                         <!-- <div class="map">map</div> -->
                         <ul class="tags">

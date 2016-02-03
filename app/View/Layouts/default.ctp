@@ -40,6 +40,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
 <body id="layout">
+	<div id="mask" class="is-hidden"></div>
 	<div id="l-container">
 		<?php // $this->element('side-menu'); 読み込み方謎なので一旦放置 ?>
 		<a href="#menu" id="menuLink" class="menu-link">
@@ -78,7 +79,6 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		</div>
 	</div>
 	<?php 
-		echo $this->element('sql_dump');
 		echo $this->Html->script('ui');
 	?>
 </body>

@@ -21,6 +21,10 @@
 
 App::uses('Controller', 'Controller');
 
+//ユーティリティーをロード
+App::uses('Folder', 'Utility');
+App::uses('File', 'Utility');
+
 /* アプリケーション全体で利用出来る関数をロード */
 App::uses('Util', 'Vendor');
 App::uses('ArrayControl', 'Vendor');

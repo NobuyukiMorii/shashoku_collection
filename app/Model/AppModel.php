@@ -103,7 +103,7 @@ class AppModel extends Model {
             $cacheName = $this->generateCacheName($type, $params);
 
             /* キャッシュのパスを指定する */
-            Cache::set(array('path' => CACHE."models/"));
+            Cache::set(array('path' => CACHE."master/"));
 
             /* キャッシュを取得する */
             $data = Cache::read($cacheName);
@@ -115,7 +115,7 @@ class AppModel extends Model {
                 $data = parent::find($type, $params);
 
                 /* キャッシュのパスを指定する */
-                Cache::set(array('path' => CACHE."models/"));
+                Cache::set(array('path' => CACHE."master/"));
 
                 /* 結果をキャッシュに記録する */
                 Cache::write($cacheName, $data);

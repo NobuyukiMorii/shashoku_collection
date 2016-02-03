@@ -108,6 +108,43 @@ if (!defined('CACHE')) {
 }
 
 /**
+ *キャッシュのマスタデータへのパス
+ */
+if (!defined('CACHE_MASTER')) {
+
+	define('CACHE_MASTER', TMP . 'cache' . DS . "master" . DS);
+
+}
+
+/**
+ *キャッシュのモデル定義へのパス
+ */
+if (!defined('CACHE_MODELS')) {
+
+	define('CACHE_MODELS', TMP . 'cache' . DS . "models" . DS);
+
+}
+
+/**
+ *キャッシュのパーシステントへのパス
+ */
+if (!defined('CACHE_PERSISTENT')) {
+
+	define('CACHE_PERSISTENT', TMP . 'cache' . DS . "persistent" . DS);
+
+}
+
+
+/**
+ *ビューキャッシュへのパス
+ */
+if (!defined('CACHE_VIEWS')) {
+
+	define('CACHE_VIEWS', TMP . 'cache' . DS . "views" . DS);
+
+}
+
+/**
  * Path to the vendors directory.
  */
 if (!defined('VENDORS')) {

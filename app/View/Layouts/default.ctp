@@ -74,8 +74,8 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 			<?php echo $this->Flash->render(); ?>
 			<?php echo $this->fetch('content'); ?>
 		</div>
-		<div id="l-flooter">
-			<p></p>
+		<div id="l-footer">
+			<p>@copyright ShashokuCollection</p>
 		</div>
 	</div>
 	<?php 

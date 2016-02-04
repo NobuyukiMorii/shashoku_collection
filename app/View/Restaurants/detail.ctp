@@ -81,7 +81,7 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
                     <img class="menuImg" src="<?php echo $coupon['set_menu']["photo_url"] ;?>" />
                     <p>クーポン利用可能期間：<?php echo date("m/d",strtotime($coupon["start_date"])).'〜'.date("m/d", strtotime($coupon["end_date"])) ?></p>
                     <p class="bold"><?php echo $coupon['price'] ?>円メニュー:<br/><?php ehbr($coupon['set_menu']['name']) ?></p>
-                    <button><a href="<?php echo $this->Html->url(array("controller" => "Coupons", "action" => "show")); ?>">このメニューのクーポンを発行する</a></button>
+                    <button><a href="<?php echo $this->Html->url(array("controller" => "Coupons", "action" => "show")); ?>" class="a">このメニューのクーポンを発行する</a></button>
                 </div>
         <?php
             }

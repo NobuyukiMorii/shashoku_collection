@@ -26,15 +26,12 @@
  */
 
 var gulp = require('gulp');
-var dir = require('require-dir');
 var git = require('gulp-git');
 var minimist = require('minimist');
 // コマンドラインの引数をパース
 var args = minimist(process.argv.slice(2));
 var conf = require('./config.json');
 var path = args.o ? conf[args.o].path : null;
-
-dir( './gulp/', { recurse: true } );
 
 // css最適化
 var sass = require('gulp-sass');

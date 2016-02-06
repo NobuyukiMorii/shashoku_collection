@@ -11,12 +11,137 @@ class CouponsComponent extends Component {
     	'SetMenus'
     );
 
+    /*
+     * コントローラーを読み込む
+     */
+    public function initialize(Controller $controller) {
+
+      $this->Controller = $controller;
+
+    }
+
+	/**
+	 * 表示用のクーポンを取得する
+	 * @param array $coupon_id
+	 * @return array
+	 */
+    public function getOneCouponForDisp($coupon_id=null){
+
+    	//変数の初期値を設定
+    	$result = array();
+
+    	//引数がない場合
+    	if(is_null($coupon_id) || !is_numeric($coupon_id)){
+    		return $result;
+    	}
+
+    	//クーポン関連のマスタを取得
+    	$msts = $this->getMsts($coupon_id);
+    	if(empty($msts)){
+    		return $result;
+    	}
+
+    	//モデルをロード
+    	$SetMenusPhoto 	= ClassRegistry::init('SetMenusPhoto');
+
+    	//優先順位の最も高いセットメニューの写真を取得
+		$msts['set_menu_photos'] 					= $SetMenusPhoto->getPrimaryRecord($msts['set_menu_photos']);
+    	//レストラン名
+    	$result['restaurant']['name'] 				= $msts['restaurants']['name'];
+    	//クーポンの追加料金
+    	$result['coupon']['additional_price'] 		= $msts['coupons']['additional_price'];
+    	//クーポンの価格
+    	$result['coupon']['price'] 					= $this->getTotalPrice($msts['coupons']['additional_price']);
+    	//セットメニューの写真
+    	$result['coupon']['set_menu']['photo_url'] 	= IMG_SET_MENUS_PHOTO.$msts['set_menu_photos']['file_name'];
+    	//料理名
+    	$result['coupon']['set_menu']['name'] 		= $msts['set_menus']['name'];
+
+    	return $result;
+
+    }
+
+	/**
+	 * クーポン関連のマスタを取得
+	 * @param int    $coupon_id
+	 * @return array
+	 */
+    public function getMsts($coupon_id){
+
+    	//返却値を設定
+    	$result = array();
+
+    	//引数がない場合
+    	if(empty($coupon_id)){
+    		return $result;
+    	}
+
+    	//モデルをロード
+		$Coupon 		= ClassRegistry::init('Coupon');
+		$SetMenu 		= ClassRegistry::init('SetMenu');
+		$SetMenusPhoto 	= ClassRegistry::init('SetMenusPhoto');
+		$Restaurant 	= ClassRegistry::init('Restaurant');
+
+		//クーポン取得
+    	$coupons = $Coupon->find('first', array(
+    		'conditions' => array(
+    			'id' => $coupon_id
+    		),
+    		'cache' => true
+    	));
+    	if(empty($coupons)){
+    		return $result;
+    	}
+
+    	//セットメニュー取得
+    	$set_menus = $SetMenu->find('first', array(
+    		'conditions' => array(
+    			'id' => $coupons['set_menu_id']
+    		),
+    		'cache' => true
+    	));
+    	if(empty($set_menus)){
+    		return $result;
+    	}
+
+        //セットメニュー写真取得
+    	$set_menu_photos = $SetMenusPhoto->find('all', array(
+    		'conditions' => array(
+    			'id' => $coupons['set_menu_id']
+    		),
+    		'cache' => true
+    	));
+    	if(empty($set_menu_photos)){
+    		return $result;
+    	}
+
+        //レストラン取得
+    	$restaurants = $Restaurant->find('first', array(
+    		'conditions' => array(
+    			'id' => $coupons['restaurant_id']
+    		),
+    		'cache' => true
+    	));
+    	if(empty($restaurants)){
+    		return $result;
+    	}
+
+    	//返却値を作成
+    	$result['coupons'] 			= $coupons;
+    	$result['set_menus'] 		= $set_menus;
+    	$result['set_menu_photos'] 	= $set_menu_photos;
+    	$result['restaurants'] 		= $restaurants;
+
+    	return $result;
+
+    }
+
 	/**
 	 * １つのレストランに複数のクーポン情報を追加する
 	 * @param array $restaurant
 	 * @return array
 	 */
-    public function AddCouponsInfoToRestaurant($restaurant, $basic_price){
+    public function AddCouponsInfoToRestaurant($restaurant){
 
     	//引数をチェック
     	if(empty($restaurant)){
@@ -79,7 +204,7 @@ class CouponsComponent extends Component {
 			}
 
 			/* 追加料金と基礎料金を合算 */
-			$coupons[$key]['price'] = $value['additional_price'] + $basic_price;
+			$coupons[$key]['price'] = $this->getTotalPrice($value['additional_price']);
 
 		}
 
@@ -107,7 +232,7 @@ class CouponsComponent extends Component {
 	 * @param array $set_menus
 	 * @return array
 	 */
-    public function AddCouponInfoToRestaurants($restaurants, $coupons, $set_menus, $basic_price){
+    public function AddCouponInfoToRestaurants($restaurants, $coupons, $set_menus){
 
     	//引数をチェック
     	$flg = ArrayControl::multipleEmptyCheck($restaurants, $coupons, $set_menus);
@@ -122,7 +247,7 @@ class CouponsComponent extends Component {
 		}
 
 		/* レストランに優先順位の一番高いクーポンを追加する */
-		$restaurants = $this->AddPrimaryCouponInfoToRestaurants($restaurants, $coupons, $set_menus, $basic_price);
+		$restaurants = $this->AddPrimaryCouponInfoToRestaurants($restaurants, $coupons, $set_menus);
 
 		return $restaurants;
 
@@ -166,7 +291,7 @@ class CouponsComponent extends Component {
 	 * @param array $set_menus
 	 * @return array
 	 */
-    public function AddPrimaryCouponInfoToRestaurants($restaurants, $coupons, $set_menus, $basic_price){
+    public function AddPrimaryCouponInfoToRestaurants($restaurants, $coupons, $set_menus){
 	
 		//レストランごとに、優先順位の高いクーポンを取得する
 		$Coupon = ClassRegistry::init('Coupon');
@@ -179,7 +304,7 @@ class CouponsComponent extends Component {
     		if(!empty($restaurants[$value['restaurant_id']])) {
 
 	    		//クーポンの価格を追加する
-	    		$restaurants[$value['restaurant_id']]['coupons']['price'] = $basic_price + $value['additional_price'];
+	    		$restaurants[$value['restaurant_id']]['coupons']['price'] = $this->getTotalPrice($value['additional_price']);
 
 	    		//セットメニューの名前を追加する
 	    		if(!empty($set_menus[$value['set_menu_id']]['name'])){
@@ -194,6 +319,51 @@ class CouponsComponent extends Component {
 
     	return $restaurants;
 
+    }
+
+	/**
+	 * 基本料金を取得する
+	 * @return array
+	 */
+    public function getBasicPrice(){
+
+    	//返却値を設定
+    	$result = 0;
+
+    	//基本料金がない場合
+		if(!isset($this->Controller->user_data['company']['basic_price'])){
+			return $result;
+		}
+
+		//ユーザー除法から基礎料金を取得
+		$result = $this->Controller->user_data['company']['basic_price'];
+
+		return $result;
+
+    }
+
+	/**
+	 * 基礎料金(basic_price)と追加料金（additional_price）の合計額を取得する
+	 * @param array $coupon_id
+	 * @return array
+	 */
+    public function getTotalPrice($additional_price){
+
+    	//返却値を設定
+    	$result = 0;
+
+    	//基本料金がない場合
+    	if(is_null($additional_price) || !is_numeric($additional_price)){
+    		return $result;
+    	}
+
+    	//基礎料金を取得
+    	$basic_price = $this->getBasicPrice();
+
+    	//合計料金を取得
+    	$result = $basic_price + $additional_price;
+
+    	return $result;
     }
 
 }

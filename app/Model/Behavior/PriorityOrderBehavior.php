@@ -6,6 +6,31 @@
 class PriorityOrderBehavior extends ModelBehavior {
 
     /**
+     * 優先順位の一番高いレコードを取得する
+	 * @param array  $array
+	 * @param string $key_name
+	 * @return array
+     */
+	public function getPrimaryRecord(Model $model, $array){
+
+		//返却値を設定
+		$result = array();
+
+		//引数がない場合
+		if(empty($array)){
+			return $result;
+		}
+
+		//優先順位順に並べ替える
+		$result = Hash::sort($array, '{n}.priority_order', 'asc');
+
+		$result = $result[0];
+
+		return $result;
+
+	}
+
+    /**
      * 対象のキーごとに、優先順位の一番高いレコードを取得する
 	 * @param array  $array
 	 * @param string $key_name

@@ -160,16 +160,10 @@ class RestaurantsComponent extends Component {
     	//返却値にレストランを格納する
     	$result = $restaurants;
 
-		//クーポンの基礎料金を追加
-		if(!isset($this->Controller->user_data['company']['basic_price'])){
-			return $result;
-		}
-		$basic_price = $this->Controller->user_data['company']['basic_price'];
-
 		//クーポンとセットメニューがあれば
 		if(!empty($coupons) && !empty($set_menus)){
 			/* レストランにクーポンを追加する */	
-			$result = $this->Coupons->AddCouponInfoToRestaurants($result, $coupons , $set_menus, $basic_price);
+			$result = $this->Coupons->AddCouponInfoToRestaurants($result, $coupons , $set_menus);
 			if(empty($result)){
 				return $result;
 			}

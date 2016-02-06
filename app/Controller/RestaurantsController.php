@@ -64,6 +64,7 @@ class RestaurantsController extends AppController {
 
 	/**
 	 * レストラン詳細画面のアクション
+	 * @param  int   $restaurant_id
 	 * @return array
 	 */
     public function detail($restaurant_id=null) {

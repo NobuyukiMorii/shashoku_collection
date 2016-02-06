@@ -2,7 +2,11 @@
 
     var layout   = document.getElementById('layout'),
         menu     = document.getElementById('menu'),
-        menuLink = document.getElementById('menuLink');
+        menuLink = document.getElementById('menuLink'),
+        mask     = document.getElementById('mask');
+
+    mask.style.width = screen.width + "px";
+    mask.style.height = screen.height + "px";
 
     function toggleClass(element, className) {
         var classes = element.className.split(/\s+/),
@@ -30,6 +34,7 @@
         toggleClass(layout, active);
         toggleClass(menu, active);
         toggleClass(menuLink, active);
+        toggleClass(mask, is-hidden);
     };
 
 }(this, this.document));

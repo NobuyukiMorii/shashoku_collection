@@ -25,6 +25,14 @@ $m_fontColor: #EEE
 #layout
     position: relative
     padding-left: 0
+    #mask
+        position: absolute
+        top: 0
+        left: 0
+        background-color: rgba(0,0,0,0.7)
+    &.active
+        position: absolute
+        left: 0
     &.active #menu
         left: $m_width
         width: $m_width

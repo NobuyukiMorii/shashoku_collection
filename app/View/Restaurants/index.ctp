@@ -65,8 +65,14 @@ if(!empty($response['tags'])){
         <?php
         if (!empty($restaurants)) {
             foreach ($restaurants as $rest) {
+                // 整形
+                $menu_name = $rest["coupons"]["set_menu_name"];
+                $menu_len = mb_strlen($menu_name);
+                if ($menu_len > 17) {
+                    $menu_name = mb_substr($menu_name, 0, 17)."..";
+                }
         ?>
-                <a href="<?php echo $this->Html->url(array("controller" => "Restaurants", "action" => "detail", '?' => array('restaurant_id' => $rest['id']))); ?>"><div class="img ratioFixed" style="background-image:url('<?php echo $rest["photo_url"]; ?>')">
+                <a href="<?php echo $this->Html->url(array("controller" => "Restaurants", "action" => "detail", '?' => array('restaurant_id' => $rest['id']))); ?>" class="a"><div class="img ratioFixed" style="background-image:url('<?php echo $rest["photo_url"]; ?>')">
                     <div class="titleBox titleBox-top">
                         <!-- <div class="map">map</div> -->
                         <ul class="tags">
@@ -80,7 +86,7 @@ if(!empty($response['tags'])){
                         </ul>
                         <p class="category"><?php echo $genres[$rest["genres_id"]]; ?></p>
                         <h4><?php echo $rest["name"]; ?></h4>
-                        <p class="menu"><?php echo $rest["coupons"]["price"]; ?>円メニュー:<?php echo $rest["coupons"]["set_menu_name"]; ?><label <?php if((int)$rest["coupons"]["count"]<=1) echo 'class="is-hidden"' ?>>..他<?php echo $rest["coupons"]["count"]-1?>つ</label></p>
+                        <p class="menu"><?php echo $rest["coupons"]["price"]; ?>円:<?php echo $menu_name; ?><label <?php if((int)$rest["coupons"]["count"]<=1) echo 'class="is-hidden"' ?>> 他<?php echo $rest["coupons"]["count"]-1?>つ</label></p>
                     </div>
                 </div></a>
         <?php

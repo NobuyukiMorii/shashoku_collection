@@ -1,0 +1,8 @@
+{
+    "morii" : {
+        "path" : "/dev/morii/app"
+    },
+    "tamiko" : {
+        "path" : "/dev/tamiko/app"
+    }
+}

@@ -52,20 +52,20 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
 
 
 
-<div class="titleBox">
+<div class="titleBox titleBox-detail">
+    <p class="category"><?php echo $genres[$rest["genre_id"]]; ?></p>
+    <h4><?php echo $rest["name"]; ?></h4>
     <ul class="tags">
     <?php  
-        if (empty($rest["tag_ids"])) {
-            foreach ($rest["tags_id"] as $tag_id) {
-                echo ' <li>'.$tags[$tag_id]["name"].'</li>';
+        if (!empty($rest["tag_ids"])) {
+            foreach ($rest["tag_ids"] as $tag_id) {
+                echo ' <li style="background-color:'.$tags[$tag_id]['color_code'].';">'.$tags[$tag_id]['name'].'</li>';
             }
         }
     ?>
     </ul>
-    <p class="category"><?php echo $genres[$rest["genre_id"]]; ?></p>
-    <h4><?php echo $rest["name"]; ?></h4>
-    <p>ランチ営業時間:<?php echo $rest["lunch_time"]; ?>　定休日:<?php echo $rest["regular_holiday"]; ?></p>
-    <p class="description"><?php echo $rest["description"]; ?></p>
+    <p>ランチ営業時間:<?php ehbr($rest["lunch_time"]); ?>　定休日:<?php echo $rest["regular_holiday"]; ?></p>
+    <p class="description"><?php ehbr($rest["description"]); ?></p>
 </div>
 
 <!-- メニュー -->
@@ -80,8 +80,8 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
                 <div class="menuBox">
                     <img class="menuImg" src="<?php echo $coupon['set_menu']["photo_url"] ;?>" />
                     <p>クーポン利用可能期間：<?php echo date("m/d",strtotime($coupon["start_date"])).'〜'.date("m/d", strtotime($coupon["end_date"])) ?></p>
-                    <p class="bold"><?php echo $coupon['price'] ?>円メニュー:<?php echo $coupon['set_menu']['name'] ?></p>
-                    <button><a href="<?php echo $this->Html->url(array("controller" => "Coupons", "action" => "show")); ?>">このメニューのクーポンを発行する</a></button>
+                    <p class="bold"><?php echo $coupon['price'] ?>円メニュー:<br/><?php ehbr($coupon['set_menu']['name']) ?></p>
+                    <button onClick="confirmCoupon()">このメニューのクーポンを発行する</button>
                 </div>
         <?php
             }
@@ -99,8 +99,9 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
 <tr><th>ジャンル</th><td><?php echo $genres[$rest["genre_id"]]; ?></td></tr>
 <tr><th>席数</th><td><?php echo $rest['seats_num']; ?></td></tr>
 <tr><th>喫煙</th><td><?php if($rest['smoke_flg']==1) echo '可能'; else echo '不可'; ?></td></tr>
-<tr><th>電話番号</th><td><?php echo $rest['phone_num'] ?></td></tr>
-<tr><th>ランチ<br/>営業時間</th><td><?php echo $rest['lunch_time'] ?></td></tr>
+<tr><th>予約</th><td><?php if($rest['reservation_flg']==1) echo '可能'; else echo '不可'; ?></td></tr>
+<tr><th>電話番号</th><td class="link"><?php echo $rest['phone_num'] ?></td></tr>
+<tr><th>ランチ<br/>営業時間</th><td><?php ehbr($rest['lunch_time']) ?></td></tr>
 <tr><th>定休日</th><td><?php echo $rest['regular_holiday'] ?></td></tr>
 <tr><th>住所</th><td><?php echo $rest['address'] ?></td></tr>
 <tr><th>店舗URL</th><td><a href="<?php echo $rest['url'] ?>" target="_blank"><?php echo $rest['url'] ?></a></td></tr>
@@ -124,6 +125,9 @@ if (count > 1) {
         var li = $("<li>",{id:"num_"+i, class:(i==1)?"selected":"", text:i});
         li.appendTo(ul);
     }
+} else {
+    $("#nextBtn").addClass("is-hidden");
+    $(".menuBox").css('margin-right','0');
 }
 var interval = -(w-25);
 var now = 0;
@@ -310,4 +314,14 @@ GMaps.geocode({
         }
     }
 });
+
+
+function confirmCoupon(){
+    // 「OK」時の処理開始 ＋ 確認ダイアログの表示
+    if(window.confirm('クーポンを発行します。この操作は取り消せません。よろしいですか？')){
+        location.href = "<?php echo $this->Html->url(array("controller" => "Coupons", "action" => "show")); ?>";
+    } else{
+        // 戻る
+    }
+}
 </script>

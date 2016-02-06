@@ -41,7 +41,7 @@ input, textarea
   vertical-align: middle
 
 // リンク
-a // リセット用
+.a // リセット用
   &:link
     color: $font_color
     text-decoration: none
@@ -52,7 +52,9 @@ a // リセット用
     color: $font_color
   &:active
     color: $font_color
-p a // 文章中のリンク
+p a, td a, .link // 文章中のリンク
+  color: $link_color
+  text-decoration: underline
   &:link
     color: $link_color
   &:visited

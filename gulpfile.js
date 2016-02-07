@@ -9,8 +9,11 @@
  * 2) CSSコンパイル & Sassの自動コンパイル
  * $ gulp   or $ gulp watch
  * 
- * 3) shashoku_collection へのCSSデプロイ
+ * 3) CSSデプロイ
  * $ gulp deploy-css
+ *  -> 開発環境にデプロイ(/dev/shashoku_collection/app/webroot/css)
+ * $ gulp deploy-css --prod
+ *  -> 本番環境?にデプロイ(/shashoku_collection/app/webroot/css)
  * ※ローカルファイルのsassをコンパイルしてアップするので注意
  * 
  * 4) テストフォルダへのサーバーデプロイ
@@ -67,7 +70,8 @@ var conn_config = {
   log: gutil.log
 }
 var remoteDest = path;
-var remoteDest_css = '/shashoku_collection/app/webroot/css';
+var remoteDest_css = 'dev/shashoku_collection/app/webroot/css';
+var remoteDest_prod_css = 'shashoku_collection/app/webroot/css';
 var localDest_css = [
   'app/webroot/css/style.css'
 ];
@@ -85,6 +89,9 @@ var globs_all = [
 ];
 gulp.task('deploy-css', ['sass'], function(){
   var conn = ftp.create(conn_config);
+  if (args.o) {
+    remoteDest_css = remoteDest_prod_css;
+  }
   return gulp.src(localDest_css, {buffer: false, dot: true})
     .pipe(conn.newerOrDifferentSize(remoteDest_css))
     .pipe(conn.dest(remoteDest_css));

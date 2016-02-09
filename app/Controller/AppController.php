@@ -65,7 +65,23 @@ class AppController extends Controller {
     /* コンポーネントをロード*/
     public $components = array(
         'FindSupport',
-        'Common'
+        'Common',
+        'Session',
+        'Auth' => array(
+            'authenticate' => array(
+                    'Form' => array(
+                            'scope' => array( 'User.del_flg' => 0),
+                            'fields' => array(
+                                'username' => 'email'
+                            ),
+                            'passwordHasher' => array(
+                                    'className' => 'Simple',
+                                    'hashType' => 'sha1',
+                            ),
+
+                    ),
+            ),
+        )
     );
     
     /*
@@ -78,6 +94,9 @@ class AppController extends Controller {
 
         //PCからのアクセスの場合には専用のviewを出力する 
         $this->Common->setThemeForPC();
+
+        //開発時は全てのメソッドをallowしておく（最後に削除）
+        $this->Auth->allow();
 
     }
 

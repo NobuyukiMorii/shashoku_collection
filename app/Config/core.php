@@ -42,7 +42,7 @@
  * SQLのログの出力設定
  * Model/Behavior/MysqlLog.phpにて出力
  */
-	Configure::write('Cake.logQuery', 0);
+	Configure::write('Cake.logQuery', 1);
 /**
  * Configure the Error handler used to handle errors for your application. By default
  * ErrorHandler::handleError() is used. It will display errors using Debugger, when debug > 0
@@ -229,17 +229,13 @@
 
 /**
  * A random string used in security hashing methods.
- * 2015/11/22
- * nmorii rewrite this
  */
-	Configure::write('Security.salt', 'Djghdj587589hfjashgljkashglja4062306529369');
+	Configure::write('Security.salt', 'rpqwiurp23578GJKJ70873iwghsdghshgphgo');
 
 /**
  * A random numeric string (digits only) used to encrypt/decrypt strings.
- * 2015/11/22
- * nmorii rewrite this
  */
-	Configure::write('Security.cipherSeed', '6273672039670293769823678920746026');
+	Configure::write('Security.cipherSeed', '70246702847608274690237406927309');
 
 /**
  * Apply timestamps with the last modified time to static assets (js, css, images).

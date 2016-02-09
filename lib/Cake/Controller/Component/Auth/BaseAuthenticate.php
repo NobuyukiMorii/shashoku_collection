@@ -128,6 +128,20 @@ abstract class BaseAuthenticate implements CakeEventListener {
 			'fields' => $userFields,
 			'contain' => $this->settings['contain'],
 		));
+
+		//自作after findの影響で上記$resultがlogin判定でうまく取得出来ないため、以下追記
+		if (empty($result[$model])) {
+
+			$result = ClassRegistry::init($userModel)->find('first', array(
+				'conditions' => $conditions,
+				'recursive' => $this->settings['recursive'],
+				'fields' => $userFields,
+				'contain' => $this->settings['contain'],
+				'callbacks' => 'before'
+			));
+
+		}
+
 		if (empty($result[$model])) {
 			$this->passwordHasher()->hash($password);
 			return false;

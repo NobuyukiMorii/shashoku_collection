@@ -21,3 +21,4 @@ $config['RECORD_DELETED'] = "1";
 /* ---------- About error code -------------------------- */
 $config['ERR_CODE_NO_PARAM'] 	= "1";
 $config['ERR_CODE_NO_DATA'] 	= "2";
+$config['ERR_CODE_FAIL_LOGIN'] 	= "3";

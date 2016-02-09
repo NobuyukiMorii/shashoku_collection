@@ -41,20 +41,6 @@ class CouponsController extends AppController {
 		//現在の時刻を格納
 		$this->view_data['now']  	= date('Y/m/d H:i');
 
-
-
-
-
-
-
-
-
-    	var_dump($this->view_data);
-    	exit;
-
-
-
-
     }
 
     public function history() {

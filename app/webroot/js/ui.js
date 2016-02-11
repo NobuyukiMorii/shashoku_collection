@@ -14,27 +14,38 @@
             i = 0;
 
         for(; i < length; i++) {
-          if (classes[i] === className) {
-            classes.splice(i, 1);
-            break;
-          }
+            if (classes[i] === className) {
+                classes.splice(i, 1);
+                // if (className=="is-hidden") {
+                //     $(window).on('touchmove.noScroll', function(e) {
+                //     e.preventDefault();
+                // });
+                // }
+                break;
+            }
         }
         // The className is not found
         if (length === classes.length) {
             classes.push(className);
+            // if (className=="is-hidden") {
+            //     $(window).off('.noScroll');
+            // });
         }
-
         element.className = classes.join(' ');
     }
-
-    menuLink.onclick = function (e) {
+    function menuSwitch(e) {
         var active = 'active';
-
         e.preventDefault();
         toggleClass(layout, active);
         toggleClass(menu, active);
         toggleClass(menuLink, active);
-        toggleClass(mask, is-hidden);
-    };
+        toggleClass(mask, "is-hidden");
+    }
+    menuLink.onclick = function (e) {
+        menuSwitch(e);
+    }
+    mask.onclick = function (e) {
+        menuSwitch(e);
+    }
 
 }(this, this.document));

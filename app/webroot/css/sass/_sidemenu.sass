@@ -26,12 +26,13 @@ $m_fontColor: #EEE
     position: relative
     padding-left: 0
     #mask
-        position: absolute
+        position: fixed
         top: 0
         left: 0
         background-color: rgba(0,0,0,0.7)
+        z-index: 3
     &.active
-        position: absolute
+        // position: absolute
         left: 0
     &.active #menu
         left: $m_width
@@ -145,7 +146,7 @@ $m_fontColor: #EEE
     //     * Tap the menu to trigger the active state.
     //     * Make the window large again.
     #layout.active 
-        position: relative
-        left: $m_width
+        // position: relative
+        // left: $m_width
 
 

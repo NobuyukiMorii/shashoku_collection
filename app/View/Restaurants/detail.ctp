@@ -76,12 +76,13 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
         <?php
         if ($rest['coupons']['count']  > 0) {
             foreach ($rest['coupons']['list'] as $coupon) {
+                $coupon["id"] = 1; // TODO: 仮
         ?>
                 <div class="menuBox">
                     <img class="menuImg" src="<?php echo $coupon['set_menu']["photo_url"] ;?>" />
                     <p>クーポン利用可能期間：<?php echo date("m/d",strtotime($coupon["start_date"])).'〜'.date("m/d", strtotime($coupon["end_date"])) ?></p>
                     <p class="bold"><?php echo $coupon['price'] ?>円メニュー:<br/><?php ehbr($coupon['set_menu']['name']) ?></p>
-                    <button onClick="confirmCoupon()">このメニューのクーポンを発行する</button>
+                    <button onClick="confirmCoupon(<?php echo $coupon["id"] ?>)">このメニューのクーポンを発行する</button>
                 </div>
         <?php
             }
@@ -92,6 +93,7 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
 
 <h2>アクセス</h2>
 <div id="map"></div>
+<p class="mapLink"><a href="http://maps.google.com/maps?q=<?php echo $rest['address'] ?>">GoogleMapアプリでみる</a></p>
 
 <h2>店舗情報</h2>
 <table>
@@ -316,10 +318,10 @@ GMaps.geocode({
 });
 
 
-function confirmCoupon(){
+function confirmCoupon(coupon_id){
     // 「OK」時の処理開始 ＋ 確認ダイアログの表示
     if(window.confirm('クーポンを発行します。この操作は取り消せません。よろしいですか？')){
-        location.href = "<?php echo $this->Html->url(array("controller" => "Coupons", "action" => "show")); ?>";
+        location.href = "/Coupons/show?coupon_id="+coupon_id;
     } else{
         // 戻る
     }

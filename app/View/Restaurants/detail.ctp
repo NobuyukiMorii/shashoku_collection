@@ -321,7 +321,7 @@ GMaps.geocode({
 function confirmCoupon(coupon_id){
     // 「OK」時の処理開始 ＋ 確認ダイアログの表示
     if(window.confirm('クーポンを発行します。この操作は取り消せません。よろしいですか？')){
-        location.href = "/Coupons/show?coupon_id="+coupon_id;
+        location.href = "<?php echo $this->Html->url(array("controller" => "Coupons", "action" => "show")); ?>"+"?coupon_id="+coupon_id;
     } else{
         // 戻る
     }

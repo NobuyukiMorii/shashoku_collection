@@ -24,12 +24,6 @@ class RestaurantsComponent extends Component {
 
     }
 
-	//----------------------------------------
-	//１//
-	//action:index
-	//最終的にviewに表示するレストラン情報を取得するメソッド
-	//----------------------------------------
-
 	/**
 	 * 返却用のレストランを取得。
 	 * ①レストランに関連するマスタを全て取得。
@@ -56,12 +50,6 @@ class RestaurantsComponent extends Component {
         return $restaurants;
 
 	}
-
-	//----------------------------------------
-	//２//
-	//action:index
-	//1のmakegetRestaurantsメソッド内の①「レストランに関連するマスタを全て取得」に関連するメソッド群
-	//----------------------------------------
 
 	/**
 	 * レストランに関連するマスタを全て取得。
@@ -201,11 +189,6 @@ class RestaurantsComponent extends Component {
 
     }
 
-	//----------------------------------------
-	//４//
-	//action:detail
-	//----------------------------------------
-
     /**
      * レストランidから、レストランを取得
      * @param  int   $restaurant_id
@@ -253,14 +236,8 @@ class RestaurantsComponent extends Component {
 			return array();
 		}
 
-		//クーポンの基礎料金を追加
-		if(!isset($this->Controller->user_data['company']['basic_price'])){
-			return $result;
-		}
-		$basic_price = $this->Controller->user_data['company']['basic_price'];
-
 		//クーポンとメニューを追加
-		$restaurant = $this->Coupons->AddCouponsInfoToRestaurant($restaurant, $basic_price);		
+		$restaurant = $this->Coupons->AddCouponsInfoToRestaurant($restaurant);		
 		if(empty($restaurant)){
 			return array();
 		}

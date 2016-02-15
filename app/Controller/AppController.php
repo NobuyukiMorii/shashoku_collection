@@ -43,16 +43,6 @@ App::uses('Log', 'Vendor');
  */
 class AppController extends Controller {
 
-    /* ユーザーの情報 */
-    public $user_data = array(
-        'user'    => array(
-
-        ),
-        'company' => array(
-
-        )
-    );
-
     /* viewに送信する変数 */
     public $view_data = array(
         'error_code'    => 0,
@@ -69,17 +59,15 @@ class AppController extends Controller {
         'Session',
         'Auth' => array(
             'authenticate' => array(
-                    'Form' => array(
-                            'scope' => array( 'User.del_flg' => 0),
-                            'fields' => array(
-                                'username' => 'email'
-                            ),
-                            'passwordHasher' => array(
-                                    'className' => 'Simple',
-                                    'hashType' => 'sha1',
-                            ),
-
+                'Form' => array(
+                    'fields' => array(
+                        'username' => 'email'
                     ),
+                    'passwordHasher' => array(
+                            'className' => 'Simple',
+                            'hashType' => 'sha1',
+                    ),
+                ),
             ),
         )
     );
@@ -95,8 +83,7 @@ class AppController extends Controller {
         //PCからのアクセスの場合には専用のviewを出力する 
         $this->Common->setThemeForPC();
 
-        //開発時は全てのメソッドをallowしておく（最後に削除）
-        $this->Auth->allow();
+
 
     }
 

@@ -5,23 +5,16 @@ class CouponsController extends AppController {
     public $components = array(
     	'Companies',
         'Coupons',
+        'LogCouponsConsumptions',
         'Common'
     );
 
-    /*
+    /**
      * クーポン表示画面
-	 * @param  int   $restaurant_id
+	 * @param  int   $coupon_id
 	 * @return array
      */
     public function show($coupon_id=null) {
-
-        //----------------------------------------
-        //法人id取得。ログイン機能実装後、本コードは削除する。自動的に取得出来るように修正する。
-        //----------------------------------------
-		$company_id = 1;
-
-        //会社情報をappコントローラーのメンバ変数に格納
-		$this->user_data['company'] = $this->Companies->getCompanyById($company_id);
 
         //----------------------------------------
         //クーポンidを取得
@@ -31,6 +24,7 @@ class CouponsController extends AppController {
     	}
     	//クーポンidが設定されなかった場合
     	if(is_null($coupon_id) || !is_numeric($coupon_id)){
+
 			$this->Common->returnError(Configure::read('ERR_CODE_NO_PARAM'), __('対象のクーポンが取得出来ません。'));	
 			return;
     	}
@@ -38,12 +32,40 @@ class CouponsController extends AppController {
     	//クーポン情報を取得
 		$this->view_data['coupon']  = $this->Coupons->getOneCouponForDisp($coupon_id);
 
-		//現在の時刻を格納
-		$this->view_data['now']  	= date('Y/m/d H:i');
+        //ログ保存
+        $log_data = $this->LogCouponsConsumptions->createLog($coupon_id);
+
+        //ログ保存に失敗した場合
+        if($log_data === false){
+
+            $this->Common->returnError(Configure::read('ERR_CODE_FAIL_SAVE'), __('クーポン利用履歴を保存出来ませんでした。'));   
+               return;
+        }
 
     }
 
+    /**
+     * クーポン消費履歴確認画面
+     * @return array
+     */
     public function history() {
+
+        //ユーザーidを取得
+        $user_id = $this->Auth->user('id');
+        if(empty($user_id)){
+
+            $this->Common->returnError(Configure::read('ERR_CODE_NOT_LOGIN'), __('ログインしていません。'));   
+            return;
+        }
+
+        //消費履歴を取得
+        $this->loadModel('LogCouponsConsumption');
+
+        $this->view_data['logs'] = $this->LogCouponsConsumption->find('all', array(
+            'conditions' => array(
+                'user_id' => $user_id
+            )
+        ));
 
     }
 

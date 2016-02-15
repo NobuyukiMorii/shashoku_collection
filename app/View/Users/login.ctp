@@ -1,6 +1,6 @@
 <form action="" method="post">
 <p>
-メールアドレス：<input type="text" name="data[User][username]">
+メールアドレス：<input type="text" name="data[User][email]">
 </p>
 <p>
 パスワード：<input type="text" name="data[User][password]">

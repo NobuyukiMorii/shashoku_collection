@@ -10,8 +10,7 @@ class RestaurantsController extends AppController {
         'RestaurantsGenres',
         'RestaurantsGenresRelations',
         'RestaurantsPhotos',
-        'Coupons',
-        'Common'
+        'Coupons'
     );
 
 	/**
@@ -19,14 +18,6 @@ class RestaurantsController extends AppController {
 	 * @return array
 	 */
     public function index() {
-
-        //----------------------------------------
-        //法人id取得。ログイン機能実装後、本コードは削除する。自動的に取得出来るように修正する。
-        //----------------------------------------
-		$company_id = 1;
-
-        //会社情報をappコントローラーのメンバ変数に格納
-		$this->user_data['company'] = $this->Companies->getCompanyById($company_id);
 
         //----------------------------------------
         //レストラン取得
@@ -68,14 +59,6 @@ class RestaurantsController extends AppController {
 	 * @return array
 	 */
     public function detail($restaurant_id=null) {
-
-        //----------------------------------------
-        //法人id取得。ログイン機能実装後、本コードは削除する。自動的に取得出来るように修正する。
-        //----------------------------------------
-		$company_id = 1;
-
-        //会社情報をappコントローラーのメンバ変数に格納
-		$this->user_data['company'] = $this->Companies->getCompanyById($company_id);
 
         //----------------------------------------
         //レストランidを取得

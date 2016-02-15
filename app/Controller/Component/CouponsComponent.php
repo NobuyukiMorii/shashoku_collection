@@ -8,7 +8,8 @@ class CouponsComponent extends Component {
 
 	//コンポーネントをロード
     public $components = array(
-    	'SetMenus'
+    	'SetMenus',
+        'Session'
     );
 
     /*
@@ -36,16 +37,11 @@ class CouponsComponent extends Component {
     	}
 
     	//クーポン関連のマスタを取得
-    	$msts = $this->getMsts($coupon_id);
+    	$msts = $this->getModifiedMsts($coupon_id);
     	if(empty($msts)){
     		return $result;
     	}
 
-    	//モデルをロード
-    	$SetMenusPhoto 	= ClassRegistry::init('SetMenusPhoto');
-
-    	//優先順位の最も高いセットメニューの写真を取得
-		$msts['set_menu_photos'] 					= $SetMenusPhoto->getPrimaryRecord($msts['set_menu_photos']);
     	//レストラン名
     	$result['restaurant']['name'] 				= $msts['restaurants']['name'];
     	//クーポンの追加料金
@@ -53,11 +49,49 @@ class CouponsComponent extends Component {
     	//クーポンの価格
     	$result['coupon']['price'] 					= $this->getTotalPrice($msts['coupons']['additional_price']);
     	//セットメニューの写真
-    	$result['coupon']['set_menu']['photo_url'] 	= IMG_SET_MENUS_PHOTO.$msts['set_menu_photos']['file_name'];
+    	$result['coupon']['set_menu']['photo_url'] 	= IMG_SET_MENUS_PHOTO.$msts['set_menus_photos']['file_name'];
     	//料理名
     	$result['coupon']['set_menu']['name'] 		= $msts['set_menus']['name'];
+        //現在の時刻
+        $result['date_time']     = date('Y/m/d H:i');
 
     	return $result;
+
+    }
+
+    /**
+     * クーポン関連マスタの返却値を使いやすいように修正
+     * @param  int    $coupon_id
+     * @return array
+     */
+    public function getModifiedMsts($coupon_id){
+
+        //変数の初期値を設定
+        $result = array();
+
+        //引数がない場合
+        if(is_null($coupon_id) || !is_numeric($coupon_id)){
+            return $result;
+        }
+
+        //マスタ取得
+        $msts = $this->getMsts($coupon_id);
+
+        if(empty($msts)){
+            return $result;
+        }
+
+        //優先順位の最も高いセットメニューの写真を取得
+        $SetMenusPhoto  = ClassRegistry::init('SetMenusPhoto');
+        $msts['set_menus_photos']                   = $SetMenusPhoto->getPrimaryRecord($msts['set_menus_photos']);
+        if(empty($msts['set_menus_photos'])){
+            return $result;
+        }
+
+        //返却値にマスタ情報を格納
+        $result = $msts;
+
+        return $result;
 
     }
 
@@ -68,13 +102,13 @@ class CouponsComponent extends Component {
 	 */
     public function getMsts($coupon_id){
 
-    	//返却値を設定
-    	$result = array();
+        //変数の初期値を設定
+        $result = array();
 
-    	//引数がない場合
-    	if(empty($coupon_id)){
-    		return $result;
-    	}
+        //引数がない場合
+        if(is_null($coupon_id) || !is_numeric($coupon_id)){
+            return $result;
+        }
 
     	//モデルをロード
 		$Coupon 		= ClassRegistry::init('Coupon');
@@ -105,13 +139,13 @@ class CouponsComponent extends Component {
     	}
 
         //セットメニュー写真取得
-    	$set_menu_photos = $SetMenusPhoto->find('all', array(
+    	$set_menus_photos = $SetMenusPhoto->find('all', array(
     		'conditions' => array(
     			'id' => $coupons['set_menu_id']
     		),
     		'cache' => true
     	));
-    	if(empty($set_menu_photos)){
+    	if(empty($set_menus_photos)){
     		return $result;
     	}
 
@@ -127,10 +161,10 @@ class CouponsComponent extends Component {
     	}
 
     	//返却値を作成
-    	$result['coupons'] 			= $coupons;
-    	$result['set_menus'] 		= $set_menus;
-    	$result['set_menu_photos'] 	= $set_menu_photos;
-    	$result['restaurants'] 		= $restaurants;
+    	$result['coupons']             = $coupons;
+    	$result['set_menus']           = $set_menus;
+    	$result['set_menus_photos']    = $set_menus_photos;
+    	$result['restaurants']         = $restaurants;
 
     	return $result;
 
@@ -330,13 +364,14 @@ class CouponsComponent extends Component {
     	//返却値を設定
     	$result = 0;
 
-    	//基本料金がない場合
-		if(!isset($this->Controller->user_data['company']['basic_price'])){
-			return $result;
-		}
+        //セッションからUser_dataを取得
+        $user_data = $this->Session->read('Auth');
+        if(empty($user_data)){
+            return $result;
+        }
 
-		//ユーザー除法から基礎料金を取得
-		$result = $this->Controller->user_data['company']['basic_price'];
+        //結果を格納
+        $result = $user_data['Company']['basic_price'];
 
 		return $result;
 

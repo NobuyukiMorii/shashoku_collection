@@ -14,40 +14,42 @@ class UsersController extends AppController {
 
     }
 
+    /**
+     * ログイン
+     * @return void
+     */
     public function login() {
 
+        //POSTされた場合
         if ($this->request->is('post')) {
+
+            //ログイン
             if ($this->Auth->login()) {
 
-                $user_data['User']['id']            = $this->Auth->user('id');
-                $user_data['User']['company_id']    = $this->Auth->user('company_id');
-                $user_data['User']['email']         = $this->Auth->user('email');
-                $user_data['User']['group_id']      = $this->Auth->user('group_id');
+                //Authをセット
+                $user_data = $this->Users->setAuthSession($this->Auth->user('id'));
 
-                $user_data['Profile']['family_name']   = null;
-                $user_data['Profile']['first_name']    = null;
-                $user_data['Profile']['gender']        = null;
-                $user_data['Profile']['group_id']      = null;
+                //ユーザーデータがない場合
+                if(empty($user_data)){
+                    $this->Common->returnError(Configure::read('ERR_CODE_NO_DATA'), __('ユーザーデータが取得出来ません。'));
 
-                $user_data['Company']['id']                 = null;
-                $user_data['Company']['name']               = null;
-                $user_data['Company']['basic_price']        = null;
-                $user_data['Company']['monthly_coupon_num'] = null;
+                    //ログアウト
+                    $this->Auth->logout();
 
-                $user_data['Departments']   = null;
-                $user_data['Location']      = null;
+                    //ログイン画面遷移
+                    $this->redirect(array('controller' => 'Users', 'action' => 'login'));
+                    return;
 
-                $this->Session->write('Auth', $user_data);
-
-                $user = $this->Session->read('Auth');
-                var_dump($user);
-                exit;
-
-
-
+                }
+                
+                //ログイン後ページ遷移
                 $this->redirect(array('controller' => 'Restaurants', 'action' => 'index'));
+
             } else {
+
+                //ログイン画面遷移
                 $this->redirect(array('controller' => 'Users', 'action' => 'login'));
+
             }
         }
 

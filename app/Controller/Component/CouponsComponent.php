@@ -355,6 +355,36 @@ class CouponsComponent extends Component {
 
     }
 
+    /**
+     * クーポンを合計料金と合わせて取得
+     * @return array
+     */
+    public function getCouponsWithTotalPrice(){
+
+        //返却値を設定
+        $result =  array();
+
+        //モデルをロード
+        $Coupon         = ClassRegistry::init('Coupon');
+
+        //クーポン取得
+        $coupons = $Coupon->find('all', array(
+            'cache' => true
+        ));
+        if(empty($coupons)){
+            return $coupons;
+        }
+
+        //合計金額を追加
+        foreach ($coupons as $key => $value) {
+            $result[$key]                   = $value;
+            $result[$key]['total_price']    = $this->getTotalPrice($value['additional_price']);
+        }
+
+        return $result;
+
+    }
+
 	/**
 	 * 基本料金を取得する
 	 * @return array

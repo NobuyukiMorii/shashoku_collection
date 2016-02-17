@@ -7,6 +7,33 @@ App::uses('Component', 'Controller');
 class RestaurantsPhotosComponent extends Component {
 
 	/**
+	 * それぞれのレストランの最優先写真を取得
+	 * @return array
+	 */
+	public function getPrimaryPhotos(){
+
+		//返却値を設定
+		$result = array();
+
+		//モデルをロード
+		$RestaurantsPhoto = ClassRegistry::init('RestaurantsPhoto');
+
+		//写真を取得
+        $restaurants_photos = $RestaurantsPhoto->find('all', array(
+            'cache' => true
+        ));
+        if(empty($restaurants_photos)){
+        	return $result;
+        }
+
+        //優先順位の一番高い写真を取得
+        $result = $RestaurantsPhoto->getPrimaryRecordOfEachKey($restaurants_photos, 'restaurant_id');
+
+        return $result;
+
+	}
+
+	/**
 	 * １つのレストランに写真を追加する
 	 * 優先順位順
 	 * @param array $restaurants

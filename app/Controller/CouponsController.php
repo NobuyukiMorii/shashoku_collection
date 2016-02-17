@@ -6,7 +6,8 @@ class CouponsController extends AppController {
     	'Companies',
         'Coupons',
         'LogCouponsConsumptions',
-        'Common'
+        'Common',
+        'RestaurantsPhotos'
     );
 
     /**
@@ -16,9 +17,7 @@ class CouponsController extends AppController {
      */
     public function show($coupon_id=null) {
 
-        //----------------------------------------
         //クーポンidを取得
-        //----------------------------------------
         if(empty($coupon_id)){
     		$coupon_id = Arguments::getArguments('coupon_id');
     	}
@@ -42,6 +41,8 @@ class CouponsController extends AppController {
                return;
         }
 
+        //authのクーポン残り枚数を変更
+
     }
 
     /**
@@ -58,14 +59,8 @@ class CouponsController extends AppController {
             return;
         }
 
-        //消費履歴を取得
-        $this->loadModel('LogCouponsConsumption');
-
-        $this->view_data['logs'] = $this->LogCouponsConsumption->find('all', array(
-            'conditions' => array(
-                'user_id' => $user_id
-            )
-        ));
+        //ログを取得
+        $this->view_data['logs'] = $this->LogCouponsConsumptions->getDataForHistory($user_id);
 
     }
 

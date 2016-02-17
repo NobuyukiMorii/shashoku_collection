@@ -20,8 +20,6 @@ if(!empty($response['tags'])){
 
 
 <?php
-// jQueryこんなところで読み込んでしもた
-echo $this->Html->script('https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js');
 // 地図用にgmaps埋め込み
 echo $this->Html->script('http://maps.google.com/maps/api/js?sensor=true&.js');
 echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');

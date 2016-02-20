@@ -14,6 +14,8 @@ class UsersController extends AppController {
 
     }
 
+    public $layout = "sample";
+
     /**
      * ログイン
      * @return void
@@ -56,7 +58,7 @@ class UsersController extends AppController {
     }
 
     public function logout() {
-
+        $this->Auth->logout();
     }
 
     public function detail() {

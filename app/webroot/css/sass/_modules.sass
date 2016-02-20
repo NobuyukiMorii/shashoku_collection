@@ -32,6 +32,9 @@ button
 
 button.emergency
   background-color: red
+  label
+    font-size: 11px
+
 i
   width: 15px
   height: 15px
@@ -54,6 +57,16 @@ i
   margin-top: 15px
   p
     margin-top: 0
+
+#mask_back
+  position: fixed
+  top: 0
+  left: 0
+  background-color: rgba(256,256,256,0.7)
+  width: 100vw
+  height: 100vh
+  z-index: 3
+
 
 .buttonBox
   margin: 10px 10px 0
@@ -97,7 +110,7 @@ div.img.history
   .menu
     padding-left: 15px
     background: url(../img/ico_cutlery.png) no-repeat
-    background-size: auto 100%
+    background-size: 15px
   ul.tags
     float: right
     li
@@ -297,17 +310,52 @@ div.menuShowBox
   background-color: rgba(30,30,30,0.8)
   border: 1px solid #DDD
   width: calc(100% - 30px)
-  height: 85%
+  height: 300px
   margin: 5px 15px 0
   border-radius: 4px
+  z-index: 5
+  .slider
+    height: 50px
+    margin: 80px auto 0
+    background-color: rgba(256,256,256,0.3)
+    border-radius: 25px
+    position: relative
+    width: 250px
+    i
+      font-size: 50px
+      position: absolute
+    i.target
+      left: 5px
+    i.target.is-ok
+      color: #f5a623
+    i.goal
+      right: 30px
+      opacity: 0.3
+    p
+      position: absolute
+      width: 250px
+      margin: 0
+      text-align: center
+      top: 17px
+      opacity: 0.3
   p
     color: #FFF
     text-align: center
-    margin: 5px 10px 0
+    margin: 20px 10px 0
     font-weight: bold
+  #success
+    font-size: 18px
+    i
+      font-size: 30px
+      width: 30px
+      height: 30px
+      color: #89b23d
   button
     position: absolute
     bottom: 0px
+    background-color: transparent
+    i
+      font-size: 14px
 
 button.cancel
   background-color: #999
@@ -322,6 +370,9 @@ button.cancel
 
 .is-hidden
   display: none !important
+
+.is-fixed
+  position: fixed
 
 .cake-sql-log
   display: none !important

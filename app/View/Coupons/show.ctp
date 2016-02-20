@@ -9,32 +9,52 @@ if(!empty($response['coupon']['coupon'])){
 ?>
 
 <div id="signUp" class="is-hidden">
-<p>認証ジェスチャーを下のエリアにかいてください</p>
-<p id="success" class="is-hidden">認証成功！</p>
-<button class="cancel" onClick="signUpCancel()">キャンセル</button>
+<p>右にスライドして認証してください<br/>
+※認証後は取消できません。</p>
+<div class="slider">
+<i id="target" class="fa fa-chevron-circle-right target"></i>
+<p>>　>　>　>　></p>
+<i class="fa fa-chevron-circle-right goal"></i>
+</div>
+<p id="success" class="is-hidden"><i class="fa fa-check-circle-o"></i>認証成功！</p>
+<button class="cancel" onClick="signUpCancel()"><i class="fa fa-times-circle"></i>キャンセル</button>
 </div>
 
 <p class="message">クーポンを発行しました！<br/>
 この画面をお店の店員さんに見せてください</p>
 
 <div class="menuShowBox">
-    <p class="rest"><?php echo $rest['name'] ?></p>
-    <h3><?php echo $menu['name'] ?></h3>
+    <p class="rest"><?php ehbr($rest['name']) ?></p>
+    <h3><?php ehbr($menu['name']) ?></h3>
     <img class="" src="<?php echo $menu["photo_url"] ?>" />
     <p class="bold"><?php echo '価格:'.$coupon['price'].'円' ?>
     <p class="dispDate"><?php echo '発行日時: '.date("Y/m/d H:i"/*, $menu['disp_date']*/) ?></p>
     </p>
-    <button class="emergency" onClick="signUpCall()">認証ボタン<br/>※必ず店舗の方に押してもらってください</button>
+    <button class="emergency" onClick="signUpCall()">認証する<br/><label>※必ず店舗の方に押してもらってください</label></button>
 </div>
 
 <div class="buttonBox">
-<button class="cancel">レストランのページに戻る</button>
+<button class="cancel" onClick="history.back()">レストランのページに戻る</button>
 </div>
+
+<form name="is_coupons_consumption" method="POST" action="">
+<input type=hidden name="is_coupons_consumption" value=true >
+</form>
 
 <script>
 function signUpInit() {
     $("#signUp").bind("touchstart", r_TouchStart);
     $("#signUp").bind("touchmove" , r_TouchMove);
+    $("#signUp").bind("touchend" , r_TouchCancel);
+    if (!$("#mask_back") || !$("#mask_back").length > 0) {
+        var mask = $("<div id='mask_back'>");
+        // mask.id = "mask_back";
+        $("#layout").append(mask);
+        // $("#layout").insertBefore(mask, $("#layout").firstChild);
+    } else {
+        $("#mask_back").removeClass("is-hidden");
+    }
+    $("#layout").addClass("is-fixed");
 }
 function signUpCall() {
     signUpInit();
@@ -43,11 +63,16 @@ function signUpCall() {
 function signUpDone() {
     $("#success").removeClass("is-hidden");
     setTimeout( function () {
-        $("#signUp").addClass("is-hidden");
-    } , 1000 );
+        // POST送信
+        document.is_coupons_consumption.submit();
+        // Show読み込み直す
+        // signUpCancel();
+    } , 2000 );
 }
 function signUpCancel() {
     $("#signUp").addClass("is-hidden");
+    $("#mask_back").addClass("is-hidden");
+    $("#layout").removeClass("is-fixed");
 }
 // タップした位置をメモリーする
 var r_posTapped;
@@ -57,21 +82,39 @@ function r_TouchStart( event ) {
     // $("#restImgs").data("memory",pos.x);
     console.log("TouchStart pos x == "+pos.x);
 }
+var moving;
 //タップした位置からプラスかマイナスかで左右移動を判断
 function r_TouchMove( event ) {
     var pos = Position(event); //X,Yを得る
     console.log("TouchMove pos x == "+pos.x);
     console.log("TouchMove r_posTapped == "+r_posTapped);
-    if( pos.x < r_posTapped ){
-        if ((pos.x - r_posTapped) < -100 ) {
-            console.log("TouchMove 左!!");
-            // r_moveNext();
+    moving = pos.x - r_posTapped;
+    if (moving > 0 && moving < 200) $("#target").css("left", moving+5+"px");
+    if (moving > 190) {
+        console.log("認証OK!");
+        // 色変える
+        if (!$("#target").hasClass("is-ok")) {
+            $("#target").addClass("is-ok");
         }
-    }else{
-        if ((pos.x - r_posTapped) > 200 ) {
-            console.log("TouchMove 右!!");
-            signUpDone();
-        }
+    }
+    if (moving < 190) {
+        // 色戻す
+        $("#target").removeClass("is-ok");
+    }
+
+}
+function r_TouchCancel( event ) {
+    if (moving > 190) {
+        signUpDone();
+    } else {
+        var reset = setInterval(function(){
+            $("#target").css("left", moving+5+"px");
+            moving --;
+            if (moving < 0) {
+                $("#target").css("left", "5px")
+                clearInterval(reset);
+            }
+        }, 0.1);
     }
 }
 /*

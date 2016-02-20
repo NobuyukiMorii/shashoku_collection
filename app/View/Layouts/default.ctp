@@ -32,6 +32,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		// [Pure.css] http://purecss.io/
 		echo $this->Html->css('http://yui.yahooapis.com/pure/0.6.0/pure-min.css');
 		echo $this->Html->css('style');
+		echo $this->Html->css('font-awesome.min');
 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
@@ -55,21 +56,22 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 			        <label>Tamiko</label>
 		        </p>
 		        <ul class="pure-menu-list">
-		            <li class="pure-menu-item"><a href="<?php echo $this->Html->url(array("controller" => "Restaurants", "action" => "index")); ?>" class="pure-menu-link">ランチ店舗一覧</a></li>
-		            <li class="pure-menu-item"><a href="<?php echo $this->Html->url(array("controller" => "Coupons", "action" => "history")); ?>" class="pure-menu-link">行ったお店の履歴</a></li>
+		            <li class="pure-menu-item"><a href="<?php echo $this->Html->url(array("controller" => "Restaurants", "action" => "index")); ?>" class="pure-menu-link"><i class="fa fa-home"></i>ランチ店舗一覧</a></li>
+		            <li class="pure-menu-item"><a href="<?php echo $this->Html->url(array("controller" => "Coupons", "action" => "history")); ?>" class="pure-menu-link"><i class="fa fa-history"></i>行ったお店の履歴</a></li>
 		            <li class="pure-menu-item" class="menu-item-divided pure-menu-selected">
-		                <a href="<?php echo $this->Html->url(array("controller" => "Notifications", "action" => "index")); ?>" class="pure-menu-link">運営からのお知らせ</a>
+		                <a href="<?php echo $this->Html->url(array("controller" => "Notifications", "action" => "index")); ?>" class="pure-menu-link"><i class="fa fa-envelope" style="font-size:12px;"></i>運営からのお知らせ</a>
 		            </li>
-		            <li class="pure-menu-item"><a href="#" class="pure-menu-link">使い方・マニュアル</a></li>
-		            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Q&A</a></li>
-		            <li class="pure-menu-item"><a href="#" class="pure-menu-link">利用規約</a></li>
-		            <li class="pure-menu-item"><a href="<?php echo $this->Html->url(array("controller" => "Users", "action" => "detail")); ?>" class="pure-menu-link">設定</a></li>
+		            <li class="pure-menu-item"><a href="#" class="pure-menu-link"><i class="fa fa-book"></i>使い方・マニュアル</a></li>
+		            <li class="pure-menu-item"><a href="#" class="pure-menu-link"><i class="fa fa-question"></i>Q&A</a></li>
+		            <li class="pure-menu-item"><a href="#" class="pure-menu-link"><i class="fa fa-file-text-o"></i>利用規約</a></li>
+		            <li class="pure-menu-item"><a href="<?php echo $this->Html->url(array("controller" => "Users", "action" => "detail")); ?>" class="pure-menu-link"><i class="fa fa-cog"></i>設定</a></li>
 		        </ul>
 		    </div>
 		</div>
 		<!--sidemenu ここまで-->
 		<div id="l-header">
-			<h1><?php echo $this->fetch('title'); ?></h1>
+			<h1><?php echo "<img src='../img/logo.png'>" ?></h1>
+			<!-- <h1><?php echo $this->fetch('title'); ?></h1> -->
 		</div>
 		<div id="l-main">
 			<?php echo $this->Flash->render(); ?>

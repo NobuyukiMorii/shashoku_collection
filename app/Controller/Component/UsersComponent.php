@@ -10,9 +10,200 @@ class UsersComponent extends Component {
     public $components = array(
     	'UsersCompaniesLocationsRelations',
     	'UsersCompaniesDepartmentsRelations',
+        'UsersCouponsConsumptionsCounts',
     	'Session',
         'Auth'
     );
+
+    /*
+     * コントローラーを読み込む
+     */
+    public function initialize(Controller $controller) {
+
+        $this->Controller = $controller;
+
+    }
+
+    /**
+     * 最終ログインが今月のログインかを判定
+     */
+    public function checkThisMonthLogin(){
+
+        //返却値を設定
+        $result = false;
+
+        //最終ログイン日時を取得
+        $last_login_date = $this->Session->read('Auth.last_login_date');
+
+        //最終ログイン日時がない場合
+        if(empty($last_login_date)){
+            //返却するauthがない可能性があるので、trueとする
+            $result = true;
+        }
+
+        //今月
+        $this_year_month = date('Ym');
+
+        //最終ログイン月
+        $last_login_year_month = date('Ym', strtotime($last_login_date));
+
+        //最終ログイン月が今月ではない場合
+        if($this_year_month === $last_login_year_month){
+            $result = true;
+        }
+
+        return $result;
+
+    }
+
+    /**
+     * render直前に、ユーザー情報を
+     */
+    public function setUserDataForView(){
+
+        //現在の月
+        $this->Controller->view_data['this_month'] = date('n');
+
+        //ユーザーデータ
+        $user_data = $this->Session->read('Auth');
+
+        //ユーザーデータがある場合
+        if(!empty($user_data)){
+
+            //ユーザー情報がある場合
+            if(!empty($user_data['User'])){
+
+                //ユーザーid
+                $this->Controller->view_data['user_data']['user']['id'] = $user_data['User']['id'];
+
+                //ユーザーのemail
+                $this->Controller->view_data['user_data']['user']['email'] = $user_data['User']['email'];
+
+            }
+
+            //プロフィール情報がある場合
+            if(!empty($user_data['UsersProfile'])){
+                //ユーザー名
+                $this->Controller->view_data['user_data']['user']['name'] = $user_data['UsersProfile']['family_name'].' '.$user_data['UsersProfile']['first_name'];
+            }
+
+            //会社情報がある場合
+            if(!empty($user_data['Company'])){
+                //会社名
+                $this->Controller->view_data['user_data']['company']['name'] = $user_data['Company']['name'];
+            }
+
+            //クーポン数情報がある場合  
+            if(!empty($user_data['CouponsCount'])){
+
+                //１ヶ月あたりの最大クーポン利用限度枚数
+                $this->Controller->view_data['user_data']['user_coupon_status']['count']['monthly'] = $user_data['CouponsCount']['monthly'];
+
+                //現在の利用枚数
+                $this->Controller->view_data['user_data']['user_coupon_status']['count']['consumption'] = $user_data['CouponsCount']['consumption'];      
+
+                //残り枚数
+                $this->Controller->view_data['user_data']['user_coupon_status']['count']['remaining'] = $user_data['CouponsCount']['remaining'];
+
+                //ユーザーが現在クーポンを利用出来るかどうか
+                $this->Controller->view_data['user_data']['user_coupon_status']['availability']['is_available']   = $this->checkIsUserCouponAvailable();
+
+                //ユーザーが今月のクーポンを使い切ったかどうか
+                $this->Controller->view_data['user_data']['user_coupon_status']['availability']['less_than_monthly_count'] = $this->checkLessThanMonthlyCount();
+
+                //ユーザーが本日クーポンを利用したかどうか
+                $this->Controller->view_data['user_data']['user_coupon_status']['consumed']['today'] = $this->checkIsUserCouponConsumedToday();
+            }
+
+        }
+
+    }
+
+    /**
+     * ユーザーが現在クーポンを取得出来る状態であるかを判定
+     * @return boolean
+     */
+    public function checkIsUserCouponAvailable(){
+
+        //返却値をしてい
+        $result = false;
+
+        //本日利用したかどうか
+        $is_consumed_today = $this->checkIsUserCouponConsumedToday();
+        if($is_consumed_today === true){
+            return $result;
+        }
+
+        //今月購入可能か
+        $is_month_available = $this->checkLessThanMonthlyCount();
+        if($is_month_available === false){
+            return $result;
+        }
+
+        $result = true;
+
+        return $result;
+    }
+
+    /**
+     * ユーザーが本日クーポンを使ったかどうかを判定
+     * @return boolean
+     */
+    public function checkIsUserCouponConsumedToday(){
+
+        //返却値を設定（本日クーポンを使っていない）
+        $result = false;
+
+        //クーポンの最終利用時間
+        $coupon_count_mofidied = $this->Session->read('Auth.UsersCouponsConsumptionsCount.modified');
+
+        //最終利用時間が取得出来ない場合
+        if(empty($coupon_count_mofidied)){
+            //一度もクーポンを使ったことがないユーザーなので、使っていない
+            return $result;
+        }
+
+        //更新時間が本日かどうかを確認
+        $is_today = DateControl::checkInToday($coupon_count_mofidied);
+
+
+        //更新日が本日の場合
+        if($is_today === true){
+            //本日クーポンを使った
+            $result = true;
+        }
+
+        return $result;
+
+    }
+
+    /**
+     * 今月のクーポン利用限度数に達していないことを確認
+     * @return array
+     */
+    public function checkLessThanMonthlyCount(){
+
+        //返却値を設定
+        $result = false;
+
+        //ユーザーデータ
+        $remaining_count = $this->Session->read('Auth.CouponsCount.remaining');
+
+        //引数がない場合
+        if(is_null($remaining_count) || !is_numeric($remaining_count)){
+            return $result;
+        }
+
+        //残り利用可能数が1以上なら
+        if($remaining_count >= 1){
+            //クーポン利用限度数に達していない
+            $result = true;
+
+        } 
+
+        return $result;
+
+    }
 
     /**
      * ログイン中のユーザーの情報をSessionに格納
@@ -35,6 +226,12 @@ class UsersComponent extends Component {
     		return $result;
     	}
 
+        //ユーザー情報にクーポン利用状況を付加
+        $user_data = $this->addCouponCountToUserData($user_data);
+
+        //最終ログイン日を付加
+        $user_data['last_login_date'] = date('Y-m-d H:i:s');
+
 		//セッションに保存
 		$flg = $this->Session->write('Auth', $user_data);
 
@@ -46,9 +243,91 @@ class UsersComponent extends Component {
 		return $result;
 
 	}
+    /**
+     * ユーザー情報にクーポン利用状況
+     * @param  int   $user_id
+     * @return array
+     */
+    public function addCouponCountToUserData($user_data){
+        //返却値を設定
+        $result = array();
+
+        //引数がない場合
+        if(empty($user_data)){
+            return $result;
+        }
+
+        //月のクーポン限度数がない場合
+        if(is_null($user_data['Company']['monthly_coupon_count'])){
+            return $result;
+        }
+
+        //今月のクーポン消費枚数がない場合
+        if(empty($user_data['UsersCouponsConsumptionsCount']['count'])){
+            //0を格納
+            $user_data['UsersCouponsConsumptionsCount']['count'] = 0;
+        }
+
+        //月のクーポン利用可能枚数
+        $user_data['CouponsCount']['monthly'] = intval($user_data['Company']['monthly_coupon_count']);
+        unset($user_data['Company']['monthly_coupon_count']);
+
+        //今月のクーポン消費数
+        $user_data['CouponsCount']['consumption'] = intval($user_data['UsersCouponsConsumptionsCount']['count']);
+        unset($user_data['UsersCouponsConsumptionsCount']['count']);  
+
+        //残りクーポン利用回数
+        $user_data['CouponsCount']['remaining']    = $user_data['CouponsCount']['monthly'] - $user_data['CouponsCount']['consumption'];
+
+        return $user_data;
+
+    }
 
     /**
-     * ユーザーに関連するマスタを取得
+     * クーポンの利用状況を更新
+     * @param  array   $consumption_count 
+     * @return array
+     */
+    public function updateCouponCount($UsersCouponsConsumptionsCount){
+
+        //返却値を設定
+        $result = false;
+
+        //引数がない、もしくは配列ではない場合
+        if(empty($UsersCouponsConsumptionsCount) || !is_array($UsersCouponsConsumptionsCount)){
+            return $result;
+        }
+
+        //クーポン利用可能上限数
+        $monthly_coupon_count = $this->Session->read('Auth.CouponsCount.monthly');
+
+        //更新後の消費数
+        $update_consumption_count = $UsersCouponsConsumptionsCount['count'];
+
+        //更新後の残り利用可能数
+        $update_remaining_count = $monthly_coupon_count - $update_consumption_count;
+
+        //重複を除外するために削除
+        unset($UsersCouponsConsumptionsCount['count']);
+
+        //クーポン消費数
+        $flg['Auth']['CouponsCount']['consumption']    = $this->Session->write('Auth.CouponsCount.consumption', $update_consumption_count);
+        //クーポン残り枚数
+        $flg['Auth']['CouponsCount']['remaining']      = $this->Session->write('Auth.CouponsCount.remaining', $update_remaining_count);
+        //クーポンの消費テーブル
+        $flg['Auth']['UsersCouponsConsumptionsCount']  = $this->Session->write('Auth.UsersCouponsConsumptionsCount', $UsersCouponsConsumptionsCount);
+
+        //セッションに正常に保存された場合
+        if($flg['Auth']['CouponsCount']['consumption'] === true && $flg['Auth']['CouponsCount']['remaining'] === true && $flg['Auth']['UsersCouponsConsumptionsCount'] === true){
+            $result = true;
+        }
+
+        return $result;
+
+    }
+
+    /**
+     * ユーザーに関連する情報を取得
      * @param  int   $user_id
      * @return array
      */
@@ -113,6 +392,10 @@ class UsersComponent extends Component {
         if(empty($result['CompaniesLocation'])){
         	return array();
         }
+
+        //クーポン消費枚数取得
+        $result['UsersCouponsConsumptionsCount'] = $this->UsersCouponsConsumptionsCounts->getRecord($user_id);
+        // *** emptyチェックしない *** //
 
         return $result;
 

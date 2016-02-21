@@ -77,12 +77,32 @@ class LogCouponsConsumptionsComponent extends Component {
         }
 
     	//ログ作成に必要な値を格納
-        $result['user_id']                  = $user_data['User']['id'];
-        $result['company_id']               = $user_data['Company']['id'];
-        $result['restaurant_id']            = $msts['restaurants']['id'];
-        $result['coupon_id']                = $msts['coupons']['id'];
-        $result['set_menus_id']             = $msts['set_menus']['id'];
-        $result['set_menus_photos_id']      = $msts['set_menus_photos']['id'];
+        $result['user_id']                      = $user_data['User']['id'];
+        $result['users_profile_id']             = $user_data['UsersProfile']['id'];
+        $result['family_name']                  = $user_data['UsersProfile']['family_name'];
+        $result['first_name']                   = $user_data['UsersProfile']['first_name'];
+        $result['company_id']                   = $user_data['Company']['id'];
+        $result['department_id']                = $user_data['CompaniesDepartment'][0]['id'];
+        $result['department_name']              = $user_data['CompaniesDepartment'][0]['name'];
+        $result['department_ids']               = ArrayControl::getCommaSeparatedValue($user_data['CompaniesDepartment'], 'id');
+        $result['location_id']                  = $user_data['CompaniesLocation'][0]['id'];
+        $result['location_name']                = $user_data['CompaniesLocation'][0]['name'];
+        $result['location_ids']                 = ArrayControl::getCommaSeparatedValue($user_data['CompaniesLocation'], 'id');
+        $result['restaurant_id']                = $msts['restaurants']['id'];
+        $result['restaurant_name']              = $msts['restaurants']['name'];
+        $result['restaurants_photo_file_name']  = $msts['restaurants_photos']['file_name'];
+        $result['restaurants_photo_ids']        = $msts['restaurants_photo_ids'];
+        $result['restaurants_genre_ids']        = $msts['restaurants_genre_ids'];
+        $result['restaurants_tag_ids']          = $msts['restaurants_tag_ids'];
+        $result['coupon_id']                    = $msts['coupons']['id'];
+        $result['total_price']                  = $msts['coupons']['total_price'];
+        $result['additional_price']             = $msts['coupons']['additional_price'];
+        $result['basic_price']                  = $user_data['Company']['basic_price'];
+        $result['set_menu_id']                  = $msts['set_menus']['id'];
+        $result['set_menu_name']                = $msts['set_menus']['name'];
+        $result['set_menus_photo_file_name']    = $msts['set_menus_photos']['file_name'];
+        $result['set_menus_photo_id']           = $msts['set_menus_photos']['id'];
+        $result['set_menus_photo_ids']          = $msts['set_menus_photo_ids'];
 
         return $result;
 
@@ -208,11 +228,11 @@ class LogCouponsConsumptionsComponent extends Component {
         //返却値を作成
         foreach ($log_coupons_consumptions as $key => $value) {
 
-            //レストラン格納
+            $result[$key]['restaurant']['id']       = $value['restaurant_id'];
             $result[$key]['restaurant']['name']     = $restaurants[$value['restaurant_id']]['name'];
             $result[$key]['restaurant']['address']  = $restaurants[$value['restaurant_id']]['address'];
             $result[$key]['restaurant']['photos']   = IMG_RESTAURANTS_PHOTO.$restaurants_photos[$value['restaurant_id']]['file_name'];
-            $result[$key]['set_menu']['name']       = $set_menus[$value['set_menus_id']]['name'];
+            $result[$key]['set_menu']['name']       = $set_menus[$value['set_menu_id']]['name'];
             $result[$key]['coupon']['price']        = $coupons[$value['coupon_id']]['total_price'];
             $result[$key]['log']['created']         = date('Y/m/d', strtotime($value['created']));
 

@@ -223,9 +223,23 @@
  * To use database sessions, run the app/Config/Schema/sessions.php schema using
  * the cake shell command: cake schema create Sessions
  */
-	Configure::write('Session', array(
-		'defaults' => 'php'
-	));
+
+/*
+ * セッションを一ヶ月間保持する
+ * （参考サイト）
+ * http://artisanedge.jp/blog/2012/11/21/223145.html
+ */
+	Configure::write(
+		'Session', 
+		array(
+			'defaults' => 'php',
+			'timeout' => 43200, //1month 30days min
+			'autoRegenerate' => true,
+			'ini' => array(
+				'session.gc_maxlifetime' => MONTH, //1month sec
+			),
+		)
+	);
 
 /**
  * A random string used in security hashing methods.

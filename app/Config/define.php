@@ -18,8 +18,9 @@ $config['RECORD_NOT_DELETED'] = "0";
 $config['RECORD_DELETED'] = "1";
 
 /* ---------- About error code -------------------------- */
-$config['ERR_CODE_NO_PARAM'] 	= "1";
-$config['ERR_CODE_NO_DATA'] 	= "2";
-$config['ERR_CODE_FAIL_LOGIN'] 	= "3";
-$config['ERR_CODE_FAIL_SAVE'] 	= "4";
-$config['ERR_CODE_NOT_LOGIN'] 	= "5";
+$config['ERR_CODE_NO_PARAM'] 		= "1";
+$config['ERR_CODE_NO_DATA'] 		= "2";
+$config['ERR_CODE_FAIL_LOGIN'] 		= "3";
+$config['ERR_CODE_FAIL_SAVE'] 		= "4";
+$config['ERR_CODE_NOT_LOGIN'] 		= "5";
+$config['ERR_CODE_ILLEGAL_ACCESS'] 	= "6";

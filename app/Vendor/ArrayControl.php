@@ -346,7 +346,80 @@ class ArrayControl {
 
 	}
 
+    //----------------------------------------
+    //キー修正系
+    //----------------------------------------
 
+    /**
+     * 
+     * @param  array $array
+     * @return array
+     */
+    public function changeKeyToNaturalNum($array){
 
+        //返却値を設定
+        $result = array();
+
+        //引数が空か変数ではない場合
+        if(empty($array) || !is_array($array)){
+            return $result;
+        }
+
+        $i = 0;
+        foreach ($array as $key => $value) {
+            $result[$i] = $value;
+            $i ++;
+        }
+
+        return $result;
+
+    }
+
+    //----------------------------------------
+    //値抽出系
+    //----------------------------------------
+
+    /**
+     *  配列内の特定のキーの値をカンマ区切りで抽出
+     * @param  array $array
+     * @return array
+     */
+    public function getCommaSeparatedValue($array, $key_name){
+
+        //返却値を設定
+        $result = array();
+
+        //引数の配列が空か変数ではない場合
+        if(empty($array) || !is_array($array)){
+            return $result;
+        }
+
+        //キー名が空の場合
+        if(empty($key_name) || !is_string($key_name)){
+            return $result;
+        }
+
+        //キーが存在するか判定
+        foreach ($array as $key => $value) {
+
+            if(!array_key_exists($key_name, $value)){
+                unset($array[$key]);
+            }
+
+        }
+
+        //キーが存在しない場合
+        if(empty($array)){
+            return $result;
+        }
+
+        //idを取得
+        $ids =    Hash::extract($array, '{n}.'.$key_name);
+
+        //idをカンマ区切りとする
+        $result = implode($ids, ',');
+
+        return $result;
+    }
 
 }

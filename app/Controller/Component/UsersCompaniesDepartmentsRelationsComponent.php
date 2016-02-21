@@ -38,22 +38,28 @@ class UsersCompaniesDepartmentsRelationsComponent extends Component {
         	return $result;
         }
 
-        //ユーザー
-		$users_companies_departments_ids = Hash::extract($users_companies_departments_relation, '{n}.companies_department_id');
+        //優先順位順に並び変える
+        $users_companies_departments_relation = Hash::sort($users_companies_departments_relation, '{n}.priority_order');
 
-		//結果を格納
+        //ユーザーidをキーとした配列とする
+		$users_companies_departments_ids = Hash::extract($users_companies_departments_relation, '{n}.companies_department_id');
+        //上記配列を文字列にする
+        $users_companies_departments_ids_string = implode(",", $users_companies_departments_ids);
+
+		//部署を優先順位順に取得
         $department = $CompaniesDepartment->find('all', array(
             'conditions' => array(
                 'id' => $users_companies_departments_ids
             ),
+            'order' =>  array('FIELD(CompaniesDepartment.id, ' . $users_companies_departments_ids_string . ')'),
             'cache' => true
         ));
         if(empty($department)){
             return $result;
         }
 
-        //id順に並び変える
-        $result = Hash::sort($department, '{n}.id');
+        //キーを0,1,2とする
+        $result = ArrayControl::changeKeyToNaturalNum($department);
 
         return $result;
 

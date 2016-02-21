@@ -30,6 +30,15 @@ class Arguments {
             //GETを格納する
             $result = $this->request->query($param);
 
+            switch ($result) {
+                case 'true':
+                    $result = true;
+                    break;
+                case 'false':
+                    $result = false;
+                    break;      
+            }
+
         } 
 
         return $result;

@@ -27,10 +27,11 @@ App::uses('File', 'Utility');
 
 /* アプリケーション全体で利用出来る関数をロード */
 App::uses('Util', 'Vendor');
-App::uses('ArrayControl', 'Vendor');
-App::uses('Arguments', 'Vendor');
-App::uses('UserAgent', 'Vendor');
-App::uses('Log', 'Vendor');
+App::uses('ArrayControl',   'Vendor');
+App::uses('Arguments',      'Vendor');
+App::uses('UserAgent',      'Vendor');
+App::uses('Log',            'Vendor');
+App::uses('DateControl',    'Vendor');
 
 /**
  * Application Controller
@@ -45,8 +46,33 @@ class AppController extends Controller {
 
     /* viewに送信する変数 */
     public $view_data = array(
-        'error_code'    => 0,
-        'error_message' => null
+        'error_code' => 0,
+        'error_message' => "",
+        'this_month' => "",
+        'user_data' => array(
+            'user' => array(
+                'id' => 0,
+                'name' => "",
+                'email' => ""
+            ),
+            'company' => array(
+                'name' => ""
+            ),
+            'user_coupon_status' => array(
+                'count' => array(
+                    'monthly' => 0,
+                    'consumption' => 0,
+                    'remaining' => 0
+                ),
+                'availability' => array(
+                    'is_available' => false,
+                    'less_than_monthly_count' => false
+                ),
+                'consumed' => array(
+                    'today' => true
+                )
+            ),
+        )
     );
 
     /* 表示jsonフラグ */
@@ -57,6 +83,7 @@ class AppController extends Controller {
         'FindSupport',
         'Common',
         'Session',
+        'Users',
         'Auth' => array(
             'authenticate' => array(
                 'Form' => array(
@@ -72,10 +99,27 @@ class AppController extends Controller {
         )
     );
     
-    /*
+    /**
      * アクション実行前にコールされる
+     * @return void
      */
     public function beforeFilter(){
+
+        /* 
+         * リクエスト毎にCookieが再作成される
+         * sessionを1ヶ月間とするため
+         * （参考サイト）
+         * http://artisanedge.jp/blog/2012/11/21/223145.html
+         */
+        CakeSession::$requestCountdown = 1;
+
+        //今月ログインしたかどうか
+        $is_this_month_login = $this->Users->checkThisMonthLogin();
+        //今月ログインしていない場合
+        if($is_this_month_login === false){
+            //認証のSessionを削除。強制的にログアウトされる。
+            $this->Session->delete('Auth');
+        }
 
         //Basic認証
         $this->Common->basicAuthentication();
@@ -83,12 +127,11 @@ class AppController extends Controller {
         //PCからのアクセスの場合には専用のviewを出力する 
         $this->Common->setThemeForPC();
 
-
-
     }
 
-    /*
+    /**
      * アクション実行後にコールされる
+     * @return void
      */
     public function afterFilter(){
 
@@ -102,30 +145,17 @@ class AppController extends Controller {
 
     }
 
-    /*
+    /**
      * レンダリングの前にコールされる
+     * @return void
      */
     public function beforeRender() {
 
-        // jsonで返却する場合
-        if ($this->view_json_flag) {
+        //ユーザーデータをviewに渡す
+        $this->Users->setUserDataForView();
 
-            //UTF-8を指定
-            $this->response->header(array(
-                'Content-Type: application/json; charset=utf-8'
-            ));
-
-            //Jsonにエンコードして表示
-            echo json_encode($this->view_data);
-
-            exit;
-
-        } else {
-        //phpの変数で返却する場合
-
-            $this->set('response', $this->view_data);
-
-        }
+        //viewにレスポンスを渡す
+        $this->Common->setDefaultResponse();
 
     }
 

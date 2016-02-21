@@ -37,22 +37,28 @@ class UsersCompaniesLocationsRelationsComponent extends Component {
         	return $result;
         }
 
+        //優先順位順に並び変える
+        $users_companies_locations_relations = Hash::sort($users_companies_locations_relations, '{n}.priority_order');
+
         //法人idを配列で取得
         $users_companies_locations_ids = Hash::extract($users_companies_locations_relations, '{n}.companies_location_id');
+        //上記配列を文字列にする
+        $users_companies_locations_ids_string = implode(",", $users_companies_locations_ids);
 
         //法人を取得
         $location = $CompaniesLocation->find('all', array(
             'conditions' => array(
                 'id' => $users_companies_locations_ids
             ),
+            'order' =>  array('FIELD(CompaniesLocation.id, ' . $users_companies_locations_ids_string . ')'),
             'cache' => true
         ));
         if(empty($location)){
             return $result;
         }
 
-        //id順に並び変える
-        $result = Hash::sort($location, '{n}.id');
+        //キーを0,1,2とする
+        $result = ArrayControl::changeKeyToNaturalNum($location);
 
         return $result;
 

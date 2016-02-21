@@ -119,6 +119,23 @@ class UsersComponent extends Component {
     }
 
     /**
+     * 新しい月にセッションを削除
+     * @return array
+     */
+    public function deleteAuthSessionAtNewMonth() {
+
+        //今月ログインしたかどうか
+        $is_this_month_login = $this->checkThisMonthLogin();
+        
+        //今月ログインしていない場合
+        if($is_this_month_login === false){
+            //認証のSessionを削除。強制的にログアウトされる。
+            $this->Session->delete('Auth');
+        }
+        
+    }
+
+    /**
      * 最終ログインが今月のログインかを判定
      */
     public function checkThisMonthLogin(){

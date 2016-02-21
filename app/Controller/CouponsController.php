@@ -1,6 +1,7 @@
 <?php
 class CouponsController extends AppController {
 
+
 	//コンポーネントをロード
     public $components = array(
         'Users',
@@ -66,16 +67,11 @@ class CouponsController extends AppController {
      */
     public function history() {
 
-        //ユーザーidを取得
-        $user_id = $this->Auth->user('id');
-        if(empty($user_id)){
-
-            $this->Common->returnError(Configure::read('ERR_CODE_NOT_LOGIN'), __('ログインしていません。'));   
-            return;
-        }
+        //ページを利用
+        $this->paging['is_use'] = true;
 
         //ログを取得
-        $this->view_data['logs'] = $this->LogCouponsConsumptions->getDataForHistory($user_id);
+        $this->view_data['logs'] = $this->LogCouponsConsumptions->getDataForHistory();
 
     }
 

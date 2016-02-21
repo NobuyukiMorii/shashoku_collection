@@ -44,7 +44,7 @@ App::uses('DateControl',    'Vendor');
  */
 class AppController extends Controller {
 
-    /* viewに送信する変数 */
+    /* 自動的にviewに送信する変数 */
     public $view_data = array(
         'error_code' => 0,
         'error_message' => "",
@@ -72,7 +72,8 @@ class AppController extends Controller {
                     'today' => true
                 )
             ),
-        )
+        ),
+        'paging' => array()
     );
 
     /* 表示jsonフラグ */
@@ -98,7 +99,17 @@ class AppController extends Controller {
             ),
         )
     );
-    
+
+    /* ページの情報 */
+    public $paging = array(
+        'is_use'            => false,
+        'total_pages'       => 1,
+        'current_page'      => 1,
+        'limit_per_page'    => 10,
+        'is_end_page'       => false
+
+    );
+
     /**
      * アクション実行前にコールされる
      * @return void
@@ -113,13 +124,11 @@ class AppController extends Controller {
          */
         CakeSession::$requestCountdown = 1;
 
-        //今月ログインしたかどうか
-        $is_this_month_login = $this->Users->checkThisMonthLogin();
-        //今月ログインしていない場合
-        if($is_this_month_login === false){
-            //認証のSessionを削除。強制的にログアウトされる。
-            $this->Session->delete('Auth');
-        }
+        //ページを取得
+        $this->Common->getCurrentPage();
+
+        //新しい月になった場合、Authを削除
+        $is_this_month_login = $this->Users->deleteAuthSessionAtNewMonth();
 
         //Basic認証
         $this->Common->basicAuthentication();
@@ -153,6 +162,9 @@ class AppController extends Controller {
 
         //ユーザーデータをviewに渡す
         $this->Users->setUserDataForView();
+
+        //ページ情報を送信する
+        $this->Common->setPagingForView();
 
         //viewにレスポンスを渡す
         $this->Common->setDefaultResponse();

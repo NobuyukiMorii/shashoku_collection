@@ -38,4 +38,58 @@ class DateControl {
 
 	}
 
+
+	/**
+	 * 年月のリストを取得
+	 * @param  string $date
+	 * @return bool
+	 */
+	public function getMonthYearList($start_date=null, $list_count=null, $order=null) {
+
+		//返却値
+		$result = array();
+
+		//開始年月がない場合
+		if(is_null($start_date)){
+			//指定がない場合は現在の月
+			$start_date = date('Y-m-d');
+		}
+
+		//返却数がない場合
+		if(is_null($list_count)){
+			//指定がない場合は1ヶ月分
+			$list_count = 1;
+		}
+
+		//並び順がない場合
+		if(is_null($order)){
+			//指定がない場合は降順
+			$order = "desc";
+		}
+
+		//フォーマットをyyyymmに変更する
+		$start_month = date('Ym', strtotime($start_date));
+
+		//並び順が降順の場合
+		if($order === "desc"){
+			$next = '-1 month';
+		} else {
+			$next = '+1 month';		
+		}
+
+		$result[0] = $start_month;
+
+		//0から$list_countの回数ループ
+		for($i=1; $i<$list_count; $i++){
+
+			$result[$i] = date('Ym', strtotime($start_month . $next));
+
+		}
+
+		return $result;
+
+	}
+
+
+
 }

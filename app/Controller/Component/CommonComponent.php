@@ -21,6 +21,12 @@ class CommonComponent extends Component {
      */
     public function setDefaultResponse(){
 
+        //Ajaxの場合
+        if ($this->Controller->request->is('ajax')) {
+            //jsonを利用
+            $this->Controller->view_json_flag = true;
+        }
+
         // jsonで返却する場合
         if ($this->Controller->view_json_flag) {
 
@@ -56,8 +62,9 @@ class CommonComponent extends Component {
 
     }
 
-	/*
+	/**
      * PCの場合には、PC用のthemeを設定する
+     * @return void
      */
     public function setThemeForPC(){
 
@@ -68,6 +75,52 @@ class CommonComponent extends Component {
         if($device_type === 'PC') {
             /* PC用のviewを表示する */
             $this->Controller->theme = 'PC';
+        }
+
+    }
+
+    /**
+     * 現在のページ数を取得
+     * @return void
+     */
+    public function getCurrentPage(){
+
+        //ページを取得
+        if(isset($this->Controller->params['named']['page'])){
+            //ページングの利用をon
+            $this->Controller->paging['is_use']       = true;
+            //現在のページを取得
+            $this->Controller->paging['current_page'] = $this->Controller->params['named']['page'];
+        } else {
+
+            $this->Controller->paging['current_page'] = 1;    
+        }
+
+    }
+
+    /**
+     * Pagingをviewに送る
+     * @return void
+     */
+    public function setPagingForView(){
+
+        //ページ情報を送信する
+        if($this->Controller->paging['is_use'] === true){
+
+            //総ページ数と現在のページ数が一致していたら
+            if($this->Controller->paging['total_pages'] == $this->Controller->paging['current_page']){
+
+                //最終ページをtrueとする
+                $this->Controller->paging['is_end_page'] = true;
+
+            }
+
+            //ページ情報を追加
+            $this->Controller->view_data['paging'] = $this->Controller->paging;
+
+        } else {
+            //ページ情報を除去
+            unset($this->Controller->view_data['paging']);
         }
 
     }

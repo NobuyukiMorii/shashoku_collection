@@ -10,8 +10,18 @@ class LogCouponsConsumptionsComponent extends Component {
     public $components = array(
     	'Coupons',
     	'Session',
-        'RestaurantsPhotos'
+        'RestaurantsPhotos',
+        'Paginator'
     );
+
+    /*
+     * コントローラーを読み込む
+     */
+    public function initialize(Controller $controller) {
+
+        $this->Controller = $controller;
+
+    }
 
     /**
      * クーポン消費ログを作成する
@@ -103,6 +113,7 @@ class LogCouponsConsumptionsComponent extends Component {
         $result['set_menus_photo_file_name']    = $msts['set_menus_photos']['file_name'];
         $result['set_menus_photo_id']           = $msts['set_menus_photos']['id'];
         $result['set_menus_photo_ids']          = $msts['set_menus_photo_ids'];
+        $result['yearmonth']                    = intval(date('Ym'));
 
         return $result;
 
@@ -110,21 +121,15 @@ class LogCouponsConsumptionsComponent extends Component {
 
     /**
      * クーポン消費ログ履歴一覧ページ用のデータを取得
-     * @param array $user_id
      * @return array 
      */
-    public function getDataForHistory($user_id){
+    public function getDataForHistory(){
 
         //返却値を設定
         $result = array();
 
-        //引数がない場合
-        if(is_null($user_id) || !is_numeric($user_id)){
-            return $result;
-        }
-
         //クーポン消費ログの表示に必要なデータを取得
-        $data = $this->getLogAndMsts($user_id);
+        $data = $this->getLogAndMsts();
         if(empty($data)){
             return $result;
         }
@@ -141,13 +146,18 @@ class LogCouponsConsumptionsComponent extends Component {
      * @param array $user_id
      * @return array 
      */
-    public function getLogAndMsts($user_id){
+    public function getLogAndMsts(){
 
         //返却値を設定
         $result = array();
 
-        //引数がない場合
-        if(is_null($user_id) || !is_numeric($user_id)){
+        //ユーザーidを取得
+        $user_id        = $this->Session->read('Auth.User.id');
+        //法人idを取得
+        $company_id     = $this->Session->read('Auth.Company.id');
+
+        //ユーザーidか法人idがない場合
+        if(is_null($user_id) || is_null($company_id)){
             return $result;
         }
 
@@ -157,11 +167,27 @@ class LogCouponsConsumptionsComponent extends Component {
         $Coupons                = ClassRegistry::init('Coupons');
         $SetMenu                = ClassRegistry::init('SetMenu');
 
+        //総レコード数（countにはdel_flg除去が組み込まれていないため、del_flgをコンディションに追加）
+        $total_records = $LogCouponsConsumption->find('count', array(
+            'conditions' => array(
+                'company_id' => $company_id,
+                'user_id' => $user_id,
+                'del_flg' => 0
+            )
+        ));
+
+        //総ページ数
+        $this->Controller->paging['total_pages'] = ceil($total_records/$this->Controller->paging['limit_per_page']);
+
         //消費履歴取得
         $log_coupons_consumptions = $LogCouponsConsumption->find('all', array(
             'conditions' => array(
+                'company_id' => $company_id,
                 'user_id' => $user_id
-            )
+            ),
+            'page'  => $this->Controller->paging['current_page'],
+            'limit' => $this->Controller->paging['limit_per_page'],
+            'order' => array('LogCouponsConsumption.created DESC'), 
         ));
         if(empty($log_coupons_consumptions)){
             return $result;
@@ -228,15 +254,25 @@ class LogCouponsConsumptionsComponent extends Component {
         //返却値を作成
         foreach ($log_coupons_consumptions as $key => $value) {
 
-            $result[$key]['restaurant']['id']       = $value['restaurant_id'];
-            $result[$key]['restaurant']['name']     = $restaurants[$value['restaurant_id']]['name'];
-            $result[$key]['restaurant']['address']  = $restaurants[$value['restaurant_id']]['address'];
-            $result[$key]['restaurant']['photos']   = IMG_RESTAURANTS_PHOTO.$restaurants_photos[$value['restaurant_id']]['file_name'];
-            $result[$key]['set_menu']['name']       = $set_menus[$value['set_menu_id']]['name'];
-            $result[$key]['coupon']['price']        = $coupons[$value['coupon_id']]['total_price'];
-            $result[$key]['log']['created']         = date('Y/m/d', strtotime($value['created']));
+            //返却用配列を作成
+            $result[$value['yearmonth']][] = array();
+
+            //追加したキーを取得
+            $new_key = ArrayControl::endKey($result[$value['yearmonth']]);
+            //返却値を格納
+            $result[$value['yearmonth']][$new_key]['restaurant']['id']       = $value['restaurant_id'];
+            $result[$value['yearmonth']][$new_key]['restaurant']['name']     = $restaurants[$value['restaurant_id']]['name'];
+            $result[$value['yearmonth']][$new_key]['restaurant']['address']  = $restaurants[$value['restaurant_id']]['address'];
+            $result[$value['yearmonth']][$new_key]['restaurant']['photos']   = IMG_RESTAURANTS_PHOTO.$restaurants_photos[$value['restaurant_id']]['file_name'];
+            $result[$value['yearmonth']][$new_key]['set_menu']['name']       = $set_menus[$value['set_menu_id']]['name'];
+            $result[$value['yearmonth']][$new_key]['coupon']['price']        = $coupons[$value['coupon_id']]['total_price'];
+            $result[$value['yearmonth']][$new_key]['log']['created']         = date('Y/m/d', strtotime($value['created']));
+
 
         }
+
+        //年月を新しい順にソート
+        krsort($result);
 
         return $result;
 

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost:8889
--- Generation Time: 2016 年 2 月 21 日 11:48
+-- Generation Time: 2016 年 2 月 21 日 14:12
 -- サーバのバージョン： 5.5.42
 -- PHP Version: 5.6.10
 
@@ -36,7 +36,7 @@ CREATE TABLE `colors` (
 
 INSERT INTO `colors` (`id`, `name`, `color_code`, `del_flg`, `created`, `modified`) VALUES
 (1, '橙', '#ffb2b2', 0, '2016-01-01 00:00:00', '2016-01-01 00:00:00'),
-(2, '赤', '#ffb2d8	', 0, '2016-01-01 00:00:00', '2016-01-01 00:00:00'),
+(2, '赤', '#ffb2d8 ', 0, '2016-01-01 00:00:00', '2016-01-01 00:00:00'),
 (3, 'ピンク', '#ffb2ff', 0, '2016-01-01 00:00:00', '2016-01-01 00:00:00'),
 (4, '紫', '#d8b2ff', 0, '2016-01-01 00:00:00', '2016-01-01 00:00:00'),
 (5, '青', '#b2b2ff', 0, '2016-01-01 00:00:00', '2016-01-01 00:00:00'),
@@ -281,7 +281,7 @@ CREATE TABLE `log_coupons_consumptions` (
   `del_flg` tinyint(4) NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
 /*!50500 PARTITION BY RANGE  COLUMNS(created)
 (PARTITION p201601 VALUES LESS THAN ('2016-01-01') ENGINE = InnoDB,
  PARTITION p201602 VALUES LESS THAN ('2016-02-01') ENGINE = InnoDB,
@@ -368,13 +368,6 @@ CREATE TABLE `log_coupons_consumptions` (
  PARTITION p202211 VALUES LESS THAN ('2022-11-01') ENGINE = InnoDB,
  PARTITION p202212 VALUES LESS THAN ('2022-12-01') ENGINE = InnoDB,
  PARTITION pmax VALUES LESS THAN (MAXVALUE) ENGINE = InnoDB) */;
-
---
--- テーブルのデータのダンプ `log_coupons_consumptions`
---
-
-INSERT INTO `log_coupons_consumptions` (`id`, `company_id`, `user_id`, `users_profile_id`, `family_name`, `first_name`, `department_id`, `department_ids`, `department_name`, `location_id`, `location_name`, `location_ids`, `restaurant_id`, `restaurant_name`, `restaurants_photo_file_name`, `restaurants_photo_ids`, `restaurants_genre_ids`, `restaurants_tag_ids`, `coupon_id`, `total_price`, `additional_price`, `basic_price`, `set_menu_id`, `set_menu_name`, `set_menus_photo_file_name`, `set_menus_photo_ids`, `del_flg`, `created`, `modified`) VALUES
-(1, 2, 1, 1, 'test', 'test', 6, '6,5,4', '人事', 3, '本社', '3,2', 1, 'ichicha cafe', 'restaurant_1_3.jpg', '3,2,1', '1,2,4', '3,2,1', 1, 600, 400, 200, 1, 'チキンと野菜の\nグラタンセット', 'set_menu_1_1.jpg', '1', 0, '2016-02-21 11:32:55', '2016-02-21 11:32:55');
 
 -- --------------------------------------------------------
 
@@ -1004,17 +997,11 @@ CREATE TABLE `users_coupons_consumptions_counts` (
   `user_id` int(11) NOT NULL,
   `yearmonth` int(6) NOT NULL,
   `count` int(11) NOT NULL,
+  `last_consumed_coupon_id` int(11) NOT NULL,
   `del_flg` tinyint(4) NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
---
--- テーブルのデータのダンプ `users_coupons_consumptions_counts`
---
-
-INSERT INTO `users_coupons_consumptions_counts` (`id`, `user_id`, `yearmonth`, `count`, `del_flg`, `created`, `modified`) VALUES
-(1, 1, 201602, 1, 0, '2016-02-21 11:32:55', '2016-02-21 11:32:55');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1240,7 +1227,7 @@ ALTER TABLE `groups`
 -- AUTO_INCREMENT for table `log_coupons_consumptions`
 --
 ALTER TABLE `log_coupons_consumptions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `prefectures`
 --
@@ -1305,7 +1292,7 @@ ALTER TABLE `users_companies_locations_relations`
 -- AUTO_INCREMENT for table `users_coupons_consumptions_counts`
 --
 ALTER TABLE `users_coupons_consumptions_counts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `users_profiles`
 --

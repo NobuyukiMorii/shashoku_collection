@@ -14,13 +14,13 @@ class UsersController extends AppController {
 
     }
 
-    public $layout = "sample";
-
     /**
      * ログイン
      * @return void
      */
     public function login() {
+
+        $this->layout = "sample";
 
         //POSTされた場合
         if ($this->request->is('post')) {

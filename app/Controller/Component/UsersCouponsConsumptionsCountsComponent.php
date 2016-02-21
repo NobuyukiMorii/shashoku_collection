@@ -48,10 +48,15 @@ class UsersCouponsConsumptionsCountsComponent extends Component {
      * ユーザーのクーポン消費枚数を保存
      * @return array
      */
-	public function createRecord(){
+	public function createRecord($coupon_id){
 
         //変数の初期値を設定
         $result = array();
+
+        //引数がない場合
+        if(is_null($coupon_id) || !is_numeric($coupon_id)){
+            return $result;
+        }
 
     	//ユーザー情報を取得
         $user_data = $this->Session->read('Auth');
@@ -88,6 +93,7 @@ class UsersCouponsConsumptionsCountsComponent extends Component {
         $data['user_id']                      = $user_id;
         $data['yearmonth']                    = $yearmonth;
         $data['count']		                  = $new_count;
+        $data['last_consumed_coupon_id']      = $coupon_id;
 
         //レコードがない場合
         if(empty($record)){
@@ -100,7 +106,7 @@ class UsersCouponsConsumptionsCountsComponent extends Component {
         	//idを指定
         	$data['id']                      = $record['id'];
         	//フィールドを指定
-        	$fields = array('count');
+        	$fields = array('count', 'last_consumed_coupon_id');
         	//sql実行
         	$result = $UsersCouponsConsumptionsCount->save($data, false, $fields);
         }

@@ -47,6 +47,8 @@ class CouponsComponent extends Component {
 
     	//レストラン名
     	$result['restaurant']['name'] 				= $msts['restaurants']['name'];
+        //表示するクーポンが本日認証済みかどうか
+        $result['coupon']['is_authenticated_today'] = $this->Users->checkThisCouponConsumedToday($coupon_id);
     	//クーポンの追加料金
     	$result['coupon']['additional_price'] 		= $msts['coupons']['additional_price'];
     	//クーポンの価格
@@ -56,10 +58,40 @@ class CouponsComponent extends Component {
     	//料理名
     	$result['coupon']['set_menu']['name'] 		= $msts['set_menus']['name'];
         //現在の時刻
-        $result['date_time']                        = date('Y/m/d H:i');
-
+        $result['date_time']                        = $this->getDateTimeForDisp($coupon_id);
 
     	return $result;
+
+    }
+
+    /**
+     * 表示する時間を取得
+     * @param array $coupon_id
+     * @return array
+     */
+    public function getDateTimeForDisp($coupon_id){
+
+        //変数の初期値を設定
+        $result = array();
+
+        //引数がない場合
+        if(is_null($coupon_id) || !is_numeric($coupon_id)){
+            return $result;
+        }
+
+        //対象のクーポンが本日認証（消費）されたかどうか 
+        $authentication_info = $this->Users->getThisCouponConsumedInfo($coupon_id);
+
+        //本日既に認証されていた場合
+        if($authentication_info['is_authenticated_today'] === true){
+            //認証された時間
+            $result = date('Y/m/d H:i', strtotime($authentication_info['authenticated_date']));
+        } else {
+            //現ジアの時間
+            $result = date('Y/m/d H:i');
+        }
+
+        return $result;
 
     }
 
@@ -93,7 +125,7 @@ class CouponsComponent extends Component {
             $log_data = $this->LogCouponsConsumptions->createLog($coupon_id);
 
             //ユーザーのクーポン消費枚数をupdate
-            $user_coupons_count = $this->UsersCouponsConsumptionsCounts->createRecord();
+            $user_coupons_count = $this->UsersCouponsConsumptionsCounts->createRecord($coupon_id);
 
             //成功時
             if(!empty($log_data) || !empty($user_coupons_count)){

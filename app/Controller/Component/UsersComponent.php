@@ -25,6 +25,100 @@ class UsersComponent extends Component {
     }
 
     /**
+     * クーポンがの認証（消費）情報
+     * @return boolean
+     */
+    public function getThisCouponConsumedInfo($coupon_id){
+
+        //返却値を設定
+        $result = array();
+
+        //引数がない場合
+        if(is_null($coupon_id) || !is_numeric($coupon_id)){
+            return $result;
+        }
+
+        //対象のクーポンが本日認証（消費）されたかどうか
+        $result['is_authenticated_today']   = $this->checkThisCouponConsumedToday($coupon_id);
+
+        //対象のクーポンが認証（消費）された時間
+        $result['authenticated_date']       = $this->getThisCouponConsumedDate($coupon_id);
+
+        return $result;
+
+    }
+
+    /**
+     * 対象のクーポンが本日認証（消費）されたかどうか 
+     * @return boolean
+     */
+    public function checkThisCouponConsumedToday($coupon_id){
+
+        $result = false;
+
+        //引数がない場合
+        if(is_null($coupon_id) || !is_numeric($coupon_id)){
+            return $result;
+        }
+
+        //ユーザーが本日クーポンを使ったかどうか
+        $is_today_consumed = $this->checkIsUserCouponConsumedToday();
+        //本日クーポンを使っていない場合
+        if($is_today_consumed === false){
+            //引数のクーポンは使っていない
+            return $result;
+        }
+
+        //以下、本日クーポンを使った場合
+
+        //最後に消費したクーポンidを取得
+        $last_consumed_coupon_id = $this->Session->read('Auth.UsersCouponsConsumptionsCount.last_consumed_coupon_id');
+        //今月まだクーポンを消費していない場合
+        if(is_null($last_consumed_coupon_id)){
+            //本日消費していない
+            return $result;
+        }
+
+        //クーポンidが同じ場合
+        if($last_consumed_coupon_id === $coupon_id){
+            //引数のクーポンidを本日認証された
+            $result = true;
+        }
+
+        return $result;
+
+    }
+
+    /**
+     * 対象のクーポンが認証（消費）された時間
+     * @return boolean
+     */
+    public function getThisCouponConsumedDate($coupon_id){
+
+        $result = "";
+
+        //引数がない場合
+        if(is_null($coupon_id) || !is_numeric($coupon_id)){
+            return $result;
+        }
+
+        //引数のクーポンが本日認証されたか判定
+        $is_authenticated_today = $this->checkThisCouponConsumedToday($coupon_id);
+        if($is_authenticated_today === false){
+            //本日認証されていないので、空文字を返却
+            return $result;
+        }
+
+        //クーポンの認証時間を取得
+        $authenticated_date = $this->Session->read('Auth.UsersCouponsConsumptionsCount.modified');
+
+        //フォーマットを変更
+        $result = date('Y/m/d H:i', strtotime($authenticated_date));
+
+        return $result;
+    }
+
+    /**
      * 最終ログインが今月のログインかを判定
      */
     public function checkThisMonthLogin(){

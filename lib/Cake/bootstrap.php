@@ -134,13 +134,30 @@ if (!defined('CACHE_PERSISTENT')) {
 
 }
 
-
 /**
  *ビューキャッシュへのパス
  */
 if (!defined('CACHE_VIEWS')) {
 
 	define('CACHE_VIEWS', TMP . 'cache' . DS . "views" . DS);
+
+}
+
+/**
+ *キャッシュのユーザー情報へのパス
+ */
+if (!defined('CACHE_USERS')) {
+
+	define('CACHE_USERS', TMP . 'cache' . DS . "users" . DS);
+
+}
+
+/**
+ *キャッシュのユーザーのトランザクション情報へのパス
+ */
+if (!defined('CACHE_USERS_TRANSACTION')) {
+
+	define('CACHE_USERS_TRANSACTION', TMP . 'cache' . DS . "users" . DS . 'transaction'  . DS);
 
 }
 

@@ -6,12 +6,74 @@ App::uses('Component', 'Controller');
  */
 class CachesComponent extends Component {
 
+    //----------------------------------------
+    //キャッシュのメイン機能
+    //----------------------------------------
+
+    /**
+     * キャッシュを読む
+     * @param  strin $path
+     * @param  strin $name 
+     * @return array
+     */
+    public function read($path, $name){
+
+        //返却値を設定
+        $result = array();
+
+        //引数がない場合
+        if(empty($path) || empty($name)){
+            return $result;
+        }
+
+        //キャッシュのパスを指定する 
+        Cache::set(array('path' => $path));
+
+        //キャッシュを取得する
+        $result = Cache::read($name);
+
+        return $result;
+
+    }
+
+    /**
+     * キャッシュを読む
+     * @param  strin $path
+     * @param  strin $name 
+     * @return array
+     */
+    public function write($path, $name, $data, $duration){
+
+        //返却値を設定
+        $result = array();
+
+        //引数がない場合
+        if(empty($path) || empty($name) || empty($data)){
+            return $result;
+        }
+
+        //キャッシュの有効期限がない場合
+        if(empty($duration)){
+            //1年
+            $duration = 31536000;
+        }
+
+        //キャッシュの有効期限を指定する
+        Cache::set(array('path' => $path, 'duration' => '+'.$duration.' seconds'));
+
+        //キャッシュに記録する
+        $result = Cache::write($name, 'true');
+
+        return $result;
+
+    }
+
 	/**
 	 * キャッシュのフォルダのパスを取得
 	 * @param  string $cache_folder_name
 	 * @return array
 	 */
-    public function getCacheFolderPathByName($cache_folder_name) {
+    public function getCacheFolderPathByName($cache_folder_name, $func_name=null) {
 
     	$result = "";
 
@@ -34,6 +96,14 @@ class CachesComponent extends Component {
             case 'views':
                 $result = CACHE_VIEW;
                 break;
+            case 'transaction':
+                $result = CACHE_USERS_TRANSACTION;
+                break;
+        }
+
+        //関数名がある場合
+        if(isset($func_name)){
+            $result = $result.$func_name.'/';
         }
 
         return $result;
@@ -74,7 +144,7 @@ class CachesComponent extends Component {
 	 * @param  string $file_name
 	 * @return array
 	 */
-    public function clearOne($cache_folder_name, $file_name){
+    public function clearOne($cache_folder_name, $file_name, $func_name=null){
 
     	//返却値を設定
     	$result = false;
@@ -85,7 +155,7 @@ class CachesComponent extends Component {
     	}
 
         //フォルダのパスを取得
-        $folder_path = $this->getCacheFolderPathByName($cache_folder_name);
+        $folder_path = $this->getCacheFolderPathByName($cache_folder_name, $func_name);
         //フォルダのパスが取得出来ない場合
         if(empty($folder_path)){
         	return $result;

@@ -12,7 +12,8 @@ class CouponsComponent extends Component {
     	'SetMenus',
         'LogCouponsConsumptions',
         'UsersCouponsConsumptionsCounts',
-        'Session'
+        'Session',
+        'Transactions'
     );
 
     /*
@@ -24,8 +25,14 @@ class CouponsComponent extends Component {
 
     }
 
+    //----------------------------------------
+    //クーポン表示関連
+    //CouponsController::show
+    //----------------------------------------
+
 	/**
 	 * 表示用のクーポンを取得する
+     * CouponsController::show
 	 * @param array $coupon_id
 	 * @return array
 	 */
@@ -39,7 +46,7 @@ class CouponsComponent extends Component {
     		return $result;
     	}
 
-    	//クーポン関連のマスタを取得
+    	//クーポン関連情報を取得
     	$msts = $this->getModifiedMsts($coupon_id);
     	if(empty($msts)){
     		return $result;
@@ -65,136 +72,9 @@ class CouponsComponent extends Component {
     }
 
     /**
-     * 表示する時間を取得
-     * @param array $coupon_id
-     * @return array
-     */
-    public function getDateTimeForDisp($coupon_id){
-
-        //変数の初期値を設定
-        $result = array();
-
-        //引数がない場合
-        if(is_null($coupon_id) || !is_numeric($coupon_id)){
-            return $result;
-        }
-
-        //対象のクーポンが本日認証（消費）されたかどうか 
-        $authentication_info = $this->Users->getThisCouponConsumedInfo($coupon_id);
-
-        //本日既に認証されていた場合
-        if($authentication_info['is_authenticated_today'] === true){
-            //認証された時間
-            $result = date('Y/m/d H:i', strtotime($authentication_info['authenticated_date']));
-        } else {
-            //現ジアの時間
-            $result = date('Y/m/d H:i');
-        }
-
-        return $result;
-
-    }
-
-    /**
-     * 表示用のクーポンを取得する
-     * @param array $coupon_id
-     * @return array
-     */
-    public function saveLogAndUserData($coupon_id){
-
-        //変数の初期値を設定
-        $result = array();
-
-        //引数がない場合
-        if(is_null($coupon_id) || !is_numeric($coupon_id)){
-            return $result;
-        }
-
-        //連打対策
-        $this->Session->write('Transaction.saveLogAndUserData');
-
-        //モデルをロード
-        $TransactionManager                         = ClassRegistry::init('TransactionManager');
-
-        //トランザクション開始
-        $transaction = $TransactionManager->begin();
-
-        try{
-            
-            //消費ログ保存
-            $log_data = $this->LogCouponsConsumptions->createLog($coupon_id);
-
-            //ユーザーのクーポン消費枚数をupdate
-            $user_coupons_count = $this->UsersCouponsConsumptionsCounts->createRecord($coupon_id);
-
-            //成功時
-            if(!empty($log_data) || !empty($user_coupons_count)){
-
-                //更新前のAuthをread
-                $old_user_data = $this->Session->read('Auth');
-
-                //セッションのクーポン使用状況を更新
-                $flg = $this->Users->updateCouponCount($user_coupons_count['UsersCouponsConsumptionsCount']);
-
-                //セッション更新成功時
-                if($flg === true){
-
-                    //コミット
-                    $TransactionManager->commit($transaction);
-
-                    //連打対策解除
-                    $this->Session->delete('Transaction.'.$this->action);
-
-                } else {
-                //セッション更新失敗時
-
-                    //ロールバック
-                    $TransactionManager->rollback($transaction);
-
-                    //Authセッションを巻き戻す
-                    $this->Session->write('Auth', $old_user_data);
-
-                    //連打対策解除
-                    $this->Session->delete('Transaction.'.$this->action);
-                    return $result;
-
-                }
-
-            } else {
-
-            //失敗時
-                //ロールバック
-                $TransactionManager->rollback($transaction);
-
-                //連打対策解除
-                $this->Session->delete('Transaction.'.$this->action);
-
-                return $result;
-
-            }
-
-        } catch(Exception $e) {
-
-        //失敗時
-            //ロールバック
-            $TransactionManager->rollback($transaction);
-
-            //連打対策解除
-            $this->Session->delete('Transaction.'.$this->action);
-
-            return $result;
-
-        }
-
-        //返却値を格納
-        $result = array_merge($log_data, $user_coupons_count);
-
-        return $result;
-
-    }
-
-    /**
-     * クーポン関連マスタの返却値を使いやすいように修正
+     * CouponsComponent::getMsts（クーポン関連の情報を取得する関数）の返却値（マスタの配列）を使いやすいように修正
+     * 1)Coupons::getOneCouponForDisp
+     * 2)LogCoupons::getDataForCreate
      * @param  int    $coupon_id
      * @return array
      */
@@ -210,6 +90,9 @@ class CouponsComponent extends Component {
 
         //マスタ取得
         $msts = $this->getMsts($coupon_id);
+        if(empty($msts)){
+            return $result;
+        }
 
         //合計額を取得
         $msts['coupons']['total_price'] = $this->getTotalPrice($msts['coupons']['additional_price']);
@@ -247,11 +130,12 @@ class CouponsComponent extends Component {
 
     }
 
-	/**
-	 * クーポン関連のマスタを取得
-	 * @param int    $coupon_id
-	 * @return array
-	 */
+    /**
+     * クーポン関連のマスタを取得
+     * CouponsComponent::getModifiedMstsで利用
+     * @param 　int    $coupon_id
+     * @return array
+     */
     public function getMsts($coupon_id){
 
         //変数の初期値を設定
@@ -262,58 +146,58 @@ class CouponsComponent extends Component {
             return $result;
         }
 
-    	//モデルをロード
-		$Coupon 		                = ClassRegistry::init('Coupon');
-		$SetMenu 		                = ClassRegistry::init('SetMenu');
-		$SetMenusPhoto                  = ClassRegistry::init('SetMenusPhoto');
-		$Restaurant                     = ClassRegistry::init('Restaurant');
+        //モデルをロード
+        $Coupon                         = ClassRegistry::init('Coupon');
+        $SetMenu                        = ClassRegistry::init('SetMenu');
+        $SetMenusPhoto                  = ClassRegistry::init('SetMenusPhoto');
+        $Restaurant                     = ClassRegistry::init('Restaurant');
         $RestaurantsPhoto               = ClassRegistry::init('RestaurantsPhoto');
         $RestaurantsGenresRelation      = ClassRegistry::init('RestaurantsGenresRelation');
         $RestaurantsTagsRelation        = ClassRegistry::init('RestaurantsTagsRelation');
 
-		//クーポン取得
-    	$coupons = $Coupon->find('first', array(
-    		'conditions' => array(
-    			'id' => $coupon_id
-    		),
-    		'cache' => true
-    	));
-    	if(empty($coupons)){
-    		return $result;
-    	}
+        //クーポン取得
+        $coupons = $Coupon->find('first', array(
+            'conditions' => array(
+                'id' => $coupon_id
+            ),
+            'cache' => true
+        ));
+        if(empty($coupons)){
+            return $result;
+        }
 
-    	//セットメニュー取得
-    	$set_menus = $SetMenu->find('first', array(
-    		'conditions' => array(
-    			'id' => $coupons['set_menu_id']
-    		),
-    		'cache' => true
-    	));
-    	if(empty($set_menus)){
-    		return $result;
-    	}
+        //セットメニュー取得
+        $set_menus = $SetMenu->find('first', array(
+            'conditions' => array(
+                'id' => $coupons['set_menu_id']
+            ),
+            'cache' => true
+        ));
+        if(empty($set_menus)){
+            return $result;
+        }
 
         //セットメニュー写真取得
-    	$set_menus_photos = $SetMenusPhoto->find('all', array(
-    		'conditions' => array(
-    			'id' => $coupons['set_menu_id']
-    		),
-    		'cache' => true
-    	));
-    	if(empty($set_menus_photos)){
-    		return $result;
-    	}
+        $set_menus_photos = $SetMenusPhoto->find('all', array(
+            'conditions' => array(
+                'id' => $coupons['set_menu_id']
+            ),
+            'cache' => true
+        ));
+        if(empty($set_menus_photos)){
+            return $result;
+        }
 
         //レストラン取得
-    	$restaurants = $Restaurant->find('first', array(
-    		'conditions' => array(
-    			'id' => $coupons['restaurant_id']
-    		),
-    		'cache' => true
-    	));
-    	if(empty($restaurants)){
-    		return $result;
-    	}
+        $restaurants = $Restaurant->find('first', array(
+            'conditions' => array(
+                'id' => $coupons['restaurant_id']
+            ),
+            'cache' => true
+        ));
+        if(empty($restaurants)){
+            return $result;
+        }
 
         //レストランジャンル関連性取得
         $restaurants_genres_relations = $RestaurantsGenresRelation->find('all', array(
@@ -348,21 +232,147 @@ class CouponsComponent extends Component {
             return $result;
         }        
 
-    	//返却値を作成
-    	$result['coupons']                             = $coupons;
-    	$result['set_menus']                           = $set_menus;
-    	$result['set_menus_photos']                    = $set_menus_photos;
-    	$result['restaurants']                         = $restaurants;
+        //返却値を作成
+        $result['coupons']                             = $coupons;
+        $result['set_menus']                           = $set_menus;
+        $result['set_menus_photos']                    = $set_menus_photos;
+        $result['restaurants']                         = $restaurants;
         $result['restaurants_genres_relations']        = $restaurants_genres_relations;
         $result['restaurants_tags_relations']          = $restaurants_tags_relations;
         $result['restaurants_photos']                  = $restaurants_photos;
 
-    	return $result;
+        return $result;
 
     }
 
+    /**
+     * CouponsComponent::getOneCouponForDisp（クーポン関連の情報を取得する関数）のdate_timeを取得
+     * CouponsComponent::getOneCouponForDisp
+     * @param array $coupon_id
+     * @return array
+     */
+    public function getDateTimeForDisp($coupon_id){
+
+        //変数の初期値を設定
+        $result = array();
+
+        //引数がない場合
+        if(is_null($coupon_id) || !is_numeric($coupon_id)){
+            return $result;
+        }
+
+        //対象のクーポンが本日認証（消費）されたかどうか 
+        $authentication_info = $this->Users->getThisCouponConsumedInfo($coupon_id);
+
+        //本日既に認証されていた場合
+        if($authentication_info['is_authenticated_today'] === true){
+            //認証された時間
+            $result = date('Y/m/d H:i', strtotime($authentication_info['authenticated_date']));
+        } else {
+            //現ジアの時間
+            $result = date('Y/m/d H:i');
+        }
+
+        return $result;
+
+    }
+
+    //----------------------------------------
+    //クーポン履歴保存関連
+    //CouponsController::show
+    //----------------------------------------
+    /**
+     * ログとユーザーデータを保存する
+     * CouponsController::show
+     * @param  array $coupon_id
+     * @return array
+     */
+    public function saveLogAndUserData($coupon_id){
+
+        //変数の初期値を設定
+        $result = array();
+
+        //引数がない場合
+        if(is_null($coupon_id) || !is_numeric($coupon_id)){
+            return $result;
+        }
+
+        //モデルをロード
+        $TransactionManager                         = ClassRegistry::init('TransactionManager');
+
+        //トランザクション開始
+        $transaction = $this->Transactions->start(__FUNCTION__);
+
+        try{
+            
+            //消費ログ保存
+            $log_data = $this->LogCouponsConsumptions->createLog($coupon_id);
+
+            //ユーザーのクーポン消費枚数をupdate
+            $user_coupons_count = $this->UsersCouponsConsumptionsCounts->createRecord($coupon_id);
+
+            //成功時
+            if(!empty($log_data) || !empty($user_coupons_count)){
+
+                //更新前のAuthをread
+                $old_user_data = $this->Session->read('Auth');
+
+                //セッションのクーポン使用状況を更新
+                $flg = $this->Users->updateCouponCount($user_coupons_count['UsersCouponsConsumptionsCount']);
+
+                //セッション更新成功時
+                if($flg === true){
+
+                    //コミット
+                    $this->Transactions->end(true, $transaction, __FUNCTION__);
+
+                } else {
+                //セッション更新失敗時
+
+                    //ロールバック
+                    $this->Transactions->end(false, $transaction, __FUNCTION__);
+
+                    //Authセッションを巻き戻す
+                    $this->Session->write('Auth', $old_user_data);
+
+                    return $result;
+
+                }
+
+            } else {
+
+            //失敗時
+                //ロールバック
+                $this->Transactions->end(false, $transaction, __FUNCTION__);
+
+                return $result;
+
+            }
+
+        } catch(Exception $e) {
+
+        //失敗時
+            //ロールバック
+            $this->Transactions->end(false, $transaction, __FUNCTION__);
+
+            return $result;
+
+        }
+
+        //返却値を格納
+        $result = array_merge($log_data, $user_coupons_count);
+
+        return $result;
+
+    }
+
+    //----------------------------------------
+    //レストランへのクーポン付加
+    //RestaurantsComponent
+    //----------------------------------------
 	/**
 	 * １つのレストランに複数のクーポン情報を追加する
+     * RestaurantsComponent::getRestaurantById
 	 * @param array $restaurant
 	 * @return array
 	 */
@@ -452,6 +462,7 @@ class CouponsComponent extends Component {
 
 	/**
 	 * レストランの配列にクーポン情報を追加する
+     * RestaurantsComponent::ApplyMstsToRestaurants
 	 * @param array $restaurants
 	 * @param array $coupons
 	 * @param array $set_menus
@@ -546,6 +557,10 @@ class CouponsComponent extends Component {
 
     }
 
+    //----------------------------------------
+    //クーポンの料金計算
+    //RestaurantsComponent
+    //----------------------------------------
     /**
      * クーポンを合計料金と合わせて取得
      * @return array

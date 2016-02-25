@@ -115,25 +115,4 @@ class UsersCouponsConsumptionsCountsComponent extends Component {
 
 	}
 
-    /**
-     * クーポンが利用可能かを判定
-     * @return array
-     */
-    public function checkOverMonthlyCount(){
-
-        //返却値を定義
-        $result = false;
-
-        //残り利用可能枚数を取得
-        $remaining_count = $this->Session->read('Auth.CouponsCount.remaining');
-
-        //残り利用可能枚数が0以下の場合
-        if($remaining_count <= 0){
-            $result = true;
-        }
-
-        return $result;
-
-    }
-
 }

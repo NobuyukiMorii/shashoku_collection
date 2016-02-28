@@ -62,16 +62,18 @@ if(!empty($u['user_coupon_status'])){
 		<div id="menu">
 		    <div class="pure-menu">
 		        <p class="pure-menu-heading">
-			        <label><?php echo $u['company']['name']?></label><br/>
-			        <label><?php echo $u['user']['name']?></label>
+			        <label><i class="fa fa-building-o"></i><?php echo $u['company']['name']?></label><br/>
+			        <label><i class="fa fa-user"></i><?php echo $u['user']['name']?> さん</label>
 		        </p>
 		        <div id="userCoupon">
 		        <p>
 		        	<?php
 		        	$count = $uc['count'];
-		        	echo date('m', time())."月";
+		        	echo "【".(int)date('m', time())."月】";
 		        	if ($count['remaining'] > 0) {
-		        		echo " あと".$count['remaining']."回使えます!";
+		        		echo "あと<label>".$count['remaining']."</label>回使えます!";
+		        	} else {
+		        		echo "あと<label>".$count['remaining']."</label>回使えます";
 		        	}
 		            ?>
 		        </p>
@@ -91,8 +93,9 @@ if(!empty($u['user_coupon_status'])){
 		</div>
 		<!--sidemenu ここまで-->
 		<div id="l-header">
-			<h1><?php echo "<img src='../img/logo.png'>" ?></h1>
-			<!-- <h1><?php echo $this->fetch('title'); ?></h1> -->
+
+			<!-- <h1><?php echo "<img src='../img/logo.png'>" ?></h1> -->
+			<h1><?php echo $this->fetch('title'); ?></h1>
 		</div>
 		<div id="l-main">
 			<?php echo $this->Flash->render(); ?>

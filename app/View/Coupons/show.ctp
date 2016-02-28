@@ -1,7 +1,7 @@
 <pre>
 <?php
 
-// var_dump($response);
+// echo "<pre>"; var_dump($response); echo "</pre>";
 
 if(!empty($response['coupon']['restaurant'])){
     $rest           = $response['coupon']['restaurant'];
@@ -25,7 +25,7 @@ if(!empty($response['coupon']['coupon'])){
 <button class="cancel" onClick="signUpCancel()"><i class="fa fa-times-circle"></i>キャンセル</button>
 </div>
 
-<?php if ($coupon['is_authenticated_today']) { ?>
+<?php if (!$coupon['is_authenticated_today']) { ?>
 <p class="message">クーポンを発行しました！<br/>
 この画面をお店の店員さんに見せてください</p>
 <?php } else {?>
@@ -42,7 +42,7 @@ if(!empty($response['coupon']['coupon'])){
     <p class="dispDate"><?php echo '発行日時: '.$response["coupon"]["datetime"]; ?></p>
     </p>
     <?php } ?>
-    <?php if ($coupon['is_authenticated_today']) { ?>
+    <?php if (!$coupon['is_authenticated_today']) { ?>
         <button class="emergency" onClick="signUpCall()">認証する<br/><label>※必ず店舗の方に押してもらってください</label></button>
     <?php } else { ?>
         <button class="cancel">クーポンは認証済みです</button>

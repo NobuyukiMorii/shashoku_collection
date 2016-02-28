@@ -50,7 +50,7 @@ if(!empty($response['coupon']['coupon'])){
 </div>
 
 <div class="buttonBox">
-<button class="cancel" onClick="history.back()">レストランのページに戻る</button>
+<button class="cancel" onClick="goback_restaurant()">レストランのページに戻る</button>
 </div>
 
 <form name="is_coupons_consumption" method="POST" action="">
@@ -144,5 +144,8 @@ function Position   (e){
     y = Math.floor(y);
     var pos = {'x':x , 'y':y};
     return pos;
-};
+}
+function goback_restaurant(){
+    location.href = "<?php echo $this->Html->url(array("controller" => "Restaurants", "action" => "detail")); ?>"+"?restaurant_id="+"<?php echo $rest['id']; ?>";
+}
 </script>

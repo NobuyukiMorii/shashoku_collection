@@ -52,6 +52,8 @@ class CouponsComponent extends Component {
     		return $result;
     	}
 
+        //レストラン名
+        $result['restaurant']['id']                 = $msts['restaurants']['id'];
     	//レストラン名
     	$result['restaurant']['name'] 				= $msts['restaurants']['name'];
         //表示するクーポンが本日認証済みかどうか

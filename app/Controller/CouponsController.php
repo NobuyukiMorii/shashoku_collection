@@ -77,6 +77,11 @@ class CouponsController extends AppController {
                 return;
             }
 
+            //----------------------------------------
+            //クーポン認証フラグを変更する
+            //----------------------------------------
+            $this->view_data['coupon']['coupon']['is_authenticated_today'] = true;
+
         }
 
         return $this->view_data;

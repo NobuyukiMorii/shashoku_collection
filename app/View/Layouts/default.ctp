@@ -15,7 +15,15 @@
  */
 
 $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework');
-$cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
+$cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version());
+
+// 共通パラメータ
+if(!empty($response['user_data'])){
+	$u    = $response['user_data'];
+}
+if(!empty($u['user_coupon_status'])){
+	$uc   = $u['user_coupon_status'];
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -44,7 +52,9 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 <body id="layout">
 	<div id="mask" class="is-hidden"></div>
 	<div id="l-container">
-		<?php // $this->element('side-menu'); 読み込み方謎なので一旦放置 ?>
+		<?php // $this->element('side-menu'); 読み込み方謎なので一旦放置
+			// echo "<pre>"; var_dump($u); echo "</pre>"; 
+		?>
 		<a href="#menu" id="menuLink" class="menu-link">
 		    <!-- Hamburger icon -->
 		    <span></span>
@@ -52,9 +62,20 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		<div id="menu">
 		    <div class="pure-menu">
 		        <p class="pure-menu-heading">
-			        <label>株式会社Shashoku</label><br/>
-			        <label>Tamiko</label>
+			        <label><?php echo $u['company']['name']?></label><br/>
+			        <label><?php echo $u['user']['name']?></label>
 		        </p>
+		        <div id="userCoupon">
+		        <p>
+		        	<?php
+		        	$count = $uc['count'];
+		        	echo date('m', time())."月";
+		        	if ($count['remaining'] > 0) {
+		        		echo " あと".$count['remaining']."回使えます!";
+		        	}
+		            ?>
+		        </p>
+		        </div>
 		        <ul class="pure-menu-list">
 		            <li class="pure-menu-item"><a href="<?php echo $this->Html->url(array("controller" => "Restaurants", "action" => "index")); ?>" class="pure-menu-link"><i class="fa fa-home"></i>ランチ店舗一覧</a></li>
 		            <li class="pure-menu-item"><a href="<?php echo $this->Html->url(array("controller" => "Coupons", "action" => "history")); ?>" class="pure-menu-link"><i class="fa fa-history"></i>行ったお店の履歴</a></li>

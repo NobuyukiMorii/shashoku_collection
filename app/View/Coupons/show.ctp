@@ -39,7 +39,7 @@ if(!empty($response['coupon']['coupon'])){
     <img class="" src="<?php echo $menu["photo_url"] ?>" />
     <p class="bold"><?php echo '価格:'.$coupon['price'].'円' ?>
     <?php if ($coupon['is_authenticated_today']) { ?>
-    <p class="dispDate"><?php echo '発行日時: '.$response["coupon"]["datetime"]; ?></p>
+    <p class="dispDate"><?php echo '発行日時: '.$response["coupon"]["date_time"]; ?></p>
     </p>
     <?php } ?>
     <?php if (!$coupon['is_authenticated_today']) { ?>

@@ -1,5 +1,6 @@
 <!-- Restaurants/index.ctp トップページ レストラン一覧 -->
-<?php 
+<?php
+$this->assign('title', '<img src="img/logo.png">');
 //エラーコード（0以外の場合、いい感じにエラーメッセージを表示して頂きたいです。）
 $error_code     = $response['error_code'];
 //エラーメッセージ

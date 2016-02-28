@@ -1,5 +1,6 @@
 <div class="boxList">
     <?php
+    $this->assign('title', 'クーポン履歴');
     // echo "<pre>";
     // var_dump($response);
     // echo "</pre>";
@@ -11,6 +12,9 @@
     <?php
     if (isset($all_histories) && count($all_histories) > 0) {
         foreach ($all_histories as $month => $histories) {
+            if ($month) {
+                $month = (int)substr($month, 4, 2);
+            }
             echo "<h2>".$month."月</h2>";
             foreach ($histories as $history) {
     ?>

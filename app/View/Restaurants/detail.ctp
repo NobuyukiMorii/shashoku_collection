@@ -1,7 +1,6 @@
 <!-- Restaurants/detail.ctp レストラン詳細 -->
 <?php 
 // echo "<pre>"; var_dump($response); echo "</pre>";
-
 //エラーコード（0以外の場合、いい感じにエラーメッセージを表示して頂きたいです。）
 $error_code     = $response['error_code'];
 //エラーメッセージ
@@ -21,6 +20,8 @@ if(!empty($response['genres'])){
 if(!empty($response['tags'])){
     $tags           = $response['tags'];
 }
+
+$this->assign('title', $rest['name']);
 ?>
 
 

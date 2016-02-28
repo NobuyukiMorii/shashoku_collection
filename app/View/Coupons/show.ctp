@@ -1,6 +1,6 @@
 <pre>
 <?php
-
+$this->assign('title', 'クーポン発行画面');
 // echo "<pre>"; var_dump($response); echo "</pre>";
 
 if(!empty($response['coupon']['restaurant'])){

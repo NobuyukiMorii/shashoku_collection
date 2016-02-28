@@ -101,7 +101,7 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
 
 <h2>アクセス</h2>
 <div id="map"></div>
-<p class="mapLink"><a href="http://maps.google.com/maps?q=<?php echo $rest['address'] ?>">GoogleMapアプリでみる</a></p>
+<p class="mapLink"><a target="blank" href="http://maps.google.com/maps?q=<?php echo $rest['address'] ?>">GoogleMapアプリでみる</a></p>
 
 <h2>店舗情報</h2>
 <table>

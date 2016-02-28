@@ -1,6 +1,6 @@
 <pre>
 <?php
-
+$this->assign('title', 'クーポン発行画面');
 // echo "<pre>"; var_dump($response); echo "</pre>";
 
 if(!empty($response['coupon']['restaurant'])){
@@ -39,7 +39,7 @@ if(!empty($response['coupon']['coupon'])){
     <img class="" src="<?php echo $menu["photo_url"] ?>" />
     <p class="bold"><?php echo '価格:'.$coupon['price'].'円' ?>
     <?php if ($coupon['is_authenticated_today']) { ?>
-    <p class="dispDate"><?php echo '発行日時: '.$response["coupon"]["datetime"]; ?></p>
+    <p class="dispDate"><?php echo '発行日時: '.$response["coupon"]["date_time"]; ?></p>
     </p>
     <?php } ?>
     <?php if (!$coupon['is_authenticated_today']) { ?>
@@ -50,7 +50,7 @@ if(!empty($response['coupon']['coupon'])){
 </div>
 
 <div class="buttonBox">
-<button class="cancel" onClick="history.back()">レストランのページに戻る</button>
+<button class="cancel" onClick="goback_restaurant()">レストランのページに戻る</button>
 </div>
 
 <form name="is_coupons_consumption" method="POST" action="">
@@ -144,5 +144,8 @@ function Position   (e){
     y = Math.floor(y);
     var pos = {'x':x , 'y':y};
     return pos;
-};
+}
+function goback_restaurant(){
+    location.href = "<?php echo $this->Html->url(array("controller" => "Restaurants", "action" => "detail")); ?>"+"?restaurant_id="+"<?php echo $rest['id']; ?>";
+}
 </script>

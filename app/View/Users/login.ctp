@@ -13,10 +13,10 @@
 </form>
 
 <script>
-var i=0;
-setInterval(function(){
-    $("#layout").css("background-image","url(../img/login_bg"+i+".jpg)")
-    i++;
-    if (i>2) i=0;
-}, 2500);
+// var i=0;
+// setInterval(function(){
+//     $("#layout").css("background-image","url(../img/login_bg"+i+".jpg)")
+//     i++;
+//     if (i>2) i=0;
+// }, 2500);
 </script>

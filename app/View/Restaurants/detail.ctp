@@ -1,9 +1,13 @@
 <!-- Restaurants/detail.ctp レストラン詳細 -->
 <?php 
+// echo "<pre>"; var_dump($response); echo "</pre>";
 //エラーコード（0以外の場合、いい感じにエラーメッセージを表示して頂きたいです。）
 $error_code     = $response['error_code'];
 //エラーメッセージ
 $error_message  = $response['error_message'];
+if(!empty($response['user_data'])){
+    $u    = $response['user_data'];
+}
 //レストラン
 if(!empty($response['restaurant'])){
     $rest           = $response['restaurant'];
@@ -16,6 +20,8 @@ if(!empty($response['genres'])){
 if(!empty($response['tags'])){
     $tags           = $response['tags'];
 }
+
+$this->assign('title', $rest['name']);
 ?>
 
 
@@ -74,13 +80,17 @@ echo $this->Html->script('https://rawgit.com/HPNeo/gmaps/master/gmaps.js');
         <?php
         if ($rest['coupons']['count']  > 0) {
             foreach ($rest['coupons']['list'] as $coupon) {
-                $coupon["id"] = 1; // TODO: 仮
+                // $coupon["id"] = 1; // TODO: 仮
         ?>
                 <div class="menuBox">
                     <img class="menuImg" src="<?php echo $coupon['set_menu']["photo_url"] ;?>" />
                     <p>クーポン利用可能期間：<?php echo date("m/d",strtotime($coupon["start_date"])).'〜'.date("m/d", strtotime($coupon["end_date"])) ?></p>
                     <p class="bold"><?php echo $coupon['price'] ?>円メニュー:<br/><?php ehbr($coupon['set_menu']['name']) ?></p>
-                    <button onClick="confirmCoupon(<?php echo $coupon["id"] ?>)">このメニューのクーポンを発行する</button>
+                    <?php if (!$u["user_coupon_status"]["consumed"]["today"]) { ?>
+                        <button onClick="confirmCoupon(<?php echo $coupon["id"] ?>)">このメニューのクーポンを発行する</button>
+                    <?php } else { ?>
+                        <button class="cancel">本日は発券済みです</button>
+                    <?php } ?>
                 </div>
         <?php
             }

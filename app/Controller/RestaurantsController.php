@@ -19,6 +19,7 @@ class RestaurantsController extends AppController {
 	 */
     public function index() {
 
+        $this->title = "レストラン一覧";
         //----------------------------------------
         //レストラン取得
         //----------------------------------------

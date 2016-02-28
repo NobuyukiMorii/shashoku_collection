@@ -1,4 +1,8 @@
+<pre>
 <?php
+
+// var_dump($response);
+
 if(!empty($response['coupon']['restaurant'])){
     $rest           = $response['coupon']['restaurant'];
 }
@@ -7,6 +11,7 @@ if(!empty($response['coupon']['coupon'])){
     $menu           = $response['coupon']['coupon']['set_menu'];
 } 
 ?>
+</pre>
 
 <div id="signUp" class="is-hidden">
 <p>右にスライドして認証してください<br/>
@@ -20,17 +25,28 @@ if(!empty($response['coupon']['coupon'])){
 <button class="cancel" onClick="signUpCancel()"><i class="fa fa-times-circle"></i>キャンセル</button>
 </div>
 
+<?php if ($coupon['is_authenticated_today']) { ?>
 <p class="message">クーポンを発行しました！<br/>
 この画面をお店の店員さんに見せてください</p>
+<?php } else {?>
+<p class="message">このクーポンは認証済みです。<br/>
+ご利用いただきありがとうございます！</p>
+<?php } ?>
 
 <div class="menuShowBox">
     <p class="rest"><?php ehbr($rest['name']) ?></p>
     <h3><?php ehbr($menu['name']) ?></h3>
     <img class="" src="<?php echo $menu["photo_url"] ?>" />
     <p class="bold"><?php echo '価格:'.$coupon['price'].'円' ?>
-    <p class="dispDate"><?php echo '発行日時: '.date("Y/m/d H:i"/*, $menu['disp_date']*/) ?></p>
+    <?php if ($coupon['is_authenticated_today']) { ?>
+    <p class="dispDate"><?php echo '発行日時: '.$response["coupon"]["datetime"]; ?></p>
     </p>
-    <button class="emergency" onClick="signUpCall()">認証する<br/><label>※必ず店舗の方に押してもらってください</label></button>
+    <?php } ?>
+    <?php if ($coupon['is_authenticated_today']) { ?>
+        <button class="emergency" onClick="signUpCall()">認証する<br/><label>※必ず店舗の方に押してもらってください</label></button>
+    <?php } else { ?>
+        <button class="cancel">クーポンは認証済みです</button>
+    <?php } ?>
 </div>
 
 <div class="buttonBox">
@@ -40,6 +56,7 @@ if(!empty($response['coupon']['coupon'])){
 <form name="is_coupons_consumption" method="POST" action="">
 <input type=hidden name="is_coupons_consumption" value=true >
 </form>
+
 
 <script>
 function signUpInit() {
@@ -127,6 +144,5 @@ function Position   (e){
     y = Math.floor(y);
     var pos = {'x':x , 'y':y};
     return pos;
-}
-
+};
 </script>

@@ -246,8 +246,7 @@ class UsersComponent extends Component {
         $result['User'] = $User->find('first', array(
             'conditions' => array(
                 'id' => $user_id
-            ),
-            'cache' => true
+            )
         ));
         if(empty($result['User'])){
             return array();
@@ -257,8 +256,7 @@ class UsersComponent extends Component {
         $result['UsersProfile'] = $UsersProfile->find('first', array(
             'conditions' => array(
                 'user_id' => $user_id
-            ),
-            'cache' => true
+            )
         ));
         if(empty($result['UsersProfile'])){
             return array();
@@ -268,8 +266,7 @@ class UsersComponent extends Component {
         $result['Company'] = $Company->find('first', array(
             'conditions' => array(
                 'id' => $result['User']['company_id']
-            ),
-            'cache' => true
+            )
         ));
         if(empty($result['Company'])){
             return array();

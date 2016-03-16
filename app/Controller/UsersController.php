@@ -25,6 +25,9 @@ class UsersController extends AppController {
         //POSTされた場合
         if ($this->request->is('post')) {
 
+            //Authセッションを削除（初期化）
+            $this->Session->delete('Auth');
+
             //ログイン
             if ($this->Auth->login()) {
 

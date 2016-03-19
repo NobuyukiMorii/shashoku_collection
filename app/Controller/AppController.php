@@ -130,9 +130,6 @@ class AppController extends Controller {
         //新しい月になった場合、Authを削除
         $is_this_month_login = $this->Users->deleteAuthSessionAtNewMonth();
 
-        //Basic認証
-        $this->Common->basicAuthentication();
-
         //PCからのアクセスの場合には専用のviewを出力する 
         $this->Common->setThemeForPC();
 

@@ -160,6 +160,18 @@ CakeLog::config('sql', array(
     'rotate' => 20,
     'path' => LOGS.DS.'sql'.DS,
 ));
+/* 調査ログを追加 */
+CakeLog::config('trace', array(
+    'engine' => 'File',
+    'types' => array('trace'),
+    /* 日ごとにログを切り替える設定 */
+    'file' => date( 'Ymd'),
+    /* 5Mごとにファイルを切り替え */
+    'size' => '5MB',
+    /* 20ファイルまで切り替え */
+    'rotate' => 20,
+    'path' => LOGS.DS.'trace'.DS,
+));
 
 /**
  * 2015/11/22

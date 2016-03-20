@@ -245,7 +245,8 @@ class UsersComponent extends Component {
 
         $result['User'] = $User->find('first', array(
             'conditions' => array(
-                'id' => $user_id
+                'id' => $user_id,
+                'del_flg' => 0
             )
         ));
         if(empty($result['User'])){
@@ -255,7 +256,8 @@ class UsersComponent extends Component {
         //プロフィール取得
         $result['UsersProfile'] = $UsersProfile->find('first', array(
             'conditions' => array(
-                'user_id' => $user_id
+                'user_id' => $user_id,
+                'del_flg' => 0
             )
         ));
         if(empty($result['UsersProfile'])){
@@ -265,7 +267,8 @@ class UsersComponent extends Component {
         //法人取得
         $result['Company'] = $Company->find('first', array(
             'conditions' => array(
-                'id' => $result['User']['company_id']
+                'id' => $result['User']['company_id'],
+                'del_flg' => 0
             )
         ));
         if(empty($result['Company'])){
@@ -527,6 +530,42 @@ class UsersComponent extends Component {
         $result = date('Y/m/d H:i', strtotime($authenticated_date));
 
         return $result;
+    }
+
+    //----------------------------------------
+    //ユーザーの存在確認
+    //----------------------------------------
+    /**
+     * 対象のユーザーidが存在するかどうか
+     * @return boolean
+     */
+    public function checkUserExistence($user_id){
+
+        $result = false;
+
+        //ユーザーidが指定されていない場合
+        if(empty($user_id)) {
+            return $result;
+        }
+
+        //モデルをロード
+        $User = ClassRegistry::init('User');
+
+        //ユーザーを検索
+        $user = $User->find('first', array(
+            'conditions' => array(
+                'id' => $user_id,
+                'del_flg' => 0
+            )
+        ));
+
+        //ユーザーが存在する場合
+        if(!empty($user)){
+            $result = true;
+        }
+
+        return $result;
+
     }
 
 }

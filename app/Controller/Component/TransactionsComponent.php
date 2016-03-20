@@ -41,7 +41,7 @@ class TransactionsComponent extends Component {
         //トランザクションを開始
         $is_success_register_cache = $this->registerTransactionCache($func_name);
         if($is_success_register_cache === false){
-        	//実行中の場合は空配列で返却
+        	//キャッシュ登録に失敗した場合、空配列で返却
         	return $result;
         }
 

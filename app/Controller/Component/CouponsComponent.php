@@ -304,6 +304,11 @@ class CouponsComponent extends Component {
 
         //トランザクション開始
         $transaction = $this->Transactions->start(__FUNCTION__);
+        
+        //トランザクション開始に失敗した場合
+        if(empty($transaction)){
+            return $result;
+        }
 
         try{
             

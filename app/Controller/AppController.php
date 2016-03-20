@@ -85,6 +85,7 @@ class AppController extends Controller {
         'Common',
         'Session',
         'Users',
+        'Flash',
         'Auth' => array(
             'authenticate' => array(
                 'Form' => array(

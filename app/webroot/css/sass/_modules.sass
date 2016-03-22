@@ -20,7 +20,7 @@ h2
   background-color: #EEE
   padding: 5px 10px
 
-button
+button, .button
   margin-top: 5px
   width: 100%
   height: 44px
@@ -29,6 +29,7 @@ button
   border: none
   font-weight: bold
   color: #FFF
+  text-align: center
 
 button.emergency
   background-color: red
@@ -58,7 +59,7 @@ form.login
 #layout.login
   background: url(../img/login_bg0.jpg) no-repeat center center
   background-size: cover
-  height: 100vh
+  height: 100vh 
 
 // #layout.login .bg0
 //   background-image: url(../img/login_bg0.jpg)
@@ -107,7 +108,7 @@ ul.information
   margin-top: 10px
   border-top: 1px solid #DDD
   li
-    padding: 1em 2em 1em 1em
+    padding: 1.1em 2em 1.1em 1em
     font-size: 11px
     border-bottom: 1px solid #DDD
   a
@@ -126,7 +127,7 @@ div.img.history
   padding: 0
   min-height: 9vh
   .titleBox
-    height: 100%
+    height: 9vh
 
 
 .titleBox
@@ -157,6 +158,8 @@ div.img.history
     margin-top: 10px
     font-size: 13px
     line-height: 1.4
+  i
+    color: #333
 
 .titleBox-top
   margin-top: 130px
@@ -176,6 +179,10 @@ div.img.history
     margin-top: 5px
   p
     margin-top: 8px
+
+.titleBox-userSetting
+  line-height: 1.5
+  background-color: #FFFCF7
 
 
 .boxList
@@ -394,9 +401,18 @@ div.menuShowBox
 button.cancel
   background-color: #999
 
+form.password
+  > *
+    margin-top: 10px
+  p
+    color: #666
+
 .pdlr-10
   padding-left: 10px
   padding-right: 10px
+
+.mgt-15
+  margin-top: 15px
 
 .is-important
   color: #e0001a !important
@@ -410,3 +426,10 @@ button.cancel
 
 .cake-sql-log
   display: none !important
+
+#flashMessage
+  background-color: #e0001a
+  color: #FFF
+  text-align: center
+  padding: 7px
+  font-weight: bold

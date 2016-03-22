@@ -46,6 +46,7 @@ if(!empty($u['user_coupon_status'])){
 		echo $this->fetch('css');
 		echo $this->fetch('script');
 		echo $this->Html->script('https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js');
+		echo $this->Html->script('common');
 	?>
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 </head>

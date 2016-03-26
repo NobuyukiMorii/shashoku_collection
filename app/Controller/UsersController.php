@@ -125,6 +125,7 @@ class UsersController extends AppController {
             if($validation_result['error_code'] !== 0){
                 //エラーコードを返却
                 $this->Common->returnError($validation_result['error_code'], $validation_result['error_message']);
+                $this->Flash->set(__($validation_result['error_message']));
                 return;
             }
 
@@ -140,6 +141,7 @@ class UsersController extends AppController {
             if($result === false){
                 //エラーメッセージを返却
                 $this->Common->returnError(Configure::read('ERR_CODE_FAIL_SAVE'), __('パスワードの更新に失敗しました。'));   
+                $this->Flash->set(__('パスワードの更新に失敗しました。'));
                 return;
             }
 

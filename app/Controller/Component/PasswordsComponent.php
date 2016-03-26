@@ -52,7 +52,8 @@ class PasswordsComponent extends Component {
         }
 
         //半角英数記号
-        if(!preg_match("/^[!-~]+$/", $password)){
+        $preg_match_flg = preg_match("/^[!-~]+$/", $password);
+        if($preg_match_flg === 0){
 
             $result['error_code'] = Configure::read('ERR_CODE_NOT_SUITABLE_PARAM');
             $result['error_message'] = __('半角英数記号でご入力下さい');
@@ -61,7 +62,7 @@ class PasswordsComponent extends Component {
 
         //文字数チェック
         $password_length = mb_strlen($password,"UTF-8");
-        if($password_length < Configure::read('LOGIN_PASSWORD_LEMGTH_MIN') && $password_length > Configure::read('LOGIN_PASSWORD_LEMGTH_MAX')){
+        if($password_length < Configure::read('LOGIN_PASSWORD_LEMGTH_MIN') || $password_length > Configure::read('LOGIN_PASSWORD_LEMGTH_MAX')){
 
             $result['error_code'] = Configure::read('ERR_CODE_NOT_SUITABLE_PARAM');
             $result['error_message'] = __('指定の長さのパスワードを入力して下さい');

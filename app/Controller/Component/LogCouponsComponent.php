@@ -43,6 +43,7 @@ class LogCouponsComponent extends Component {
 
     	//ログ作成に必要な値を格納
         $result['user_id']                      = $user_data['User']['id'];
+        $result['employee_id']                  = $user_data['User']['employee_id'];
         $result['users_profile_id']             = $user_data['UsersProfile']['id'];
         $result['family_name']                  = $user_data['UsersProfile']['family_name'];
         $result['first_name']                   = $user_data['UsersProfile']['first_name'];

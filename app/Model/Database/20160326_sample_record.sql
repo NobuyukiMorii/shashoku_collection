@@ -3,12 +3,18 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost:8889
--- Generation Time: 2016 年 3 月 26 日 12:47
+-- Generation Time: 2016 年 3 月 26 日 19:18
 -- サーバのバージョン： 5.5.42
 -- PHP Version: 5.6.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `LAA0682918-shashoku`
@@ -36,7 +42,7 @@ CREATE TABLE `colors` (
 
 INSERT INTO `colors` (`id`, `name`, `color_code`, `del_flg`, `created`, `modified`) VALUES
 (1, '橙', '#ffb2b2', 0, '2016-01-01 00:00:00', '2016-01-01 00:00:00'),
-(2, '赤', '#ffb2d8	', 0, '2016-01-01 00:00:00', '2016-01-01 00:00:00'),
+(2, '赤', '#ffb2d8 ', 0, '2016-01-01 00:00:00', '2016-01-01 00:00:00'),
 (3, 'ピンク', '#ffb2ff', 0, '2016-01-01 00:00:00', '2016-01-01 00:00:00'),
 (4, '紫', '#d8b2ff', 0, '2016-01-01 00:00:00', '2016-01-01 00:00:00'),
 (5, '青', '#b2b2ff', 0, '2016-01-01 00:00:00', '2016-01-01 00:00:00'),
@@ -234,6 +240,7 @@ INSERT INTO `groups` (`id`, `name`, `del_flg`, `created`, `modified`) VALUES
 DROP TABLE IF EXISTS `log_coupons_consumptions`;
 CREATE TABLE `log_coupons_consumptions` (
   `id` int(11) NOT NULL,
+  `employee_id` varchar(500) NOT NULL,
   `company_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `users_profile_id` int(11) NOT NULL,
@@ -263,7 +270,7 @@ CREATE TABLE `log_coupons_consumptions` (
   `del_flg` tinyint(4) NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8
 /*!50500 PARTITION BY RANGE  COLUMNS(created)
 (PARTITION p201601 VALUES LESS THAN ('2016-01-01') ENGINE = InnoDB,
  PARTITION p201602 VALUES LESS THAN ('2016-02-01') ENGINE = InnoDB,
@@ -355,9 +362,11 @@ CREATE TABLE `log_coupons_consumptions` (
 -- テーブルのデータのダンプ `log_coupons_consumptions`
 --
 
-INSERT INTO `log_coupons_consumptions` (`id`, `company_id`, `user_id`, `users_profile_id`, `family_name`, `first_name`, `department_id`, `department_ids`, `department_name`, `location_id`, `location_name`, `location_ids`, `restaurant_id`, `restaurant_name`, `restaurants_photo_file_name`, `restaurants_photo_ids`, `restaurants_genre_ids`, `restaurants_tag_ids`, `coupon_id`, `total_price`, `additional_price`, `basic_price`, `set_menu_id`, `set_menu_name`, `set_menus_photo_file_name`, `set_menus_photo_ids`, `yearmonth`, `del_flg`, `created`, `modified`) VALUES
-(1, 2, 1, 1, 'test', 'test', 6, '6,5,4', '人事', 3, '本社', '3,2', 1, 'ichicha cafe', 'restaurant_1_3.jpg', '3,2,1', '1,2,4', '3,2,1', 1, 600, 400, 200, 1, 'チキンと野菜の\nグラタンセット', 'set_menu_1_1.jpg', '1', 201602, 0, '2016-02-28 15:40:40', '2016-02-28 15:40:40'),
-(2, 2, 1, 1, 'test1', 'test1', 6, '6,5,4', '人事', 3, '本社', '3,2', 4, 'yoncha cafe', 'restaurant_4_1.jpg', '10,11,12,13', '2,3,4,1', '10,1,2,3', 10, 500, 300, 200, 10, 'チキンと野菜のグラタンセット', 'set_menu_10_1.jpg', '10', 201603, 0, '2016-03-20 18:40:11', '2016-03-20 18:40:11');
+INSERT INTO `log_coupons_consumptions` (`id`, `employee_id`, `company_id`, `user_id`, `users_profile_id`, `family_name`, `first_name`, `department_id`, `department_ids`, `department_name`, `location_id`, `location_name`, `location_ids`, `restaurant_id`, `restaurant_name`, `restaurants_photo_file_name`, `restaurants_photo_ids`, `restaurants_genre_ids`, `restaurants_tag_ids`, `coupon_id`, `total_price`, `additional_price`, `basic_price`, `set_menu_id`, `set_menu_name`, `set_menus_photo_file_name`, `set_menus_photo_ids`, `yearmonth`, `del_flg`, `created`, `modified`) VALUES
+(1, '1', 2, 1, 1, 'test', 'test', 6, '6,5,4', '人事', 3, '本社', '3,2', 1, 'ichicha cafe', 'restaurant_1_3.jpg', '3,2,1', '1,2,4', '3,2,1', 1, 600, 400, 200, 1, 'チキンと野菜の\nグラタンセット', 'set_menu_1_1.jpg', '1', 201602, 0, '2016-02-28 15:40:40', '2016-02-28 15:40:40'),
+(2, '1', 2, 1, 1, 'test1', 'test1', 6, '6,5,4', '人事', 3, '本社', '3,2', 4, 'yoncha cafe', 'restaurant_4_1.jpg', '10,11,12,13', '2,3,4,1', '10,1,2,3', 10, 500, 300, 200, 10, 'チキンと野菜のグラタンセット', 'set_menu_10_1.jpg', '10', 201603, 0, '2016-03-20 18:40:11', '2016-03-20 18:40:11'),
+(3, '2', 2, 2, 2, 'test2', 'test2', 6, '6', '人事', 3, '本社', '3', 1, 'ichicha cafe', 'restaurant_1_3.jpg', '3,2,1', '1,2,4', '3,2,1', 3, 500, 300, 200, 3, 'チキンと野菜の\nグラタンセット', 'set_menu_3_1.jpg', '3', 201603, 0, '2016-03-26 13:04:48', '2016-03-26 13:04:48'),
+(4, '1', 2, 1, 1, 'test1@', 'test1@', 5, '5', '技術', 3, '本社', '3', 1, 'ichicha cafe', 'restaurant_1_3.jpg', '3,2,1', '1,2,4', '3,2,1', 3, 500, 300, 200, 3, 'チキンと野菜の\nグラタンセット', 'set_menu_3_1.jpg', '3', 201603, 0, '2016-03-26 13:09:25', '2016-03-26 13:09:25');
 
 -- --------------------------------------------------------
 
@@ -368,6 +377,7 @@ INSERT INTO `log_coupons_consumptions` (`id`, `company_id`, `user_id`, `users_pr
 DROP TABLE IF EXISTS `log_coupons_displays`;
 CREATE TABLE `log_coupons_displays` (
   `id` int(11) NOT NULL,
+  `employee_id` varchar(500) NOT NULL,
   `authenticated_status_flg` tinyint(4) NOT NULL DEFAULT '0',
   `company_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -398,7 +408,7 @@ CREATE TABLE `log_coupons_displays` (
   `del_flg` tinyint(4) NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8
 /*!50500 PARTITION BY RANGE  COLUMNS(created)
 (PARTITION p201601 VALUES LESS THAN ('2016-01-01') ENGINE = InnoDB,
  PARTITION p201602 VALUES LESS THAN ('2016-02-01') ENGINE = InnoDB,
@@ -490,10 +500,16 @@ CREATE TABLE `log_coupons_displays` (
 -- テーブルのデータのダンプ `log_coupons_displays`
 --
 
-INSERT INTO `log_coupons_displays` (`id`, `authenticated_status_flg`, `company_id`, `user_id`, `users_profile_id`, `family_name`, `first_name`, `department_id`, `department_ids`, `department_name`, `location_id`, `location_name`, `location_ids`, `restaurant_id`, `restaurant_name`, `restaurants_photo_file_name`, `restaurants_photo_ids`, `restaurants_genre_ids`, `restaurants_tag_ids`, `coupon_id`, `total_price`, `additional_price`, `basic_price`, `set_menu_id`, `set_menu_name`, `set_menus_photo_file_name`, `set_menus_photo_ids`, `yearmonth`, `del_flg`, `created`, `modified`) VALUES
-(1, 1, 2, 1, 1, 'test', 'test', 6, '6,5,4', '人事', 3, '本社', '3,2', 1, 'ichicha cafe', 'restaurant_1_3.jpg', '3,2,1', '1,2,4', '3,2,1', 1, 600, 400, 200, 1, 'チキンと野菜の\nグラタンセット', 'set_menu_1_1.jpg', '1', 201602, 0, '2016-02-28 15:40:40', '2016-02-28 15:40:40'),
-(2, 0, 2, 1, 1, 'test1', 'test1', 6, '6,5,4', '人事', 3, '本社', '3,2', 4, 'yoncha cafe', 'restaurant_4_1.jpg', '10,11,12,13', '2,3,4,1', '10,1,2,3', 10, 500, 300, 200, 10, 'チキンと野菜のグラタンセット', 'set_menu_10_1.jpg', '10', 201603, 0, '2016-03-20 18:39:52', '2016-03-20 18:39:52'),
-(3, 1, 2, 1, 1, 'test1', 'test1', 6, '6,5,4', '人事', 3, '本社', '3,2', 4, 'yoncha cafe', 'restaurant_4_1.jpg', '10,11,12,13', '2,3,4,1', '10,1,2,3', 10, 500, 300, 200, 10, 'チキンと野菜のグラタンセット', 'set_menu_10_1.jpg', '10', 201603, 0, '2016-03-20 18:40:11', '2016-03-20 18:40:11');
+INSERT INTO `log_coupons_displays` (`id`, `employee_id`, `authenticated_status_flg`, `company_id`, `user_id`, `users_profile_id`, `family_name`, `first_name`, `department_id`, `department_ids`, `department_name`, `location_id`, `location_name`, `location_ids`, `restaurant_id`, `restaurant_name`, `restaurants_photo_file_name`, `restaurants_photo_ids`, `restaurants_genre_ids`, `restaurants_tag_ids`, `coupon_id`, `total_price`, `additional_price`, `basic_price`, `set_menu_id`, `set_menu_name`, `set_menus_photo_file_name`, `set_menus_photo_ids`, `yearmonth`, `del_flg`, `created`, `modified`) VALUES
+(1, '1', 1, 2, 1, 1, 'test', 'test', 6, '6,5,4', '人事', 3, '本社', '3,2', 1, 'ichicha cafe', 'restaurant_1_3.jpg', '3,2,1', '1,2,4', '3,2,1', 1, 600, 400, 200, 1, 'チキンと野菜の\nグラタンセット', 'set_menu_1_1.jpg', '1', 201602, 0, '2016-02-28 15:40:40', '2016-02-28 15:40:40'),
+(2, '1', 0, 2, 1, 1, 'test1', 'test1', 6, '6,5,4', '人事', 3, '本社', '3,2', 4, 'yoncha cafe', 'restaurant_4_1.jpg', '10,11,12,13', '2,3,4,1', '10,1,2,3', 10, 500, 300, 200, 10, 'チキンと野菜のグラタンセット', 'set_menu_10_1.jpg', '10', 201603, 0, '2016-03-20 18:39:52', '2016-03-20 18:39:52'),
+(3, '1', 1, 2, 1, 1, 'test1', 'test1', 6, '6,5,4', '人事', 3, '本社', '3,2', 4, 'yoncha cafe', 'restaurant_4_1.jpg', '10,11,12,13', '2,3,4,1', '10,1,2,3', 10, 500, 300, 200, 10, 'チキンと野菜のグラタンセット', 'set_menu_10_1.jpg', '10', 201603, 0, '2016-03-20 18:40:11', '2016-03-20 18:40:11'),
+(4, '2', 0, 2, 2, 2, 'test2', 'test2', 6, '6', '人事', 3, '本社', '3', 1, 'ichicha cafe', 'restaurant_1_3.jpg', '3,2,1', '1,2,4', '3,2,1', 3, 500, 300, 200, 3, 'チキンと野菜の\nグラタンセット', 'set_menu_3_1.jpg', '3', 201603, 0, '2016-03-26 13:04:43', '2016-03-26 13:04:43'),
+(5, '2', 1, 2, 2, 2, 'test2', 'test2', 6, '6', '人事', 3, '本社', '3', 1, 'ichicha cafe', 'restaurant_1_3.jpg', '3,2,1', '1,2,4', '3,2,1', 3, 500, 300, 200, 3, 'チキンと野菜の\nグラタンセット', 'set_menu_3_1.jpg', '3', 201603, 0, '2016-03-26 13:04:48', '2016-03-26 13:04:48'),
+(6, '1', 0, 2, 1, 1, 'test1@', 'test1@', 5, '5', '技術', 3, '本社', '3', 1, 'ichicha cafe', 'restaurant_1_3.jpg', '3,2,1', '1,2,4', '3,2,1', 3, 500, 300, 200, 3, 'チキンと野菜の\nグラタンセット', 'set_menu_3_1.jpg', '3', 201603, 0, '2016-03-26 13:09:12', '2016-03-26 13:09:12'),
+(7, '1', 1, 2, 1, 1, 'test1@', 'test1@', 5, '5', '技術', 3, '本社', '3', 1, 'ichicha cafe', 'restaurant_1_3.jpg', '3,2,1', '1,2,4', '3,2,1', 3, 500, 300, 200, 3, 'チキンと野菜の\nグラタンセット', 'set_menu_3_1.jpg', '3', 201603, 0, '2016-03-26 13:09:25', '2016-03-26 13:09:25'),
+(8, '7', 0, 2, 7, 7, 'test7', 'test7', 4, '4', '営業', 3, '本社', '3', 14, '14cha cafe', 'restaurant_14_1.jpg', '41,42,43', '2,3,4', '1,2,3', 43, 900, 700, 200, 43, 'チキンと野菜のグラタンセット', 'set_menu_43_1.jpg', '43', 201603, 0, '2016-03-26 17:58:48', '2016-03-26 17:58:48'),
+(9, '7', 0, 2, 7, 7, 'test7', 'test7', 4, '4', '営業', 3, '本社', '3', 14, '14cha cafe', 'restaurant_14_1.jpg', '41,42,43', '2,3,4', '1,2,3', 43, 900, 700, 200, 43, 'チキンと野菜のグラタンセット', 'set_menu_43_1.jpg', '43', 201603, 0, '2016-03-26 17:59:05', '2016-03-26 17:59:05');
 
 -- --------------------------------------------------------
 
@@ -1024,29 +1040,34 @@ CREATE TABLE `users` (
   `password` varchar(1000) NOT NULL,
   `company_id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL DEFAULT '1',
+  `employee_id` varchar(500) NOT NULL,
   `del_flg` tinyint(4) NOT NULL DEFAULT '0',
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 --
 -- テーブルのデータのダンプ `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `password`, `company_id`, `group_id`, `del_flg`, `created`, `modified`) VALUES
-(1, 'test1@test1.com', 'b37d842e0820f894b49c6a0ba86b2e75341e34bb', 2, 1, 0, '2016-02-09 21:38:48', '2016-03-26 12:41:19'),
-(2, 'test2@test2.com', '84a3230d1daac6031d1e1691d852371a3dc5b0e2', 2, 0, 0, '2016-02-09 21:38:58', '2016-02-09 21:38:58'),
-(3, 'test3@test3.com', 'bce8bf8e37300c7c5b68b37e1320c773b0afbda5', 2, 1, 0, '2016-02-09 21:39:06', '2016-03-20 18:06:58'),
-(4, 'test4@test4.com', '0b5fede8b3fb09cfa3ea57a8ce796996bb8b3be3', 2, 1, 0, '2016-02-09 21:39:17', '2016-02-09 21:39:17'),
-(5, 'test5@test5.com', '7348d1a2213bcdea6c68d29f04bb5f37dfbf6935', 2, 1, 0, '2016-02-09 21:39:26', '2016-02-09 21:39:26'),
-(6, 'test6@test6.com', '60ecdda46fe379ada134f26dc82fe94e4a96b5cc', 2, 1, 0, '2016-02-09 21:39:35', '2016-02-09 21:39:35'),
-(7, 'test7@test7.com', 'b9ae2c24ad63dc52d97d9170c716fa3ec8e3d36a', 2, 1, 0, '2016-03-20 23:20:13', '2016-03-21 00:13:30'),
-(8, 'test8@test8.com', '5eb7bc0c8c4d5fd36b12f5023b1163fb6de64d2d', 2, 1, 0, '2016-03-20 23:36:03', '2016-03-20 23:36:03'),
-(9, 'test9@test9.com', 'aea4ee4599bd15a052c6e7adbca9ec9b3e638e18', 2, 1, 0, '2016-03-20 23:38:04', '2016-03-20 23:38:04'),
-(10, 'test10@test10.com', 'rpqwiurp23578GJKJ70873iwghsdghshgphgotesttest10', 2, 1, 0, '2016-03-21 00:14:38', '2016-03-21 00:14:38'),
-(11, 'test11@test11.com', '1f9c3ea7942dad611ab090127f89de7e190f2150', 2, 1, 0, '2016-03-21 00:44:11', '2016-03-21 00:44:11'),
-(12, 'test12@test12.com', '2dca3495207b7b05dd676d0a2339aea56f692ec4', 2, 1, 0, '2016-03-21 00:55:39', '2016-03-21 00:55:39'),
-(13, 'test13@test13.com', '86909ce50b274daaa4e576651a6f985c288d2694', 2, 1, 0, '2016-03-21 01:07:52', '2016-03-21 01:07:52');
+INSERT INTO `users` (`id`, `email`, `password`, `company_id`, `group_id`, `employee_id`, `del_flg`, `created`, `modified`) VALUES
+(1, 'test1@test1.com', 'e23810feb24f9e0e5471b64b6ad99ebfe24fda07', 2, 1, '1', 0, '2016-02-09 21:38:48', '2016-03-26 19:14:15'),
+(2, 'test2@test2.com', '25a2e050fd251afe2df3999845bf4517c45dec5d', 2, 1, '2', 0, '2016-02-09 21:38:58', '2016-03-26 13:41:14'),
+(3, 'test3@test3.com', '8ec8d79ae8d625b37c04cb43f523e500fa42d38c', 2, 1, '3', 0, '2016-02-09 21:39:06', '2016-03-26 15:14:13'),
+(4, 'test4@test4.com', 'd691b1fc68d9ddc4c7b35b292b4db43acc817e40', 2, 1, '4', 0, '2016-02-09 21:39:17', '2016-03-26 15:18:14'),
+(5, 'test5@test5.com', '396e0acf6d5eb358b69763a0e47051465e8f6751', 2, 1, '5', 0, '2016-02-09 21:39:26', '2016-03-26 15:19:38'),
+(6, 'test6@test6.com', '8ef963e91a69e52adb3266dc0cbf3257a1ccc4b0', 2, 1, '6', 0, '2016-02-09 21:39:35', '2016-03-26 15:21:09'),
+(7, 'test7@test7.com', 'b9ae2c24ad63dc52d97d9170c716fa3ec8e3d36a', 2, 1, '7', 0, '2016-03-20 23:20:13', '2016-03-26 17:58:06'),
+(8, 'test8@test8.com', '5eb7bc0c8c4d5fd36b12f5023b1163fb6de64d2d', 2, 1, '8', 0, '2016-03-20 23:36:03', '2016-03-20 23:36:03'),
+(9, 'test9@test9.com', 'aea4ee4599bd15a052c6e7adbca9ec9b3e638e18', 2, 1, '9', 0, '2016-03-20 23:38:04', '2016-03-20 23:38:04'),
+(10, 'test10@test10.com', 'rpqwiurp23578GJKJ70873iwghsdghshgphgotesttest10', 2, 0, '10', 0, '2016-03-21 00:14:38', '2016-03-21 00:14:38'),
+(11, 'test11@test11.com', '1f9c3ea7942dad611ab090127f89de7e190f2150', 2, 0, '11', 0, '2016-03-21 00:44:11', '2016-03-21 00:44:11'),
+(12, 'test12@test12.com', '2dca3495207b7b05dd676d0a2339aea56f692ec4', 2, 0, '12', 0, '2016-03-21 00:55:39', '2016-03-21 00:55:39'),
+(13, 'test13@test13.com', '86909ce50b274daaa4e576651a6f985c288d2694', 2, 0, '13', 0, '2016-03-21 01:07:52', '2016-03-21 01:07:52'),
+(14, 'test14@test14.com', 'd2d54759ba517a139418edc558f529e638a61fd5', 2, 0, '14', 0, '2016-03-26 18:52:09', '2016-03-26 18:52:09'),
+(15, 'test15@test15.com', '71aed770e519c8dc24d4e4c0f88d686c81403d3d', 2, 1, '15', 0, '2016-03-26 18:57:20', '2016-03-26 18:57:20'),
+(16, 'test16@test16.com', '92a86987a7d8a1620807941c6c1eca2bd456ea76', 2, 1, '16', 0, '2016-03-26 19:00:14', '2016-03-26 19:00:14'),
+(17, 'test17@test17.com', '8ad40897448e4972d6ab269d06a890e5938c5c0d', 2, 1, '17', 0, '2016-03-26 19:01:54', '2016-03-26 19:01:54');
 
 -- --------------------------------------------------------
 
@@ -1063,7 +1084,7 @@ CREATE TABLE `users_companies_departments_relations` (
   `del_flg` tinyint(4) NOT NULL DEFAULT '0',
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
 
 --
 -- テーブルのデータのダンプ `users_companies_departments_relations`
@@ -1071,7 +1092,7 @@ CREATE TABLE `users_companies_departments_relations` (
 
 INSERT INTO `users_companies_departments_relations` (`id`, `user_id`, `priority_order`, `companies_department_id`, `del_flg`, `created`, `modified`) VALUES
 (3, 3, 1, 4, 0, '2016-02-07 21:35:11', '2016-02-07 21:35:11'),
-(5, 1, 1, 5, 0, '2016-02-09 21:34:04', '2016-03-26 12:41:19'),
+(5, 1, 1, 4, 0, '2016-02-09 21:34:04', '2016-03-26 19:14:15'),
 (7, 2, 1, 6, 0, '2016-02-09 21:36:20', '2016-02-09 21:36:20'),
 (16, 4, 1, 5, 0, '2016-02-09 21:39:17', '2016-02-09 21:39:17'),
 (18, 5, 1, 5, 0, '2016-02-09 21:39:26', '2016-02-09 21:39:26'),
@@ -1082,7 +1103,11 @@ INSERT INTO `users_companies_departments_relations` (`id`, `user_id`, `priority_
 (25, 10, 1, 4, 0, '2016-03-21 00:44:11', '2016-03-21 00:44:11'),
 (26, 11, 1, 4, 0, '2016-03-21 00:55:39', '2016-03-21 00:55:39'),
 (27, 12, 1, 4, 0, '2016-03-21 01:07:52', '2016-03-21 01:07:52'),
-(28, 13, 1, 4, 0, '2016-03-21 12:50:06', '2016-03-21 12:50:06');
+(28, 13, 1, 4, 0, '2016-03-21 12:50:06', '2016-03-21 12:50:06'),
+(29, 14, 1, 5, 0, '2016-03-26 18:44:49', '2016-03-26 18:44:49'),
+(30, 15, 1, 6, 0, '2016-03-26 18:57:20', '2016-03-26 18:57:20'),
+(31, 16, 1, 5, 0, '2016-03-26 19:00:14', '2016-03-26 19:00:14'),
+(32, 17, 1, 5, 0, '2016-03-26 19:01:54', '2016-03-26 19:01:54');
 
 -- --------------------------------------------------------
 
@@ -1099,14 +1124,14 @@ CREATE TABLE `users_companies_locations_relations` (
   `del_flg` tinyint(4) NOT NULL DEFAULT '0',
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
 --
 -- テーブルのデータのダンプ `users_companies_locations_relations`
 --
 
 INSERT INTO `users_companies_locations_relations` (`id`, `user_id`, `priority_order`, `companies_location_id`, `del_flg`, `created`, `modified`) VALUES
-(1, 1, 1, 4, 0, '2016-02-07 21:34:51', '2016-03-26 12:41:19'),
+(1, 1, 1, 3, 0, '2016-02-07 21:34:51', '2016-03-26 19:14:15'),
 (2, 2, 1, 3, 0, '2016-02-07 21:35:01', '2016-02-07 21:35:01'),
 (3, 3, 1, 2, 0, '2016-02-07 21:35:11', '2016-02-07 21:35:11'),
 (10, 4, 1, 4, 0, '2016-02-09 21:39:17', '2016-02-09 21:39:17'),
@@ -1118,7 +1143,11 @@ INSERT INTO `users_companies_locations_relations` (`id`, `user_id`, `priority_or
 (16, 10, 1, 3, 0, '2016-03-21 00:44:11', '2016-03-21 00:44:11'),
 (17, 11, 1, 3, 0, '2016-03-21 00:55:39', '2016-03-21 00:55:39'),
 (18, 12, 1, 3, 0, '2016-03-21 01:07:52', '2016-03-21 01:07:52'),
-(19, 13, 1, 3, 0, '2016-03-21 01:07:52', '2016-03-21 01:07:52');
+(19, 13, 1, 3, 0, '2016-03-21 01:07:52', '2016-03-21 01:07:52'),
+(20, 14, 1, 4, 0, '2016-03-26 18:44:49', '2016-03-26 18:44:49'),
+(21, 18, 1, 4, 0, '2016-03-26 18:57:20', '2016-03-26 18:57:20'),
+(22, 16, 1, 4, 0, '2016-03-26 19:00:14', '2016-03-26 19:00:14'),
+(23, 17, 1, 4, 0, '2016-03-26 19:01:54', '2016-03-26 19:01:54');
 
 -- --------------------------------------------------------
 
@@ -1136,7 +1165,7 @@ CREATE TABLE `users_coupons_consumptions_counts` (
   `del_flg` tinyint(4) NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
 -- テーブルのデータのダンプ `users_coupons_consumptions_counts`
@@ -1144,7 +1173,8 @@ CREATE TABLE `users_coupons_consumptions_counts` (
 
 INSERT INTO `users_coupons_consumptions_counts` (`id`, `user_id`, `yearmonth`, `count`, `last_consumed_coupon_id`, `del_flg`, `created`, `modified`) VALUES
 (1, 1, 201602, 1, 1, 0, '2016-02-28 15:40:40', '2016-02-28 15:40:40'),
-(2, 1, 201603, 1, 10, 0, '2016-03-20 18:40:11', '2016-03-20 18:40:11');
+(2, 1, 201603, 2, 3, 0, '2016-03-20 18:40:11', '2016-03-26 13:09:25'),
+(3, 2, 201603, 1, 3, 0, '2016-03-26 13:04:48', '2016-03-26 13:04:48');
 
 -- --------------------------------------------------------
 
@@ -1162,14 +1192,14 @@ CREATE TABLE `users_profiles` (
   `del_flg` tinyint(4) NOT NULL DEFAULT '0',
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 --
 -- テーブルのデータのダンプ `users_profiles`
 --
 
 INSERT INTO `users_profiles` (`id`, `user_id`, `family_name`, `first_name`, `gender`, `del_flg`, `created`, `modified`) VALUES
-(1, 1, 'test1', 'test1', 2, 0, '2016-02-07 21:34:51', '2016-03-26 12:41:19'),
+(1, 1, 'test1@@', 'test1@@', 1, 0, '2016-02-07 21:34:51', '2016-03-26 19:14:15'),
 (2, 2, 'test2', 'test2', 1, 0, '2016-02-07 21:35:01', '2016-02-07 21:35:01'),
 (3, 3, 'test3', 'test3', 1, 0, '2016-02-07 21:35:11', '2016-02-07 21:35:11'),
 (4, 4, 'test4', 'test4', 1, 0, '2016-02-09 21:34:04', '2016-02-09 21:34:04'),
@@ -1181,7 +1211,11 @@ INSERT INTO `users_profiles` (`id`, `user_id`, `family_name`, `first_name`, `gen
 (10, 10, 'test10', 'test10', 1, 0, '2016-03-21 00:14:38', '2016-03-21 00:14:38'),
 (11, 11, 'test11', 'test11', 1, 0, '2016-03-21 00:44:11', '2016-03-21 00:44:11'),
 (12, 12, 'test12', 'test12', 1, 0, '2016-03-21 00:55:39', '2016-03-21 00:55:39'),
-(13, 13, 'test13', 'test13', 1, 0, '2016-03-21 01:07:52', '2016-03-21 01:07:52');
+(13, 13, 'test13', 'test13', 1, 0, '2016-03-21 01:07:52', '2016-03-21 01:07:52'),
+(14, 14, 'test14', 'test14', 2, 0, '2016-03-26 18:44:49', '2016-03-26 18:44:49'),
+(15, 15, 'test15', 'test15', 1, 0, '2016-03-26 18:57:20', '2016-03-26 18:57:20'),
+(16, 16, 'test16', 'test16', 1, 0, '2016-03-26 19:00:14', '2016-03-26 19:00:14'),
+(17, 17, 'test17', 'test17', 2, 0, '2016-03-26 19:01:54', '2016-03-26 19:01:54');
 
 --
 -- Indexes for dumped tables
@@ -1375,12 +1409,12 @@ ALTER TABLE `groups`
 -- AUTO_INCREMENT for table `log_coupons_consumptions`
 --
 ALTER TABLE `log_coupons_consumptions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `log_coupons_displays`
 --
 ALTER TABLE `log_coupons_displays`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `prefectures`
 --
@@ -1430,24 +1464,27 @@ ALTER TABLE `set_menus_photos`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT for table `users_companies_departments_relations`
 --
 ALTER TABLE `users_companies_departments_relations`
-  MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=29;
+  MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=33;
 --
 -- AUTO_INCREMENT for table `users_companies_locations_relations`
 --
 ALTER TABLE `users_companies_locations_relations`
-  MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
+  MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=24;
 --
 -- AUTO_INCREMENT for table `users_coupons_consumptions_counts`
 --
 ALTER TABLE `users_coupons_consumptions_counts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `users_profiles`
 --
 ALTER TABLE `users_profiles`
-  MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+  MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -4,7 +4,7 @@ $this->assign('title', 'パスワード変更');
 ?>
 
 <form class="password pdlr-10" name="changePassword" action="" method="post">
-    <p>新しいパスワードを入力してください</p>
+    <p>新しいパスワードを入力してください(7~14文字)</p>
     <input type="password" name="password" placeholder="新しいパスワード">
     <input type="password" name="password_confirm" placeholder="新しいパスワード（確認）">
 </form>

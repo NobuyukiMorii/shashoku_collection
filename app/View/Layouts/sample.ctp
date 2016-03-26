@@ -28,16 +28,15 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	<?php
 		echo $this->Html->meta('icon');
 		// echo $this->Html->css('cake.generic');
-
 		// [Pure.css] http://purecss.io/
-		echo $this->Html->css('http://yui.yahooapis.com/pure/0.6.0/pure-min.css');
 		echo $this->Html->css('style');
 		echo $this->Html->css('font-awesome.min');
 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
-		echo $this->Html->script('https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js');
+		echo $this->Html->script('jquery-2.2.2.min');
+		echo $this->Html->script('common');
 	?>
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
@@ -49,4 +48,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		</div>
 	</div>
 </body>
+<script>
+	deleteFlashMessage();
+</script>
 </html>

@@ -96,6 +96,9 @@ class AppController extends Controller {
                             'className' => 'Simple',
                             'hashType' => 'sha1',
                     ),
+                    'scope' => array(
+                        'del_flg' => '0'
+                    )
                 ),
             ),
         )

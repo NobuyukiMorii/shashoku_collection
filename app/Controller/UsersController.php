@@ -37,14 +37,18 @@ class UsersController extends AppController {
 
                 //ユーザーデータがない場合
                 if(empty($user_data)){
-                    $this->Common->returnError(Configure::read('ERR_CODE_NO_DATA'), __('ユーザーデータが取得出来ません。'));
 
-                    //ログアウト
-                    $this->Auth->logout();
+                    //エラーメッセージ送信
+                    $message = __('ユーザーデータが取得出来ません。');
+                    $this->Common->returnError(Configure::read('ERR_CODE_NO_DATA'), $message);
+                    $this->Flash->set($message);        
 
                     //フォームデータの送信
                     $this->view_data['form']['email']       = $this->request->data['User']['email'];
                     $this->view_data['form']['password']    = $this->request->data['User']['password'];
+
+                    //ログアウト
+                    $this->Auth->logout();
 
                 }
 
@@ -54,7 +58,11 @@ class UsersController extends AppController {
             } else {
 
                 //不正なアカウントの場合
-                $this->Common->returnError(Configure::read('ERR_CODE_LOGIN_WRONG_ACCOUNT'), __('ユーザー名とパスワードが一致しません。'));
+
+                //エラーメッセージ送信
+                $message = __('ユーザー名とパスワードが一致しません。');
+                $this->Common->returnError(Configure::read('ERR_CODE_LOGIN_WRONG_ACCOUNT'), $message);
+                $this->Flash->set($message);
 
                 //フォームデータの送信
                 $this->view_data['form']['email']       = $this->request->data['User']['email'];

@@ -9,7 +9,10 @@ if(!empty($response['coupon']['restaurant'])){
 if(!empty($response['coupon']['coupon'])){
     $coupon         = $response['coupon']['coupon'];
     $menu           = $response['coupon']['coupon']['set_menu'];
-} 
+}
+if(!empty($response['user_data'])){
+    $u    = $response['user_data'];
+}
 ?>
 </pre>
 
@@ -37,13 +40,14 @@ if(!empty($response['coupon']['coupon'])){
     <p class="rest"><?php ehbr($rest['name']) ?></p>
     <h3><?php ehbr($menu['name']) ?></h3>
     <img class="" src="<?php echo $menu["photo_url"] ?>" />
-    <p class="bold"><?php echo '価格:'.$coupon['price'].'円' ?>
+    <p class="bold"><i class="fa fa-yen is-black"></i><?php echo '価格: '.$coupon['price'].'円' ?>
+    <p class="bold"><i class="fa fa-building-o is-black"></i><?php echo '発行者社名: '.$u['company']['name'];?>
     <?php if ($coupon['is_authenticated_today']) { ?>
     <p class="dispDate"><?php echo '発行日時: '.$response["coupon"]["date_time"]; ?></p>
     </p>
     <?php } ?>
     <?php if (!$coupon['is_authenticated_today']) { ?>
-        <button class="emergency" onClick="signUpCall()">認証する<br/><label>※必ず店舗の方に押してもらってください</label></button>
+        <button class="emergency mgt-15" onClick="signUpCall()">認証する<br/><label>※必ず店舗の方に押してもらってください</label></button>
     <?php } else { ?>
         <button class="cancel">クーポンは認証済みです</button>
     <?php } ?>

@@ -152,8 +152,8 @@ var moveNext = function() {
     if (now >= count-1) return;
     moving_flg = true;
     now++;
-    $("#menus").animate({ "margin-left": interval*now+'px' }, 800);
-    setTimeout(function loop(){ doneMoving(); },800);
+    $("#menus").animate({ "margin-left": interval*now+'px' }, 500);
+    setTimeout(function loop(){ doneMoving(); },500);
     // TODO: 番号の背景色変更
     if (now == count-1) $("#nextBtn").addClass("is-hidden");
     if (now > 0) $("#prevBtn").removeClass("is-hidden");
@@ -163,8 +163,8 @@ var movePrev = function() {
     if (now <= 0) return;
     moving_flg = true;
     now--;
-    $("#menus").animate({ "margin-left": interval*now+'px' }, 800);
-    setTimeout(function loop(){ doneMoving(); },800);
+    $("#menus").animate({ "margin-left": interval*now+'px' }, 500);
+    setTimeout(function loop(){ doneMoving(); },500);
     // TODO: 番号の背景色変更
     if (now == 0) $("#prevBtn").addClass("is-hidden");
     if (now < count-1) $("#nextBtn").removeClass("is-hidden");
@@ -238,16 +238,16 @@ var r_moveNext = function() {
     if (r_now >= r_count-1) return;
     r_moving_flg = true;
     r_now++;
-    $("#restImgs").animate({ "margin-left": r_interval*r_now+'px' }, 800);
-    setTimeout(function loop(){ r_moving_flg=false; },800);
+    $("#restImgs").animate({ "margin-left": r_interval*r_now+'px' }, 500);
+    setTimeout(function loop(){ r_moving_flg=false; },500);
     r_refreshNum(r_now+1);
 }
 var r_movePrev = function() {
     if (r_now <= 0) return;
     r_moving_flg = true;
     r_now--;
-    $("#restImgs").animate({ "margin-left": r_interval*r_now+'px' }, 800);
-    setTimeout(function loop(){ r_moving_flg=false; },800);
+    $("#restImgs").animate({ "margin-left": r_interval*r_now+'px' }, 500);
+    setTimeout(function loop(){ r_moving_flg=false; },500);
     r_refreshNum(r_now+1);
 }
 var r_refreshNum = function(num) {

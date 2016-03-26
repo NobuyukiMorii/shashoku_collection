@@ -5,7 +5,7 @@
 <input type="text" name="data[User][email]" placeholder="メールアドレス">
 </p>
 <p>
-<input type="text" name="data[User][password]" placeholder="パスワード">
+<input type="password" name="data[User][password]" placeholder="パスワード">
 </p>
 <p>
 <button type="submit" value="送信">ログイン</button>

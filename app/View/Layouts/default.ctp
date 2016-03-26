@@ -35,6 +35,7 @@ if(!empty($u['user_coupon_status'])){
 	</title>
 	<?php
 		echo $this->Html->meta('icon');
+		echo '<meta http-equiv="Cache-Control" "max-age=0">';
 		// echo $this->Html->css('cake.generic');
 
 		// [Pure.css] http://purecss.io/

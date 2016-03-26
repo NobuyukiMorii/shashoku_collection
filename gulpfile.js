@@ -12,7 +12,7 @@
  * 3) CSSデプロイ
  * $ gulp deploy-css
  *  -> 開発環境にデプロイ(/dev/shashoku_collection/app/webroot/css)
- * $ gulp deploy-css --prod
+ * $ gulp deploy-css --o prod
  *  -> 本番環境?にデプロイ(/shashoku_collection/app/webroot/css)
  * ※ローカルファイルのsassをコンパイルしてアップするので注意
  * 
@@ -89,7 +89,7 @@ var globs_all = [
 ];
 gulp.task('deploy-css', ['sass'], function(){
   var conn = ftp.create(conn_config);
-  if (args.o) {
+  if (args.prod) {
     remoteDest_css = remoteDest_prod_css;
   }
   return gulp.src(localDest_css, {buffer: false, dot: true})

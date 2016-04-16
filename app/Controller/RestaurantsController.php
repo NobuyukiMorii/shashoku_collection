@@ -10,7 +10,8 @@ class RestaurantsController extends AppController {
         'RestaurantsGenres',
         'RestaurantsGenresRelations',
         'RestaurantsPhotos',
-        'Coupons'
+        'Coupons',
+        'Notifications'
     );
 
 	/**
@@ -23,7 +24,7 @@ class RestaurantsController extends AppController {
         //----------------------------------------
         //レストラン取得
         //----------------------------------------
-		$this->view_data['restaurants'] = $this->Restaurants->getRestaurants();
+		$this->view_data['restaurants'] 	= $this->Restaurants->getRestaurants();
 		//レストランが取得出来ない場合
 		if(empty($this->view_data['restaurants'])){
 			$this->Common->returnError(Configure::read('ERR_CODE_NO_DATA'), __('レストランが取得出来ません。'));
@@ -33,22 +34,27 @@ class RestaurantsController extends AppController {
         //----------------------------------------
         //ジャンル取得
         //----------------------------------------
-		$this->view_data['genres'] 		= $this->RestaurantsGenres->getRestaurantsGenres();
+		$this->view_data['genres'] 			= $this->RestaurantsGenres->getRestaurantsGenres();
 		//ジャンルが取得出来ない場合
 		if(empty($this->view_data['genres'])){
 			$this->Common->returnError(Configure::read('ERR_CODE_NO_DATA'), __('ジャンルが取得出来ません。'));
 			return;
 		}
-			
+		
         //----------------------------------------
         //タグ取得
         //----------------------------------------
-		$this->view_data['tags'] 		= $this->RestaurantsTags->getRestaurantsTags();
+		$this->view_data['tags'] 			= $this->RestaurantsTags->getRestaurantsTags();
 		//レストランが取得出来ない場合
 		if(empty($this->view_data['tags'])){
 			$this->Common->returnError(Configure::read('ERR_CODE_NO_DATA'), __('タグが取得出来ません。'));
 			return;
 		}
+
+        //----------------------------------------
+        //重要なお知らせを取得
+        //----------------------------------------
+		$this->view_data['Notifications'] 	= $this->Notifications->getImportantInPeriod();
 
 		return $this->view_data;
 

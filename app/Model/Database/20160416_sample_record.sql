@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost:8889
--- Generation Time: 2016 年 4 月 16 日 18:32
+-- Generation Time: 2016 年 4 月 16 日 19:04
 -- サーバのバージョン： 5.5.42
 -- PHP Version: 5.6.10
 
@@ -516,8 +516,8 @@ CREATE TABLE `notifications` (
   `id` int(11) NOT NULL,
   `title` varchar(500) NOT NULL,
   `message` varchar(2000) NOT NULL,
-  `start_date` datetime NOT NULL,
-  `end_date` datetime NOT NULL,
+  `start_date` datetime DEFAULT NULL,
+  `end_date` datetime DEFAULT NULL,
   `important_flg` tinyint(4) NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
@@ -530,9 +530,9 @@ CREATE TABLE `notifications` (
 
 INSERT INTO `notifications` (`id`, `title`, `message`, `start_date`, `end_date`, `important_flg`, `created`, `modified`, `del_flg`) VALUES
 (1, '<red>test1</red>', 'test1', '2016-04-16 17:13:00', '2016-05-16 17:13:00', 1, '2016-04-16 17:13:34', '2016-04-16 17:13:34', 0),
-(2, 'test2', 'test2', '2016-05-16 17:13:00', '2016-06-16 17:13:00', 0, '2016-04-16 17:14:13', '2016-04-16 17:14:13', 0),
+(2, 'test2', 'test2', NULL, NULL, 0, '2016-04-16 17:14:13', '2016-04-16 17:14:13', 0),
 (3, 'test3', 'test3', '2016-04-16 17:47:00', '2016-04-24 17:47:00', 0, '2016-04-16 17:48:12', '2016-04-16 17:48:24', 0),
-(4, 'test4', 'test4', '2016-04-16 17:48:00', '2016-07-16 17:48:00', 1, '2016-04-16 17:48:39', '2016-04-16 17:48:39', 0),
+(4, 'test4', 'test4', NULL, NULL, 1, '2016-04-16 17:48:39', '2016-04-16 17:48:39', 0),
 (5, 'test5', 'test5', '2016-04-16 17:48:00', '2016-04-17 17:48:00', 0, '2016-04-16 17:48:54', '2016-04-16 17:48:54', 0);
 
 -- --------------------------------------------------------

@@ -9,7 +9,7 @@ class NotificationsController extends AppController {
     public function index() {
 
     	//お知らせ取得
-    	$this->view_data['Notifications'] = $this->Notifications->getAllInPeriod();
+    	$this->view_data['Notifications'] = $this->Notifications->getAll();
 
     	//値を返却
     	return $this->view_data;

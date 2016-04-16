@@ -54,7 +54,7 @@ class RestaurantsController extends AppController {
         //----------------------------------------
         //重要なお知らせを取得
         //----------------------------------------
-		$this->view_data['Notifications'] 	= $this->Notifications->getImportantInPeriod();
+		$this->view_data['Notifications'] 	= $this->Notifications->getAllInPeriod();
 
 		return $this->view_data;
 

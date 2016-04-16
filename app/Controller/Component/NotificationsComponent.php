@@ -10,7 +10,7 @@ class NotificationsComponent extends Component {
 	 * お知らせを全て取得
 	 * @return array
 	 */
-	public function getAllInPeriod(){
+	public function getAll(){
 
 		//返却値を作成
 		$result = array();
@@ -19,13 +19,10 @@ class NotificationsComponent extends Component {
         $Notification  = ClassRegistry::init('Notification');
 
     	//お知らせ取得（キャッシュ）
-    	$notifications = $Notification->find('all',array(
+    	$result = $Notification->find('all',array(
     		'cache' => true,
     		'order' => 'Notification.important_flg DESC, Notification.created DESC'
     	));
-
-    	//期間内のお知らせを抽出
-		$result = $Notification->extractRecordInPeriod($notifications);
 
 		return $result;
 
@@ -58,7 +55,7 @@ class NotificationsComponent extends Component {
 	 * 重要なお知らせのみ取得
 	 * @return array
 	 */
-	public function getImportantInPeriod(){
+	public function getAllInPeriod(){
 
 		//返却値を作成
 		$result = array();
@@ -68,14 +65,11 @@ class NotificationsComponent extends Component {
 
     	//重要なお知らせを取得（キャッシュ）
     	$notifications = $Notification->find('all',array(
-    		'conditions' => array(
-    			'important_flg' => 1
-    		),
     		'cache' => true,
-    		'order' => 'Notification.created DESC'
+    		'order' => 'Notification.important_flg DESC, Notification.created DESC'
     	));
 
-    	//期間内のお知らせを抽出
+    	//レストラントップへの掲載期間内のお知らせのみ抽出
 		$result = $Notification->extractRecordInPeriod($notifications);
 
 		return $result;

@@ -1,4 +1,5 @@
-<?
+<?php
+    $this->assign('title', '運営からのお知らせ');
     ////////// ダミーデータ //////////
     $notices = array(
         array(
@@ -22,26 +23,30 @@
     );
 ?>
 
-<? 
+<?php 
 $v = array_search_value($notices, 'important_flg');
 if($v) {
 ?>
 <ul class="information important">
-<?
-echo '<a href="/notice/'.$v["id"].'" ';
-            if($v["important_flg"]) {echo 'class="is-important">'; }
-            else { echo '>'; }
-            echo '<li><label class="date">'.date("m/d",$v["start_date"]).'</label> ';
-            echo $v["title"].'</li></a>';
+<?php
+    echo '<a href="';
+    echo $this->Html->url(array("controller" => "Notifications", "action" => "detail", '?' => array('notification_id' => $v['id'])));
+    echo '" ';
+    if($v["important_flg"]) {echo 'class="is-important">'; }
+    else { echo '>'; }
+    echo '<li><label class="date">'.date("m/d",$v["start_date"]).'</label> ';
+    echo $v["title"].'</li></a>';
 ?>
 </ul>
-<? } ?>
+<?php } ?>
 
 <ul class="information small">
-    <?
+    <?php
     if (isset($notices) && count($notices) > 0) {
         foreach ($notices as $notice) {
-            echo '<a href="/notice/'.$notice["id"].'" ';
+            echo '<a href="';
+            echo $this->Html->url(array("controller" => "Notifications", "action" => "detail", '?' => array('notification_id' => $notice['id'])));
+            echo '" ';
             if($notice["important_flg"]) {echo 'class="is-important">'; }
             else { echo '>'; }
             echo '<li><label class="date">'.date("m/d",$notice["start_date"]).'</label> ';
@@ -51,7 +56,7 @@ echo '<a href="/notice/'.$v["id"].'" ';
     ?>
 </ul>
 
-<?
+<?php
 function array_search_value($datas, $key) {
     if(isset($datas) && isset($key)) {
         foreach($datas as $data) {

@@ -27,7 +27,7 @@ if(!empty($response['tags'])){
         ////////// ダミーデータ //////////
         $notices = array(
             array(
-                'id' => '0',
+                'id' => '1',
                 'title' => '【重要】12月から○○が変更になります',
                 'comment' => '【重要】12月から○○が変更になりますのコメントコメントコメントコメントコメントコメントコメントコメント',
                 'restaurant_list_banner_flg' => '1',
@@ -36,7 +36,7 @@ if(!empty($response['tags'])){
                 'close_date' => '1452351600'
             ),
             array(
-                'id' => '1',
+                'id' => '2',
                 'title' => '○○機能が追加されました',
                 'comment' => '【重要】12月から○○が変更になりますのコメントコメントコメントコメントコメントコメントコメントコメント',
                 'restaurant_list_banner_flg' => '1',
@@ -50,7 +50,9 @@ if(!empty($response['tags'])){
         <?php
         if (isset($notices) && count($notices) > 0) {
             foreach ($notices as $notice) {
-                echo '<a href="/notice/'.$notice["id"].'" ';
+                echo '<a href="';
+                echo $this->Html->url(array("controller" => "Notifications", "action" => "detail", '?' => array('notification_id' => $notice['id'])));
+                echo '" ';
                 if($notice["important_flg"]) {echo 'class="is-important">'; }
                 else { echo '>'; }
                 echo '<li><label class="date">'.date("m/d",$notice["start_date"]).'</label> ';

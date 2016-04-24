@@ -46,7 +46,7 @@ class RestaurantsGenresRelationsComponent extends Component {
 		$genre_ids = hash::extract($restaurants_genres_relation, '{n}.restaurants_genre_id');
 
 		//ジャンルidを追加
-		$restaurant['genre_id'] = $genre_ids[0];
+		$restaurant['genre_id'] = $genre_ids;
 
 		return $restaurant;
 
